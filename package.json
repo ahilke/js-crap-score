@@ -1,0 +1,32 @@
+{
+    "name": "crap-score",
+    "version": "1.0.0",
+    "description": "Command line tool to calculate the CRAP score of a JS/TS project.",
+    "license": "MIT",
+    "keywords": [
+        "CRAP Score",
+        "Cyclomatic Complexity",
+        "Code Quality",
+        "Test Coverage"
+    ],
+    "author": {
+        "name": "Arno Hilke",
+        "email": "arno.hilke@tum.de"
+    },
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ahilke/js-crap-score.git"
+    },
+    "bugs": {
+        "url": "https://github.com/ahilke/js-crap-score/issues"
+    },
+    "scripts": {},
+    "engines": {
+        "node": ">=18.15.0",
+        "npm": ">=9.5.0"
+    },
+    "devDependencies": {
+        "prettier": "^2.8.4"
+    }
+}
