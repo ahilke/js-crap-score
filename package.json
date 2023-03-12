@@ -24,7 +24,8 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
-        "test": "jest"
+        "test": "jest",
+        "test:coverage": "jest --coverage"
     },
     "engines": {
         "node": ">=18.15.0",

@@ -1,3 +1,7 @@
 # Artifacts
+coverage/
 dist/
 node_modules/
+
+# Operating System
+.DS_Store
