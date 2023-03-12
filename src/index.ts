@@ -1,64 +1,38 @@
 import { readFileSync } from "fs";
-import { CoverageMapData, FileCoverageData, Location, Range } from "istanbul-lib-coverage";
-
-// 1. read in coverage
-// 2. compute function statement coverage
-// 3. trigger jshint
+import { CoverageMapData } from "istanbul-lib-coverage";
+import { JSHINT } from "jshint";
+import { crap } from "./crap-score.js";
+import { getCoverageForFunction } from "./function-coverage.js";
 
 const coveragePath = new URL("../../test/coverage/coverage-final.json", import.meta.url);
+console.debug(`Loading coverage from "${coveragePath}".`);
+
 /** @see https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md */
 const coverageReport: CoverageMapData = JSON.parse(readFileSync(coveragePath, "utf-8"));
 
 Object.values(coverageReport).forEach((fileCoverage) => {
-    const { fnMap } = fileCoverage;
-    Object.entries(fnMap).forEach(([id, { name }]) => {
+    const { fnMap, path: sourcePath } = fileCoverage;
+    const sourceUrl = new URL(`file://${sourcePath}`);
+
+    console.debug(`Loading source file from "${sourceUrl}".`);
+    const source = readFileSync(sourceUrl, "utf-8");
+
+    // TODO: check proper jshint options
+    JSHINT(source);
+    const jshintData = JSHINT.data();
+
+    Object.entries(fnMap).forEach(([id, { name: functionName }]) => {
         // TODO: probably should not pass the whole `fileCoverage`?
         const coverage = getCoverageForFunction({ functionId: id, fileCoverage });
-        console.log(`function '${name}' is ${coverage * 100}%} covered`);
+        const jshintFunctionData = jshintData?.functions?.find(({ name }) => name === functionName);
+        const complexity = jshintFunctionData?.metrics.complexity;
+
+        if (complexity) {
+            console.log(`Function '${functionName}' is ${coverage * 100}%} covered.`);
+            console.log(`Function '${functionName}' has complexity ${complexity}.`);
+            console.log(`Function '${functionName}' has CRAP score of ${crap({ complexity, coverage })}.`);
+        } else {
+            console.error(`Function '${functionName}' not found in JSHint data.`);
+        }
     });
 });
-
-function getCoverageForFunction({
-    functionId,
-    fileCoverage,
-}: {
-    functionId: string;
-    fileCoverage: FileCoverageData;
-}): number {
-    // TODO: this can probably be more efficient - e.g., stop after first statement out of range
-    const statementsIdsInFunction = Object.entries(fileCoverage.statementMap)
-        .filter(
-            ([, { start, end }]) =>
-                // FIXME: this first check is weird, is there a better way to determine statements that belong to functions?
-                //          - especially for the "function definition" statement
-                //          - maybe always just +1 for total statements (also avoids division by 0), as each function has to be declared
-                locationIsInRange({ location: end, range: fileCoverage.fnMap[functionId].decl }) ||
-                locationIsInRange({ location: start, range: fileCoverage.fnMap[functionId].loc })
-        )
-        .map(([id]) => id);
-    const statementCoverage = statementsIdsInFunction.map((id) => fileCoverage.s[id]);
-    const totalStatements = statementCoverage.length;
-    const coveredStatements = statementCoverage.filter((coverage) => coverage > 0).length;
-
-    return coveredStatements / totalStatements; // FIXME: can totalStatements be 0?
-}
-
-/**
- * Determines if `location` is within `range`.
- *
- * Has undefined behaviour if `column` is `null`, as `end` of `statementMap` sometimes seem to have.
- * Use only with `start` location.
- */
-function locationIsInRange({ location, range }: { location: Location; range: Range }) {
-    if (location.line < range.start.line || location.line > range.end.line) {
-        return false;
-    }
-    if (location.line === range.start.line && location.column < range.start.column) {
-        return false;
-    }
-    if (location.line === range.end.line && location.column > range.end.column) {
-        return false;
-    }
-
-    return true;
-}
