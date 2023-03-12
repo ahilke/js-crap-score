@@ -24,6 +24,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
+        "start": "node ./dist/src/index.js",
         "test": "jest",
         "test:coverage": "jest --coverage"
     },

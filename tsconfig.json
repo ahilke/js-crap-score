@@ -8,6 +8,7 @@
 
         // Language
         "target": "es2022",
+        "module": "es2022",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
 

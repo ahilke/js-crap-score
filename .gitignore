@@ -5,3 +5,7 @@ node_modules/
 
 # Operating System
 .DS_Store
+
+# IDE
+.idea/
+.vscode/
