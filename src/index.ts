@@ -25,11 +25,16 @@ function getCoverageForFunction({
     functionId: string;
     fileCoverage: FileCoverageData;
 }): number {
-    const { start: fnStart, end: fnEnd } = fileCoverage.fnMap[functionId].loc;
-
     // TODO: this can probably be more efficient - e.g., stop after first statement out of range
     const statementsIdsInFunction = Object.entries(fileCoverage.statementMap)
-        .filter(([, { start }]) => locationIsInRange({ location: start, range: { start: fnStart, end: fnEnd } }))
+        .filter(
+            ([, { start, end }]) =>
+                // FIXME: this first check is weird, is there a better way to determine statements that belong to functions?
+                //          - especially for the "function definition" statement
+                //          - maybe always just +1 for total statements (also avoids division by 0), as each function has to be declared
+                locationIsInRange({ location: end, range: fileCoverage.fnMap[functionId].decl }) ||
+                locationIsInRange({ location: start, range: fileCoverage.fnMap[functionId].loc })
+        )
         .map(([id]) => id);
     const statementCoverage = statementsIdsInFunction.map((id) => fileCoverage.s[id]);
     const totalStatements = statementCoverage.length;
