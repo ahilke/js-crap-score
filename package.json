@@ -24,7 +24,8 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
-        "start": "node ./dist/src/index.js",
+        "start": "npm run build && npm run start:prod",
+        "start:prod": "node ./dist/src/index.js",
         "test": "jest",
         "test:coverage": "jest --coverage"
     },

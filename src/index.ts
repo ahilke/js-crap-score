@@ -17,14 +17,13 @@ Object.values(coverageReport).forEach((fileCoverage) => {
     console.debug(`Loading source file from "${sourceUrl}".`);
     const source = readFileSync(sourceUrl, "utf-8");
 
-    // TODO: check proper jshint options
     JSHINT(source);
-    const jshintData = JSHINT.data();
+    const jshintData = JSHINT.data()?.functions;
 
     Object.entries(fnMap).forEach(([id, { name: functionName }]) => {
         // TODO: probably should not pass the whole `fileCoverage`?
         const coverage = getCoverageForFunction({ functionId: id, fileCoverage });
-        const jshintFunctionData = jshintData?.functions?.find(({ name }) => name === functionName);
+        const jshintFunctionData = jshintData?.find(({ name }) => name === functionName);
         const complexity = jshintFunctionData?.metrics.complexity;
 
         if (complexity) {
