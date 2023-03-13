@@ -15,7 +15,7 @@ export function getCoverageForFunction({
                 //          - especially for the "function definition" statement
                 //          - maybe always just +1 for total statements (also avoids division by 0), as each function has to be declared
                 locationIsInRange({ location: end, range: fileCoverage.fnMap[functionId].decl }) ||
-                locationIsInRange({ location: start, range: fileCoverage.fnMap[functionId].loc })
+                locationIsInRange({ location: start, range: fileCoverage.fnMap[functionId].loc }),
         )
         .map(([id]) => id);
     const statementCoverage = statementsIdsInFunction.map((id) => fileCoverage.s[id]);
