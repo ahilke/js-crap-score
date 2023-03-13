@@ -1,7 +1,8 @@
-import { Module } from "@nestjs/common";
+import { Logger, Module } from "@nestjs/common";
 import { ComputeCrapCommand } from "./compute-crap.command.js";
+import { FileSystemService } from "./file-system.service.js";
 
 @Module({
-    providers: [ComputeCrapCommand],
+    providers: [ComputeCrapCommand, Logger, FileSystemService],
 })
 export class AppModule {}

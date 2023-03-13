@@ -25,7 +25,6 @@ export function getCoverageForFunction({
     return coveredStatements / totalStatements; // FIXME: can totalStatements be 0?
 }
 
-// TODO can we use JSHint data to determine this?
 /**
  * Determines if `location` is within `range`.
  *

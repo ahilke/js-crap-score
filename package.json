@@ -25,7 +25,7 @@
     "scripts": {
         "build": "tsc",
         "start": "npm run build && npm run start:prod",
-        "start:prod": "node ./dist/src/index.js",
+        "start:prod": "node ./dist/src/main.js",
         "test": "jest",
         "test:coverage": "jest --coverage"
     },
