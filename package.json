@@ -23,8 +23,9 @@
     },
     "type": "module",
     "scripts": {
-        "build": "tsc",
-        "start": "node ./dist/src/index.js",
+        "build": "shx rm -r dist/ && tsc",
+        "start": "npm run build && npm run start:prod",
+        "start:prod": "node ./dist/src/main.js",
         "test": "jest",
         "test:coverage": "jest --coverage"
     },
@@ -33,11 +34,17 @@
         "npm": ">=9.5.0"
     },
     "dependencies": {
-        "jshint": "^2.13.6"
+        "@nestjs/common": "^9.3.9",
+        "@nestjs/core": "^9.3.9",
+        "jshint": "^2.13.6",
+        "nest-commander": "^3.6.1",
+        "reflect-metadata": "^0.1.13",
+        "rxjs": "^7.8.0"
     },
     "devDependencies": {
         "@types/jshint": "^2.12.1",
         "prettier": "^2.8.4",
+        "shx": "^0.3.4",
         "ts-jest": "^29.0.5",
         "typescript": "^4.9.5"
     }
