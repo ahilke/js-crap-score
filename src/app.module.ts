@@ -1,7 +1,7 @@
 import { Logger, Module } from "@nestjs/common";
-import { ComputeCrapCommand } from "./compute-crap.command.js";
+import { ComputeCrapCommand } from "./command/compute-crap.command.js";
+import { TestCoveragePathQuestions } from "./command/test-coverage-path.question.js";
 import { FileSystemService } from "./file-system.service.js";
-import { TestCoveragePathQuestions } from "./test-coverage-path.question.js";
 
 @Module({
     providers: [ComputeCrapCommand, TestCoveragePathQuestions, Logger, FileSystemService],

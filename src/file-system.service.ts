@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { CoverageMapData } from "istanbul-lib-coverage";
 import { readFileSync } from "fs";
+import { CoverageMapData } from "istanbul-lib-coverage";
 
 @Injectable()
 export class FileSystemService {
@@ -9,15 +9,15 @@ export class FileSystemService {
     /**
      * @see https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md
      */
-    public loadCoverageReport(relativePath: string): CoverageMapData {
-        const fileUrl = new URL(relativePath, import.meta.url);
-        this.logger.debug(`Loading coverage from "${fileUrl}".`);
+    public loadCoverageReport(path: string): CoverageMapData {
+        const fileUrl = new URL(path, import.meta.url);
 
+        this.logger.debug(`Loading coverage from "${fileUrl}".`);
         return JSON.parse(readFileSync(fileUrl, "utf-8"));
     }
 
-    public loadSourceFile(absolutePath: string): string {
-        const fileUrl = new URL(`file://${absolutePath}`);
+    public loadSourceFile(path: string): string {
+        const fileUrl = new URL(path, import.meta.url);
 
         this.logger.debug(`Loading source file from "${fileUrl}".`);
         return readFileSync(fileUrl, "utf-8");
