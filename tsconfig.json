@@ -18,6 +18,7 @@
 
         // Type Checking
         "strict": true,
-        "exactOptionalPropertyTypes": true
+        "exactOptionalPropertyTypes": true,
+        "skipLibCheck": true
     }
 }
