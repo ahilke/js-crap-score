@@ -1,7 +1,7 @@
 import { Logger } from "@nestjs/common";
 import { CommandRunner, InquirerService, RootCommand } from "nest-commander";
-import { CrapReportService } from "../crap-report.service.js";
-import { FileSystemService } from "../file-system.service.js";
+import { CrapReportService } from "../crap/crap-report.service.js";
+import { FileSystemService } from "../crap/file-system.service.js";
 
 @RootCommand({
     arguments: "[testCoveragePath]",

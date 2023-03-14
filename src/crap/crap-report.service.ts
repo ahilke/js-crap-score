@@ -1,8 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData } from "istanbul-lib-coverage";
 import { JSHINT } from "jshint";
-import { crap } from "./computation/crap-score.js";
-import { getCoverageForFunction } from "./computation/function-coverage.js";
+import { crap } from "../computation/crap-score.js";
+import { getCoverageForFunction } from "../computation/function-coverage.js";
 import { FileSystemService } from "./file-system.service.js";
 
 @Injectable()

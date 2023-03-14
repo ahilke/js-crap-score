@@ -1,10 +1,8 @@
-import { Logger, Module } from "@nestjs/common";
-import { ComputeCrapCommand } from "./command/compute-crap.command.js";
-import { TestCoveragePathQuestions } from "./command/test-coverage-path.question.js";
-import { CrapReportService } from "./crap-report.service.js";
-import { FileSystemService } from "./file-system.service.js";
+import { Module } from "@nestjs/common";
+import { CommandModule } from "./command/command.module.js";
+import { CrapModule } from "./crap/crap.module.js";
 
 @Module({
-    providers: [ComputeCrapCommand, TestCoveragePathQuestions, CrapReportService, Logger, FileSystemService],
+    imports: [CrapModule, CommandModule],
 })
 export class AppModule {}
