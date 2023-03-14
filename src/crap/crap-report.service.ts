@@ -3,6 +3,7 @@ import { CoverageMapData } from "istanbul-lib-coverage";
 import { JSHINT } from "jshint";
 import { crap } from "../computation/crap-score.js";
 import { getCoverageForFunction } from "../computation/function-coverage.js";
+import { getLintFunctionForCoverageFunction } from "../computation/map-lint-and-coverage-data.js";
 import { FileSystemService } from "./file-system.service.js";
 
 @Injectable()
@@ -20,35 +21,40 @@ export class CrapReportService {
             const jshintData = JSHINT.data()?.functions;
 
             result[sourcePath] = {};
-            Object.entries(fnMap).forEach(([id, { name: functionName }]) => {
+            Object.entries(fnMap).forEach(([id, functionMapping]) => {
+                const { name: functionName } = functionMapping;
+
                 const coverageData = getCoverageForFunction({
                     functionId: id,
                     fileCoverage,
                 });
                 const coverage = coverageData.covered / coverageData.total;
 
-                const jshintFunctionData = jshintData?.find(({ name }) => name === functionName);
-
-                if (jshintFunctionData) {
-                    const complexity = jshintFunctionData.metrics.complexity;
-                    const crapScore = crap({ complexity, coverage });
-                    result[sourcePath][functionName] = {
-                        complexity,
-                        statements: {
-                            ...coverageData,
-                            coverage,
-                            crap: crapScore,
-                        },
-                    };
-
-                    this.logger.debug(`Computed CRAP score for '${functionName}'.`, {
-                        coverage,
-                        complexity,
-                        crapScore,
-                    });
-                } else {
+                const jshintFunctionData = getLintFunctionForCoverageFunction({
+                    coverageFunction: functionMapping,
+                    lintData: jshintData,
+                });
+                if (!jshintFunctionData) {
                     this.logger.error(`Function '${functionName}' not found in JSHint data.`);
+                    return;
                 }
+
+                const complexity = jshintFunctionData.metrics.complexity;
+                const crapScore = crap({ complexity, coverage });
+                result[sourcePath][functionName] = {
+                    complexity,
+                    statements: {
+                        ...coverageData,
+                        coverage,
+                        crap: crapScore,
+                    },
+                };
+
+                this.logger.debug(`Computed CRAP score for '${functionName}'.`, {
+                    coverage,
+                    complexity,
+                    crapScore,
+                });
             });
         });
 
