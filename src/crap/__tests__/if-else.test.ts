@@ -1,25 +1,9 @@
-import { beforeAll, describe, expect, test } from "@jest/globals";
-import { Test } from "@nestjs/testing";
-import { CrapFile, CrapReport, CrapReportService } from "../crap-report.service.js";
-import { CrapModule } from "../crap.module.js";
-import { FileSystemService } from "../file-system.service.js";
+import { describe, expect, test } from "@jest/globals";
+import { findFileInCrapReport, getCrapReport } from "./crap-report.js";
 
 describe("if-else", () => {
-    let crapReport: CrapReport;
-
-    beforeAll(async () => {
-        const appModule = await Test.createTestingModule({
-            imports: [CrapModule],
-        }).compile();
-
-        const fileSystemService = appModule.get(FileSystemService);
-        const crapReportService = appModule.get(CrapReportService);
-
-        const coverageReport = fileSystemService.loadCoverageReport("../../test-data/coverage/coverage-final.json");
-        crapReport = crapReportService.createReport({ testCoverage: coverageReport });
-    });
-
-    test("uncovered", () => {
+    test("uncovered", async () => {
+        const crapReport = await getCrapReport();
         const crapFile = findFileInCrapReport(crapReport, "test-data/if-else/uncovered.ts");
 
         expect(crapFile?.uncovered).toBeDefined();
@@ -32,7 +16,8 @@ describe("if-else", () => {
         });
     });
 
-    test.each([["ifCovered"], ["elseCovered"]])("%s", (functionName) => {
+    test.each([["ifCovered"], ["elseCovered"]])("%s", async (functionName) => {
+        const crapReport = await getCrapReport();
         const crapFile = findFileInCrapReport(crapReport, `test-data/if-else/${functionName}.ts`);
 
         expect(crapFile?.[functionName]).toBeDefined();
@@ -45,7 +30,8 @@ describe("if-else", () => {
         });
     });
 
-    test("fullyCovered", () => {
+    test("fullyCovered", async () => {
+        const crapReport = await getCrapReport();
         const crapFile = findFileInCrapReport(crapReport, "test-data/if-else/fullyCovered.ts");
 
         expect(crapFile?.fullyCovered).toBeDefined();
@@ -58,8 +44,3 @@ describe("if-else", () => {
         });
     });
 });
-
-function findFileInCrapReport(crapReport: CrapReport, projectPath: string): CrapFile | undefined {
-    const sourcePath = Object.keys(crapReport).find((sourcePath) => sourcePath.endsWith(projectPath));
-    return sourcePath ? crapReport[sourcePath] : undefined;
-}
