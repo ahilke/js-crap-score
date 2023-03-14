@@ -16,9 +16,12 @@ describe("if-else", () => {
         });
     });
 
-    test.each([["ifCovered"], ["elseCovered"]])("%s", async (functionName) => {
+    test.each([
+        ["ifCovered", "if-covered"],
+        ["elseCovered", "else-covered"],
+    ])("%s", async (functionName, fileName) => {
         const crapReport = await getCrapReport();
-        const crapFile = findFileInCrapReport(crapReport, `test-data/if-else/${functionName}.ts`);
+        const crapFile = findFileInCrapReport(crapReport, `test-data/if-else/${fileName}.ts`);
 
         expect(crapFile?.[functionName]).toBeDefined();
         expect(crapFile?.[functionName].complexity).toBe(1);
@@ -32,7 +35,7 @@ describe("if-else", () => {
 
     test("fullyCovered", async () => {
         const crapReport = await getCrapReport();
-        const crapFile = findFileInCrapReport(crapReport, "test-data/if-else/fullyCovered.ts");
+        const crapFile = findFileInCrapReport(crapReport, "test-data/if-else/fully-covered.ts");
 
         expect(crapFile?.fullyCovered).toBeDefined();
         expect(crapFile?.fullyCovered.complexity).toBe(1);

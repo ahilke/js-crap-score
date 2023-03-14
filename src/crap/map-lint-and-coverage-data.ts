@@ -1,6 +1,6 @@
 import { FunctionMapping } from "istanbul-lib-coverage";
 import { LintFunction } from "jshint";
-import { Location, locationIsInRange, Range } from "../computation/location-in-range.js";
+import { Location, locationIsInRange, Range } from "./location-in-range.js";
 
 // TODO: check this with nested functions -> find closest match?
 /**
