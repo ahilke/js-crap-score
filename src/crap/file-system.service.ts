@@ -16,6 +16,7 @@ export class FileSystemService {
         return JSON.parse(readFileSync(fileUrl, "utf-8"));
     }
 
+    // TODO: recover if file not found and continue with other files
     public loadSourceFile(path: string): string {
         const fileUrl = new URL(path, import.meta.url);
 
