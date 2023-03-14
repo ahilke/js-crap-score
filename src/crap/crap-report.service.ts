@@ -1,6 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData } from "istanbul-lib-coverage";
-import { JSHINT } from "jshint";
 import { getComplexity } from "../command/eslint-complexity.js";
 import { crap } from "../computation/crap-score.js";
 import { getCoverageForFunction } from "../computation/function-coverage.js";
@@ -24,6 +23,15 @@ export class CrapReportService {
         return result;
     }
 
+    /**
+     * Computes CRAP score for each function in the file as reported by the coverage.
+     *
+     * # Function Names
+     *
+     * ESLint generally reports better names/descriptions than istanbul, e.g. for class functions where istanbul
+     * just reports "anonymous". Thus, we use it for logging. We still use istanbul's function name for
+     * indexing, since it is our primary data source.
+     */
     private async processFile({ fileCoverage }: { fileCoverage: FileCoverageData }): Promise<CrapFile> {
         const result: CrapFile = {};
 
@@ -37,7 +45,7 @@ export class CrapReportService {
         }
 
         Object.keys(fnMap).forEach((key, index) => {
-            const { name: functionName } = fnMap[key];
+            const coverageFunction = fnMap[key];
             const lintFunction = lintReport[index];
 
             const coverageData = getCoverageForFunction({
@@ -47,7 +55,7 @@ export class CrapReportService {
             const coverage = coverageData.covered / coverageData.total;
             const complexity = lintFunction?.complexity;
             if (!complexity) {
-                this.logger.error(`Function '${functionName}' not found in ESLint data.`);
+                this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`);
                 return;
             }
 
@@ -56,7 +64,7 @@ export class CrapReportService {
             // TODO: add location, so it's more useful with anonymous functions
             // TODO: add human readable descriptor (function at line X, function Y)
             // TODO: what else to add from `lintFunction`?
-            result[functionName] = {
+            result[coverageFunction.name] = {
                 complexity,
                 functionDescriptor: lintFunction.functionName,
                 // TODO: which location to use, istanbul's or ESLint's? -> add log if different
@@ -68,7 +76,7 @@ export class CrapReportService {
                 },
             };
 
-            this.logger.debug(`Computed CRAP score for '${functionName}'.`, {
+            this.logger.debug(`Computed CRAP score for '${lintFunction.functionName}'.`, {
                 coverage,
                 complexity,
                 crapScore,

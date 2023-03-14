@@ -1,4 +1,5 @@
-import { FileCoverageData, Location, Range } from "istanbul-lib-coverage";
+import { FileCoverageData } from "istanbul-lib-coverage";
+import { locationIsInRange } from "./location-in-range.js";
 
 export function getCoverageForFunction({
     functionId,
@@ -24,24 +25,4 @@ export function getCoverageForFunction({
         covered: statementCoverage.filter((coverage) => coverage > 0).length,
         total: statementCoverage.length, // FIXME: can totalStatements be 0?
     };
-}
-
-/**
- * Determines if `location` is within `range`.
- *
- * Has undefined behaviour if `column` is `null`, as `end` of `statementMap` sometimes seem to have.
- * Use only with `start` location.
- */
-function locationIsInRange({ location, range }: { location: Location; range: Range }) {
-    if (location.line < range.start.line || location.line > range.end.line) {
-        return false;
-    }
-    if (location.line === range.start.line && location.column < range.start.column) {
-        return false;
-    }
-    if (location.line === range.end.line && location.column > range.end.column) {
-        return false;
-    }
-
-    return true;
 }
