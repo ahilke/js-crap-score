@@ -6,7 +6,7 @@ export function getCoverageForFunction({
 }: {
     functionId: string;
     fileCoverage: FileCoverageData;
-}): number {
+}): { covered: number; total: number } {
     // TODO: this can probably be more efficient - e.g., stop after first statement out of range
     const statementsIdsInFunction = Object.entries(fileCoverage.statementMap)
         .filter(
@@ -19,10 +19,11 @@ export function getCoverageForFunction({
         )
         .map(([id]) => id);
     const statementCoverage = statementsIdsInFunction.map((id) => fileCoverage.s[id]);
-    const totalStatements = statementCoverage.length;
-    const coveredStatements = statementCoverage.filter((coverage) => coverage > 0).length;
 
-    return coveredStatements / totalStatements; // FIXME: can totalStatements be 0?
+    return {
+        covered: statementCoverage.filter((coverage) => coverage > 0).length,
+        total: statementCoverage.length, // FIXME: can totalStatements be 0?
+    };
 }
 
 /**
