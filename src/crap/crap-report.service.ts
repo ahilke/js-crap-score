@@ -28,9 +28,9 @@ export class CrapReportService {
                 const coverage = coverageData.covered / coverageData.total;
 
                 const jshintFunctionData = jshintData?.find(({ name }) => name === functionName);
-                const complexity = jshintFunctionData?.metrics.complexity;
 
-                if (complexity) {
+                if (jshintFunctionData) {
+                    const complexity = jshintFunctionData.metrics.complexity;
                     const crapScore = crap({ complexity, coverage });
                     result[sourcePath][functionName] = {
                         complexity,
@@ -57,15 +57,19 @@ export class CrapReportService {
 }
 
 export interface CrapReport {
-    [sourcePath: string]: {
-        [functionName: string]: {
-            complexity: number;
-            statements: {
-                covered: number;
-                total: number;
-                coverage: number;
-                crap: number;
-            };
-        };
+    [sourcePath: string]: CrapFile;
+}
+
+export interface CrapFile {
+    [functionName: string]: CrapFunction;
+}
+
+export interface CrapFunction {
+    complexity: number;
+    statements: {
+        covered: number;
+        total: number;
+        coverage: number;
+        crap: number;
     };
 }
