@@ -5,6 +5,13 @@ export class MyClass {
      */
     private static isTest: boolean = process.env.NODE_ENV === "test";
 
+    private checkIfTest = (): boolean => {
+        if (MyClass.isTest) {
+            return true;
+        }
+        return false;
+    };
+
     private static supportedLanguages: string[];
 
     /*

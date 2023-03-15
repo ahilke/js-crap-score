@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData, FunctionMapping } from "istanbul-lib-coverage";
-import { ComplexityService, LintMessage } from "./complexity.service.js";
+import { ComplexityService, FunctionComplexity } from "./complexity.service.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
@@ -94,8 +94,8 @@ export class CrapReportService {
         lintReport,
     }: {
         coverageFunction: FunctionMapping;
-        lintReport: Array<LintMessage | null>;
-    }): LintMessage | null {
+        lintReport: Array<FunctionComplexity | null>;
+    }): FunctionComplexity | null {
         const coverageFunctionStartLine = coverageFunction.decl.start.line;
         const matchedByStartLine = lintReport.filter((lintFunction) => {
             if (!lintFunction) {

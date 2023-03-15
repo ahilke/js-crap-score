@@ -2,7 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
 import { Location } from "./location-in-range.js";
 
-export interface LintMessage {
+export interface FunctionComplexity {
     start: Location;
     end: {
         line: number | undefined;
@@ -45,10 +45,10 @@ export class ComplexityService {
      *
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
-    public async getComplexity({ sourceCode }: { sourceCode: string }): Promise<Array<LintMessage | null>> {
+    public async getComplexity({ sourceCode }: { sourceCode: string }): Promise<Array<FunctionComplexity>> {
         const [result] = await this.eslint.lintText(sourceCode);
 
-        return result.messages.map((messageData) => {
+        const functionComplexities: Array<FunctionComplexity | null> = result.messages.map((messageData) => {
             const matches = messageData.message.match(this.errorRegex);
             const complexity = matches?.groups?.complexity;
             const functionName = matches?.groups?.name;
@@ -71,5 +71,23 @@ export class ComplexityService {
                 functionName,
             };
         });
+
+        return functionComplexities.filter<FunctionComplexity>((message): message is FunctionComplexity =>
+            this.isFunctionInCoverageReport(message),
+        );
+    }
+
+    /**
+     * Determines whether a lint message should be further processed.
+     *
+     * Excludes class field initializers. Initializers that are also functions are reported by ESLint
+     *  with the same range as the function, but complexity 1.
+     */
+    private isFunctionInCoverageReport(message: FunctionComplexity | null): boolean {
+        if (!message) {
+            return false;
+        }
+
+        return message.functionName !== "Class field initializer";
     }
 }
