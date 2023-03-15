@@ -31,8 +31,8 @@ describe("anonymous", () => {
                 line: 1,
                 complexity: 2,
                 statements: {
-                    covered: 1,
-                    total: 1,
+                    covered: 2,
+                    total: 2,
                     coverage: 1,
                     crap: 2,
                 },

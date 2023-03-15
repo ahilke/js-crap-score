@@ -60,7 +60,9 @@ export class CrapReportService {
                 functionId: key,
                 fileCoverage,
             });
-            const coverage = coverageData.covered / coverageData.total;
+            const { covered: coveredStatements, total: totalStatements } = coverageData;
+            const coverage = totalStatements === 0 ? 1 : coveredStatements / totalStatements;
+
             const complexity = lintFunction?.complexity;
 
             const crapScore = crap({ complexity, coverage });
