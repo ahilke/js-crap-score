@@ -1,18 +1,23 @@
-import { describe, expect, test } from "@jest/globals";
-import { findFileInCrapReport, getCrapReport } from "./crap-report.js";
+import { describe, test } from "@jest/globals";
+import { testCrapFunctionReport } from "./crap-report.js";
 
 describe("switch", () => {
-    test("switchCase", async () => {
-        const crapReport = await getCrapReport();
-        const crapFile = findFileInCrapReport(crapReport, "test-data/switch.ts");
-
-        expect(crapFile?.switchCase).toBeDefined();
-        expect(crapFile?.switchCase.complexity).toBe(3);
-        expect(crapFile?.switchCase.statements).toEqual({
-            covered: 3,
-            total: 4,
-            coverage: 0.75,
-            crap: 3.140625,
-        });
-    });
+    test(
+        "fullyCovered",
+        testCrapFunctionReport({
+            filePath: "switch.ts",
+            istanbulFunctionName: "switchCase",
+            expectedReport: {
+                functionDescriptor: "Function 'switchCase'",
+                line: 1,
+                complexity: 3,
+                statements: {
+                    covered: 3,
+                    total: 4,
+                    coverage: 0.75,
+                    crap: 3.140625,
+                },
+            },
+        }),
+    );
 });

@@ -1,49 +1,80 @@
-import { describe, expect, test } from "@jest/globals";
-import { findFileInCrapReport, getCrapReport } from "./crap-report.js";
+import { describe, test } from "@jest/globals";
+import { testCrapFunctionReport } from "./crap-report.js";
 
 describe("if-else", () => {
-    test("uncovered", async () => {
-        const crapReport = await getCrapReport();
-        const crapFile = findFileInCrapReport(crapReport, "test-data/if-else/uncovered.ts");
+    test(
+        "uncovered",
+        testCrapFunctionReport({
+            filePath: "if-else/uncovered.ts",
+            istanbulFunctionName: "uncovered",
+            expectedReport: {
+                functionDescriptor: "Function 'uncovered'",
+                line: 1,
+                complexity: 2,
+                statements: {
+                    covered: 0,
+                    total: 3,
+                    coverage: 0,
+                    crap: 6,
+                },
+            },
+        }),
+    );
 
-        expect(crapFile?.uncovered).toBeDefined();
-        expect(crapFile?.uncovered.complexity).toBe(2);
-        expect(crapFile?.uncovered.statements).toEqual({
-            covered: 0,
-            total: 3,
-            coverage: 0,
-            crap: 6,
-        });
-    });
+    test(
+        "ifCovered",
+        testCrapFunctionReport({
+            filePath: "if-else/if-covered.ts",
+            istanbulFunctionName: "ifCovered",
+            expectedReport: {
+                functionDescriptor: "Function 'ifCovered'",
+                line: 1,
+                complexity: 2,
+                statements: {
+                    covered: 2,
+                    total: 3,
+                    coverage: 0.6666666666666666,
+                    crap: 2.1481481481481484,
+                },
+            },
+        }),
+    );
 
-    test.each([
-        ["ifCovered", "if-covered"],
-        ["elseCovered", "else-covered"],
-    ])("%s", async (functionName, fileName) => {
-        const crapReport = await getCrapReport();
-        const crapFile = findFileInCrapReport(crapReport, `test-data/if-else/${fileName}.ts`);
+    test(
+        "elseCovered",
+        testCrapFunctionReport({
+            filePath: "if-else/else-covered.ts",
+            istanbulFunctionName: "elseCovered",
+            expectedReport: {
+                functionDescriptor: "Function 'elseCovered'",
+                line: 1,
+                complexity: 2,
+                statements: {
+                    covered: 2,
+                    total: 3,
+                    coverage: 0.6666666666666666,
+                    crap: 2.1481481481481484,
+                },
+            },
+        }),
+    );
 
-        expect(crapFile?.[functionName]).toBeDefined();
-        expect(crapFile?.[functionName].complexity).toBe(2);
-        expect(crapFile?.[functionName].statements).toEqual({
-            covered: 2,
-            total: 3,
-            coverage: 0.6666666666666666,
-            crap: 2.1481481481481484,
-        });
-    });
-
-    test("fullyCovered", async () => {
-        const crapReport = await getCrapReport();
-        const crapFile = findFileInCrapReport(crapReport, "test-data/if-else/fully-covered.ts");
-
-        expect(crapFile?.fullyCovered).toBeDefined();
-        expect(crapFile?.fullyCovered.complexity).toBe(2);
-        expect(crapFile?.fullyCovered.statements).toEqual({
-            covered: 3,
-            total: 3,
-            coverage: 1,
-            crap: 2,
-        });
-    });
+    test(
+        "fullyCovered",
+        testCrapFunctionReport({
+            filePath: "if-else/fully-covered.ts",
+            istanbulFunctionName: "fullyCovered",
+            expectedReport: {
+                functionDescriptor: "Function 'fullyCovered'",
+                line: 1,
+                complexity: 2,
+                statements: {
+                    covered: 3,
+                    total: 3,
+                    coverage: 1,
+                    crap: 2,
+                },
+            },
+        }),
+    );
 });
