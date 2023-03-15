@@ -1,11 +1,39 @@
+import { expect } from "@jest/globals";
 import { Test } from "@nestjs/testing";
-import { CrapFile, CrapReport, CrapReportService } from "../crap-report.service.js";
+import { CrapFile, CrapFunction, CrapReport, CrapReportService } from "../crap-report.service.js";
 import { CrapModule } from "../crap.module.js";
 import { FileSystemService } from "../file-system.service.js";
 
 let crapReport: CrapReport | undefined;
 
-export async function getCrapReport(): Promise<CrapReport> {
+/**
+ * Standardized test case to assert CRAP report for a given function.
+ *
+ * @param filePath              Path to the file containing the function relative to `test-data`.
+ * @param istanbulFunctionName  Name of the function as reported by istanbul in `fnMap`.
+ * @param expectedReport        Expected CRAP report for the function.
+ */
+export function testCrapFunctionReport({
+    filePath,
+    istanbulFunctionName,
+    expectedReport,
+}: {
+    filePath: string;
+    istanbulFunctionName: string;
+    expectedReport: CrapFunction;
+}) {
+    return async () => {
+        const crapReport = await getCrapReport();
+        const crapFile = findFileInCrapReport(crapReport, `test-data/${filePath}`);
+
+        expect(crapFile).toBeDefined();
+        // Asserting keys, as this gives a better error message if it fails rather than just checking `toBeDefined()`
+        expect(Object.keys(crapFile!)).toContain(istanbulFunctionName);
+        expect(crapFile?.[istanbulFunctionName]).toStrictEqual(expectedReport);
+    };
+}
+
+async function getCrapReport(): Promise<CrapReport> {
     if (crapReport) {
         return crapReport;
     }
@@ -21,7 +49,7 @@ export async function getCrapReport(): Promise<CrapReport> {
     return crapReportService.createReport({ testCoverage: coverageReport });
 }
 
-export function findFileInCrapReport(crapReport: CrapReport, projectPath: string): CrapFile | undefined {
+function findFileInCrapReport(crapReport: CrapReport, projectPath: string): CrapFile | undefined {
     const sourcePath = Object.keys(crapReport).find((sourcePath) => sourcePath.endsWith(projectPath));
     return sourcePath ? crapReport[sourcePath] : undefined;
 }
