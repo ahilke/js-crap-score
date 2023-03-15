@@ -20,7 +20,7 @@ export class ComputeCrapCommand extends CommandRunner {
         const testCoveragePath = await this.getTestCoveragePath(inputs);
         const coverageReport = this.fileSystemService.loadCoverageReport(testCoveragePath);
 
-        const crapReport = this.crapReportService.createReport({ testCoverage: coverageReport });
+        const crapReport = await this.crapReportService.createReport({ testCoverage: coverageReport });
         this.logger.log(crapReport);
     }
 

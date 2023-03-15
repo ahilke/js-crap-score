@@ -7,12 +7,12 @@ describe("switch", () => {
         const crapFile = findFileInCrapReport(crapReport, "test-data/switch.ts");
 
         expect(crapFile?.switchCase).toBeDefined();
-        expect(crapFile?.switchCase.complexity).toBe(1);
+        expect(crapFile?.switchCase.complexity).toBe(3);
         expect(crapFile?.switchCase.statements).toEqual({
             covered: 3,
             total: 4,
             coverage: 0.75,
-            crap: 1.015625,
+            crap: 3.140625,
         });
     });
 });

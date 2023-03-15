@@ -42,7 +42,8 @@
         "@nestjs/cli": "^9.2.0",
         "@nestjs/common": "^9.3.9",
         "@nestjs/core": "^9.3.9",
-        "jshint": "^2.13.6",
+        "@typescript-eslint/parser": "^5.55.0",
+        "eslint": "^8.36.0",
         "nest-commander": "^3.6.1",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.8.0"
