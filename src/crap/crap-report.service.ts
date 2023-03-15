@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { CoverageMapData, FileCoverageData } from "istanbul-lib-coverage";
-import { ComplexityService } from "./complexity.service.js";
+import { CoverageMapData, FileCoverageData, FunctionMapping } from "istanbul-lib-coverage";
+import { ComplexityService, LintMessage } from "./complexity.service.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
@@ -43,14 +43,9 @@ export class CrapReportService {
         const source = this.fileSystemService.loadSourceFile(sourcePath);
 
         const lintReport = await this.complexityService.getComplexity({ sourceCode: source });
-        if (lintReport.length !== Object.keys(fnMap).length) {
-            this.logger.error(`ESLint and istanbul report differing number of functions for file '${sourcePath}'.`);
-            return {};
-        }
-
-        Object.keys(fnMap).forEach((key, index) => {
+        Object.keys(fnMap).forEach((key) => {
             const coverageFunction = fnMap[key];
-            const lintFunction = lintReport[index];
+            const lintFunction = this.getLintFunctionForCoverageFunction({ coverageFunction, lintReport });
             if (!lintFunction) {
                 this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`);
                 return;
@@ -63,7 +58,7 @@ export class CrapReportService {
             const { covered: coveredStatements, total: totalStatements } = coverageData;
             const coverage = totalStatements === 0 ? 1 : coveredStatements / totalStatements;
 
-            const complexity = lintFunction?.complexity;
+            const complexity = lintFunction.complexity;
 
             const crapScore = crap({ complexity, coverage });
 
@@ -90,6 +85,35 @@ export class CrapReportService {
         });
 
         return result;
+    }
+
+    private getLintFunctionForCoverageFunction({
+        coverageFunction,
+        lintReport,
+    }: {
+        coverageFunction: FunctionMapping;
+        lintReport: Array<LintMessage | null>;
+    }): LintMessage | null {
+        const coverageFunctionStartLine = coverageFunction.decl.start.line;
+        const matchedByStartLine = lintReport.filter((lintFunction) => {
+            if (!lintFunction) {
+                return false;
+            }
+
+            return lintFunction.line === coverageFunctionStartLine;
+        });
+
+        if (matchedByStartLine.length !== 1) {
+            this.logger.error(
+                `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
+                {
+                    found: matchedByStartLine,
+                },
+            );
+            return null;
+        }
+
+        return matchedByStartLine[0];
     }
 }
 

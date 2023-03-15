@@ -1,6 +1,12 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
 
+export interface LintMessage {
+    line: number;
+    complexity: number;
+    functionName: string;
+}
+
 @Injectable()
 export class ComplexityService {
     /**
@@ -26,7 +32,6 @@ export class ComplexityService {
 
     public constructor(private readonly logger: Logger) {}
 
-    // TODO: only return used attributes and type it
     /**
      * Gets cyclomatic complexity from ESLint.
      *
@@ -35,7 +40,7 @@ export class ComplexityService {
      *
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
-    public async getComplexity({ sourceCode }: { sourceCode: string }) {
+    public async getComplexity({ sourceCode }: { sourceCode: string }): Promise<Array<LintMessage | null>> {
         const [result] = await this.eslint.lintText(sourceCode);
 
         return result.messages.map((messageData) => {
@@ -49,7 +54,7 @@ export class ComplexityService {
             }
 
             return {
-                ...messageData,
+                line: messageData.line,
                 complexity: parseInt(complexity, 10),
                 functionName,
             };
