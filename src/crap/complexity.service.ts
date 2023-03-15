@@ -10,6 +10,12 @@ export class ComplexityService {
 
     private eslint = new ESLint({
         useEslintrc: false,
+        /*
+         * Disable ESLint comments. This solves multiple problems:
+         *  1. A disable comment on an unknown rule would cause an error, see https://stackoverflow.com/a/64650648/10380981.
+         *  2. A disable comment on the `complexity` rule would prevent us from detecting the complexity.
+         */
+        allowInlineConfig: false,
         overrideConfig: {
             parser: "@typescript-eslint/parser",
             rules: {
