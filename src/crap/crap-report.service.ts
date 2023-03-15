@@ -1,13 +1,17 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData } from "istanbul-lib-coverage";
-import { getComplexity } from "../command/eslint-complexity.js";
+import { ComplexityService } from "./complexity.service.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
 
 @Injectable()
 export class CrapReportService {
-    public constructor(private readonly logger: Logger, private readonly fileSystemService: FileSystemService) {}
+    public constructor(
+        private readonly logger: Logger,
+        private readonly fileSystemService: FileSystemService,
+        private readonly complexityService: ComplexityService,
+    ) {}
 
     public async createReport({ testCoverage }: { testCoverage: CoverageMapData }): Promise<CrapReport> {
         const result: CrapReport = {};
@@ -38,7 +42,7 @@ export class CrapReportService {
         const { fnMap, path: sourcePath } = fileCoverage;
         const source = this.fileSystemService.loadSourceFile(sourcePath);
 
-        const lintReport = await getComplexity({ sourceCode: source });
+        const lintReport = await this.complexityService.getComplexity({ sourceCode: source });
         if (lintReport.length !== Object.keys(fnMap).length) {
             this.logger.error(`ESLint and istanbul report differing number of functions for file '${sourcePath}'.`);
             return {};
@@ -47,6 +51,10 @@ export class CrapReportService {
         Object.keys(fnMap).forEach((key, index) => {
             const coverageFunction = fnMap[key];
             const lintFunction = lintReport[index];
+            if (!lintFunction) {
+                this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`);
+                return;
+            }
 
             const coverageData = getCoverageForFunction({
                 functionId: key,
@@ -54,10 +62,6 @@ export class CrapReportService {
             });
             const coverage = coverageData.covered / coverageData.total;
             const complexity = lintFunction?.complexity;
-            if (!complexity) {
-                this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`);
-                return;
-            }
 
             const crapScore = crap({ complexity, coverage });
 

@@ -1,0 +1,52 @@
+import { Injectable, Logger } from "@nestjs/common";
+import { ESLint } from "eslint";
+
+@Injectable()
+export class ComplexityService {
+    /**
+     * @see https://github.com/eslint/eslint/blob/main/lib/rules/complexity.js - source of the `complexity` rule
+     */
+    private errorRegex = /(?<name>.*) has a complexity of (?<complexity>\d*)./;
+
+    private eslint = new ESLint({
+        useEslintrc: false,
+        overrideConfig: {
+            parser: "@typescript-eslint/parser",
+            rules: {
+                complexity: ["error", { max: 0 }],
+            },
+        },
+    });
+
+    public constructor(private readonly logger: Logger) {}
+
+    // TODO: only return used attributes and type it
+    /**
+     * Gets cyclomatic complexity from ESLint.
+     *
+     * Note that `lintText` returns an array despite there being only one lint result
+     * in order to keep the interfaces between this and the eslint.lintFiles() method similar.
+     *
+     * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
+     */
+    public async getComplexity({ sourceCode }: { sourceCode: string }) {
+        const [result] = await this.eslint.lintText(sourceCode);
+
+        return result.messages.map((messageData) => {
+            const matches = messageData.message.match(this.errorRegex);
+            const complexity = matches?.groups?.complexity;
+            const functionName = matches?.groups?.name;
+
+            if (!complexity || !functionName) {
+                this.logger.error("Could not compute complexity.", { messageData });
+                return null;
+            }
+
+            return {
+                ...messageData,
+                complexity: parseInt(complexity, 10),
+                functionName,
+            };
+        });
+    }
+}
