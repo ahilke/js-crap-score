@@ -1,9 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData } from "istanbul-lib-coverage";
 import { getComplexity } from "../command/eslint-complexity.js";
-import { crap } from "../computation/crap-score.js";
-import { getCoverageForFunction } from "../computation/function-coverage.js";
+import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
+import { getCoverageForFunction } from "./function-coverage.js";
 
 @Injectable()
 export class CrapReportService {

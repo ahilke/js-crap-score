@@ -1,7 +1,7 @@
 import { describe, test, expect } from "@jest/globals";
-import { elseCovered } from "./elseCovered.js";
-import { fullyCovered } from "./fullyCovered.js";
-import { ifCovered } from "./ifCovered.js";
+import { elseCovered } from "./else-covered.js";
+import { fullyCovered } from "./fully-covered.js";
+import { ifCovered } from "./if-covered.js";
 
 describe("if-else", () => {
     describe("ifCovered", () => {
