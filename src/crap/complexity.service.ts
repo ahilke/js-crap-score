@@ -1,8 +1,13 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
+import { Location } from "./location-in-range.js";
 
 export interface LintMessage {
-    line: number;
+    start: Location;
+    end: {
+        line: number | undefined;
+        column: number | undefined;
+    };
     complexity: number;
     functionName: string;
 }
@@ -54,7 +59,14 @@ export class ComplexityService {
             }
 
             return {
-                line: messageData.line,
+                start: {
+                    line: messageData.line,
+                    column: messageData.column,
+                },
+                end: {
+                    line: messageData.endLine,
+                    column: messageData.endColumn,
+                },
                 complexity: parseInt(complexity, 10),
                 functionName,
             };

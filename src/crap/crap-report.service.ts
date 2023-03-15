@@ -47,7 +47,9 @@ export class CrapReportService {
             const coverageFunction = fnMap[key];
             const lintFunction = this.getLintFunctionForCoverageFunction({ coverageFunction, lintReport });
             if (!lintFunction) {
-                this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`);
+                this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`, {
+                    file: fileCoverage.path,
+                });
                 return;
             }
 
@@ -69,7 +71,7 @@ export class CrapReportService {
                 complexity,
                 functionDescriptor: lintFunction.functionName,
                 // TODO: which location to use, istanbul's or ESLint's? -> add log if different
-                line: lintFunction.line,
+                line: lintFunction.start.line,
                 statements: {
                     ...coverageData,
                     coverage,
@@ -100,7 +102,7 @@ export class CrapReportService {
                 return false;
             }
 
-            return lintFunction.line === coverageFunctionStartLine;
+            return lintFunction.start.line === coverageFunctionStartLine;
         });
 
         if (matchedByStartLine.length !== 1) {
@@ -108,6 +110,7 @@ export class CrapReportService {
                 `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
                 {
                     found: matchedByStartLine,
+                    all: lintReport,
                 },
             );
             return null;

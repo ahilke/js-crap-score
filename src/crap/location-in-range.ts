@@ -1,18 +1,27 @@
 /**
- * Determines if `location` is within `range`.
+ * Determines if given location is within given range.
  *
- * Has undefined behaviour if `column` is `null`, as `end` of `statementMap` sometimes seem to have.
- * Use only with `start` location.
+ * Falls back to optimistic comparison on line if column is undefined.
+ *
+ * @param location  Location to check.
+ * @param range     Range to check against.
+ * @returns         True if location is within range, false otherwise.
  */
 export function locationIsInRange({ location, range }: { location: Location; range: Range }): boolean {
     if (location.line < range.start.line || location.line > range.end.line) {
         return false;
     }
-    if (location.line === range.start.line && location.column < range.start.column) {
-        return false;
+
+    if (!location.column) {
+        return true;
     }
-    if (location.line === range.end.line && location.column > range.end.column) {
-        return false;
+
+    if (range.start.column && location.line === range.start.line) {
+        return location.column >= range.start.column;
+    }
+
+    if (range.end.column && location.line === range.end.line) {
+        return location.column <= range.end.column;
     }
 
     return true;
@@ -20,7 +29,7 @@ export function locationIsInRange({ location, range }: { location: Location; ran
 
 export interface Location {
     line: number;
-    column: number;
+    column: number | undefined;
 }
 
 export interface Range {
