@@ -8,7 +8,7 @@
 
         // Language
         "target": "es2022",
-        "module": "es2022",
+        "module": "commonjs",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
 
@@ -20,6 +20,5 @@
         "strict": true,
         "exactOptionalPropertyTypes": true,
         "skipLibCheck": true
-    },
-    "include": ["./src/"]
+    }
 }

@@ -67,7 +67,7 @@ describe("no-op", () => {
             filePath: "no-op/function-expression.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Arrow function",
+                functionDescriptor: "Arrow function 'noOp'",
                 line: 1,
                 complexity: 1,
                 statements: {

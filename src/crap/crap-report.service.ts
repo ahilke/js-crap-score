@@ -2,16 +2,11 @@ import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData, FunctionMapping } from "istanbul-lib-coverage";
 import { ComplexityService, FunctionComplexity } from "./complexity.service.js";
 import { crap } from "./crap-score.js";
-import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
 
 @Injectable()
 export class CrapReportService {
-    public constructor(
-        private readonly logger: Logger,
-        private readonly fileSystemService: FileSystemService,
-        private readonly complexityService: ComplexityService,
-    ) {}
+    public constructor(private readonly logger: Logger, private readonly complexityService: ComplexityService) {}
 
     public async createReport({ testCoverage }: { testCoverage: CoverageMapData }): Promise<CrapReport> {
         const result: CrapReport = {};
@@ -40,9 +35,8 @@ export class CrapReportService {
         const result: CrapFile = {};
 
         const { fnMap, path: sourcePath } = fileCoverage;
-        const source = this.fileSystemService.loadSourceFile(sourcePath);
 
-        const lintReport = await this.complexityService.getComplexity({ sourceCode: source });
+        const lintReport = await this.complexityService.getComplexity({ sourcePath });
         Object.keys(fnMap).forEach((key) => {
             const coverageFunction = fnMap[key];
             const lintFunction = this.getLintFunctionForCoverageFunction({ coverageFunction, lintReport });

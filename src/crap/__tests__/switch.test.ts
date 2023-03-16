@@ -3,7 +3,7 @@ import { testCrapFunctionReport } from "./crap-report.js";
 
 describe("switch", () => {
     test(
-        "fullyCovered",
+        "switchCase",
         testCrapFunctionReport({
             filePath: "switch.ts",
             istanbulFunctionName: "switchCase",

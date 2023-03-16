@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
+import { FileSystemService } from "./file-system.service.js";
 import { Location } from "./location-in-range.js";
 
 export interface FunctionComplexity {
@@ -17,7 +18,8 @@ export class ComplexityService {
     /**
      * @see https://github.com/eslint/eslint/blob/main/lib/rules/complexity.js - source of the `complexity` rule
      */
-    private errorRegex = /(?<name>.*) has a complexity of (?<complexity>\d*)./;
+    private complexityRegex = /(?<name>.*) has a complexity of (?<complexity>\d*)\./;
+    private enumRegex = /TypeScript Enum (?<name>.*)\./;
 
     private eslint = new ESLint({
         useEslintrc: false,
@@ -29,13 +31,14 @@ export class ComplexityService {
         allowInlineConfig: false,
         overrideConfig: {
             parser: "@typescript-eslint/parser",
+            plugins: ["crap"],
             rules: {
-                complexity: ["error", { max: 0 }],
+                "crap/complexity": "error",
             },
         },
     });
 
-    public constructor(private readonly logger: Logger) {}
+    public constructor(private readonly fileSystemService: FileSystemService, private readonly logger: Logger) {}
 
     /**
      * Gets cyclomatic complexity from ESLint.
@@ -45,16 +48,28 @@ export class ComplexityService {
      *
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
-    public async getComplexity({ sourceCode }: { sourceCode: string }): Promise<Array<FunctionComplexity>> {
-        const [result] = await this.eslint.lintText(sourceCode);
+    public async getComplexity({ sourcePath }: { sourcePath: string }): Promise<Array<FunctionComplexity | null>> {
+        const source = this.fileSystemService.loadSourceFile(sourcePath);
+        const [result] = await this.eslint.lintText(source);
 
-        const functionComplexities: Array<FunctionComplexity | null> = result.messages.map((messageData) => {
-            const matches = messageData.message.match(this.errorRegex);
-            const complexity = matches?.groups?.complexity;
-            const functionName = matches?.groups?.name;
+        return result.messages.map((messageData) => {
+            let complexity: string | undefined;
+            let functionName: string | undefined;
+            if (messageData.messageId === "enum") {
+                const matches = messageData.message.match(this.enumRegex);
+                complexity = "1";
+                functionName = matches?.groups?.name;
+            } else if (messageData.messageId === "complex") {
+                const matches = messageData.message.match(this.complexityRegex);
+                complexity = matches?.groups?.complexity;
+                functionName = matches?.groups?.name;
+            } else {
+                this.logger.error("Unknown message ID.", { messageData, path: sourcePath });
+                return null;
+            }
 
             if (!complexity || !functionName) {
-                this.logger.error("Could not compute complexity.", { messageData });
+                this.logger.error("Could not compute complexity.", { messageData, path: sourcePath });
                 return null;
             }
 
@@ -71,23 +86,5 @@ export class ComplexityService {
                 functionName,
             };
         });
-
-        return functionComplexities.filter<FunctionComplexity>((message): message is FunctionComplexity =>
-            this.isFunctionInCoverageReport(message),
-        );
-    }
-
-    /**
-     * Determines whether a lint message should be further processed.
-     *
-     * Excludes class field initializers. Initializers that are also functions are reported by ESLint
-     *  with the same range as the function, but complexity 1.
-     */
-    private isFunctionInCoverageReport(message: FunctionComplexity | null): boolean {
-        if (!message) {
-            return false;
-        }
-
-        return message.functionName !== "Class field initializer";
     }
 }
