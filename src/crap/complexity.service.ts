@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
+import { FileSystemService } from "./file-system.service.js";
 import { Location } from "./location-in-range.js";
 
 export interface FunctionComplexity {
@@ -35,7 +36,7 @@ export class ComplexityService {
         },
     });
 
-    public constructor(private readonly logger: Logger) {}
+    public constructor(private readonly fileSystemService: FileSystemService, private readonly logger: Logger) {}
 
     /**
      * Gets cyclomatic complexity from ESLint.
@@ -45,8 +46,9 @@ export class ComplexityService {
      *
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
-    public async getComplexity({ sourceCode }: { sourceCode: string }): Promise<Array<FunctionComplexity>> {
-        const [result] = await this.eslint.lintText(sourceCode);
+    public async getComplexity({ sourcePath }: { sourcePath: string }): Promise<Array<FunctionComplexity>> {
+        const source = this.fileSystemService.loadSourceFile(sourcePath);
+        const [result] = await this.eslint.lintText(source);
 
         const functionComplexities: Array<FunctionComplexity | null> = result.messages.map((messageData) => {
             const matches = messageData.message.match(this.errorRegex);
@@ -54,7 +56,7 @@ export class ComplexityService {
             const functionName = matches?.groups?.name;
 
             if (!complexity || !functionName) {
-                this.logger.error("Could not compute complexity.", { messageData });
+                this.logger.error("Could not compute complexity.", { messageData, path: sourcePath });
                 return null;
             }
 
