@@ -64,18 +64,10 @@ export default {
             onCodePathEnd(codePath: any, node: any) {
                 const complexity = complexities.pop()!;
 
-                // TODO: exclude class-field initializer & static block
                 /*
                  * This rule only evaluates complexity of functions, so "program" is excluded.
-                 * Class field initializers and class static blocks are implicit functions. Therefore,
-                 * they shouldn't contribute to the enclosing function's complexity, but their
-                 * own complexity should be evaluated.
                  */
-                if (
-                    codePath.origin !== "function" &&
-                    codePath.origin !== "class-field-initializer" &&
-                    codePath.origin !== "class-static-block"
-                ) {
+                if (codePath.origin !== "function") {
                     return;
                 }
 

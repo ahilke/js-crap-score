@@ -48,11 +48,11 @@ export class ComplexityService {
      *
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
-    public async getComplexity({ sourcePath }: { sourcePath: string }): Promise<Array<FunctionComplexity>> {
+    public async getComplexity({ sourcePath }: { sourcePath: string }): Promise<Array<FunctionComplexity | null>> {
         const source = this.fileSystemService.loadSourceFile(sourcePath);
         const [result] = await this.eslint.lintText(source);
 
-        const functionComplexities: Array<FunctionComplexity | null> = result.messages.map((messageData) => {
+        return result.messages.map((messageData) => {
             let complexity: string | undefined;
             let functionName: string | undefined;
             if (messageData.messageId === "enum") {
@@ -86,23 +86,5 @@ export class ComplexityService {
                 functionName,
             };
         });
-
-        return functionComplexities.filter<FunctionComplexity>((message): message is FunctionComplexity =>
-            this.isFunctionInCoverageReport(message),
-        );
-    }
-
-    /**
-     * Determines whether a lint message should be further processed.
-     *
-     * Excludes class field initializers. Initializers that are also functions are reported by ESLint
-     *  with the same range as the function, but complexity 1.
-     */
-    private isFunctionInCoverageReport(message: FunctionComplexity | null): boolean {
-        if (!message) {
-            return false;
-        }
-
-        return message.functionName !== "Class field initializer";
     }
 }
