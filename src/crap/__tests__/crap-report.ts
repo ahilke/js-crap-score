@@ -46,7 +46,8 @@ async function getCrapReport(): Promise<CrapReport> {
     const crapReportService = appModule.get(CrapReportService);
 
     const coverageReport = fileSystemService.loadCoverageReport("../../test-data/coverage/coverage-final.json");
-    return crapReportService.createReport({ testCoverage: coverageReport });
+    crapReport = await crapReportService.createReport({ testCoverage: coverageReport });
+    return crapReport;
 }
 
 function findFileInCrapReport(crapReport: CrapReport, projectPath: string): CrapFile | undefined {

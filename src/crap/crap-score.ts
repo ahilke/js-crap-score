@@ -6,9 +6,9 @@
  *
  * > complexity^2 * (1 - coverage)^3 + complexity
  *
- * where:
- *      - complexity is the cyclomatic complexity of the function
- *      - coverage is the statement coverage of the function between 0 (no coverage) and 1 (full coverage)
+ * @param complexity    Cyclomatic complexity of the function
+ * @param coverage      Statement coverage of the function between 0 (no coverage) and 1 (full coverage).
+ * @returns             CRAP score for the function.
  */
 export function crap({ complexity, coverage }: { complexity: number; coverage: number }): number {
     return complexity ** 2 * (1 - coverage) ** 3 + complexity;

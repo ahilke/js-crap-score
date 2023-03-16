@@ -1,5 +1,16 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
+import { Location } from "./location-in-range.js";
+
+export interface FunctionComplexity {
+    start: Location;
+    end: {
+        line: number | undefined;
+        column: number | undefined;
+    };
+    complexity: number;
+    functionName: string;
+}
 
 @Injectable()
 export class ComplexityService {
@@ -10,6 +21,12 @@ export class ComplexityService {
 
     private eslint = new ESLint({
         useEslintrc: false,
+        /*
+         * Disable ESLint comments. This solves multiple problems:
+         *  1. A disable comment on an unknown rule would cause an error, see https://stackoverflow.com/a/64650648/10380981.
+         *  2. A disable comment on the `complexity` rule would prevent us from detecting the complexity.
+         */
+        allowInlineConfig: false,
         overrideConfig: {
             parser: "@typescript-eslint/parser",
             rules: {
@@ -20,7 +37,6 @@ export class ComplexityService {
 
     public constructor(private readonly logger: Logger) {}
 
-    // TODO: only return used attributes and type it
     /**
      * Gets cyclomatic complexity from ESLint.
      *
@@ -29,10 +45,10 @@ export class ComplexityService {
      *
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
-    public async getComplexity({ sourceCode }: { sourceCode: string }) {
+    public async getComplexity({ sourceCode }: { sourceCode: string }): Promise<Array<FunctionComplexity>> {
         const [result] = await this.eslint.lintText(sourceCode);
 
-        return result.messages.map((messageData) => {
+        const functionComplexities: Array<FunctionComplexity | null> = result.messages.map((messageData) => {
             const matches = messageData.message.match(this.errorRegex);
             const complexity = matches?.groups?.complexity;
             const functionName = matches?.groups?.name;
@@ -43,10 +59,35 @@ export class ComplexityService {
             }
 
             return {
-                ...messageData,
+                start: {
+                    line: messageData.line,
+                    column: messageData.column,
+                },
+                end: {
+                    line: messageData.endLine,
+                    column: messageData.endColumn,
+                },
                 complexity: parseInt(complexity, 10),
                 functionName,
             };
         });
+
+        return functionComplexities.filter<FunctionComplexity>((message): message is FunctionComplexity =>
+            this.isFunctionInCoverageReport(message),
+        );
+    }
+
+    /**
+     * Determines whether a lint message should be further processed.
+     *
+     * Excludes class field initializers. Initializers that are also functions are reported by ESLint
+     *  with the same range as the function, but complexity 1.
+     */
+    private isFunctionInCoverageReport(message: FunctionComplexity | null): boolean {
+        if (!message) {
+            return false;
+        }
+
+        return message.functionName !== "Class field initializer";
     }
 }

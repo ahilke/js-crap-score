@@ -12,17 +12,16 @@ export function getCoverageForFunction({
     const statementsIdsInFunction = Object.entries(fileCoverage.statementMap)
         .filter(
             ([, { start, end }]) =>
-                // FIXME: this first check is weird, is there a better way to determine statements that belong to functions?
-                //          - especially for the "function definition" statement
-                //          - maybe always just +1 for total statements (also avoids division by 0), as each function has to be declared
+                locationIsInRange({ location: start, range: fileCoverage.fnMap[functionId].decl }) ||
                 locationIsInRange({ location: end, range: fileCoverage.fnMap[functionId].decl }) ||
-                locationIsInRange({ location: start, range: fileCoverage.fnMap[functionId].loc }),
+                locationIsInRange({ location: start, range: fileCoverage.fnMap[functionId].loc }) ||
+                locationIsInRange({ location: end, range: fileCoverage.fnMap[functionId].loc }),
         )
         .map(([id]) => id);
     const statementCoverage = statementsIdsInFunction.map((id) => fileCoverage.s[id]);
 
     return {
         covered: statementCoverage.filter((coverage) => coverage > 0).length,
-        total: statementCoverage.length, // FIXME: can totalStatements be 0?
+        total: statementCoverage.length,
     };
 }
