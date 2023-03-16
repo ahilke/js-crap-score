@@ -27,7 +27,7 @@ describe("anonymous", () => {
             filePath: "anonymous/function-expression.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Arrow function",
+                functionDescriptor: "Arrow function 'functionExpression'",
                 line: 1,
                 complexity: 2,
                 statements: {
