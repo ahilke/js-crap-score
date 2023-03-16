@@ -1,96 +1,38 @@
 /**
- * @fileoverview Counts the cyclomatic complexity of each function of the script. See http://en.wikipedia.org/wiki/Cyclomatic_complexity.
- * Counts the number of if, conditional, for, while, try, switch/case,
- * @author Patrick Brosset
+ * Based on `complexity` rule from ESLint, but modified for this project.
+ *
+ * @see https://github.com/eslint/eslint/blob/v8.36.0/lib/rules/complexity.js
  */
 
-"use strict";
+import { ASTUtils } from "@typescript-eslint/utils";
 
-//------------------------------------------------------------------------------
-// Requirements
-//------------------------------------------------------------------------------
+function upperCaseFirst(s: string): string {
+    if (s.length === 0) {
+        return s;
+    }
+    return s[0].toUpperCase() + s.slice(1);
+}
 
-const astUtils = require("./utils/ast-utils");
-const { upperCaseFirst } = require("../shared/string-utils");
+function isLogicalAssignmentOperator(operator: string): boolean {
+    return ["&&=", "||=", "??="].includes(operator);
+}
 
-//------------------------------------------------------------------------------
-// Rule Definition
-//------------------------------------------------------------------------------
-
-/** @type {import('../shared/types').Rule} */
-module.exports = {
+export default {
     meta: {
         type: "suggestion",
-
-        docs: {
-            description: "Enforce a maximum cyclomatic complexity allowed in a program",
-            recommended: false,
-            url: "https://eslint.org/docs/rules/complexity",
-        },
-
-        schema: [
-            {
-                oneOf: [
-                    {
-                        type: "integer",
-                        minimum: 0,
-                    },
-                    {
-                        type: "object",
-                        properties: {
-                            maximum: {
-                                type: "integer",
-                                minimum: 0,
-                            },
-                            max: {
-                                type: "integer",
-                                minimum: 0,
-                            },
-                        },
-                        additionalProperties: false,
-                    },
-                ],
-            },
-        ],
-
+        schema: [],
         messages: {
-            complex: "{{name}} has a complexity of {{complexity}}. Maximum allowed is {{max}}.",
+            complex: "{{name}} has a complexity of {{complexity}}.",
+            enum: "TypeScript Enum {{name}}.",
         },
     },
-
-    create(context) {
-        const option = context.options[0];
-        let THRESHOLD = 20;
-
-        if (
-            typeof option === "object" &&
-            (Object.prototype.hasOwnProperty.call(option, "maximum") ||
-                Object.prototype.hasOwnProperty.call(option, "max"))
-        ) {
-            THRESHOLD = option.maximum || option.max;
-        } else if (typeof option === "number") {
-            THRESHOLD = option;
-        }
-
-        //--------------------------------------------------------------------------
-        // Helpers
-        //--------------------------------------------------------------------------
-
+    create(context: any) {
         // Using a stack to store complexity per code path
-        const complexities = [];
+        const complexities: number[] = [];
 
-        /**
-         * Increase the complexity of the code path in context
-         * @returns {void}
-         * @private
-         */
-        function increaseComplexity() {
+        function increaseComplexity(): void {
             complexities[complexities.length - 1]++;
         }
-
-        //--------------------------------------------------------------------------
-        // Public API
-        //--------------------------------------------------------------------------
 
         return {
             onCodePathStart() {
@@ -113,15 +55,16 @@ module.exports = {
             "SwitchCase[test]": increaseComplexity,
 
             // Logical assignment operators have short-circuiting behavior
-            AssignmentExpression(node) {
-                if (astUtils.isLogicalAssignmentOperator(node.operator)) {
+            AssignmentExpression(node: any) {
+                if (isLogicalAssignmentOperator(node.operator)) {
                     increaseComplexity();
                 }
             },
 
-            onCodePathEnd(codePath, node) {
-                const complexity = complexities.pop();
+            onCodePathEnd(codePath: any, node: any) {
+                const complexity = complexities.pop()!;
 
+                // TODO: exclude class-field initializer & static block
                 /*
                  * This rule only evaluates complexity of functions, so "program" is excluded.
                  * Class field initializers and class static blocks are implicit functions. Therefore,
@@ -136,27 +79,35 @@ module.exports = {
                     return;
                 }
 
-                if (complexity > THRESHOLD) {
-                    let name;
-
-                    if (codePath.origin === "class-field-initializer") {
-                        name = "class field initializer";
-                    } else if (codePath.origin === "class-static-block") {
-                        name = "class static block";
-                    } else {
-                        name = astUtils.getFunctionNameWithKind(node);
-                    }
-
-                    context.report({
-                        node,
-                        messageId: "complex",
-                        data: {
-                            name: upperCaseFirst(name),
-                            complexity,
-                            max: THRESHOLD,
-                        },
-                    });
+                let name;
+                if (codePath.origin === "class-field-initializer") {
+                    name = "class field initializer";
+                } else if (codePath.origin === "class-static-block") {
+                    name = "class static block";
+                } else {
+                    name = ASTUtils.getFunctionNameWithKind(node);
                 }
+
+                context.report({
+                    node,
+                    messageId: "complex",
+                    data: {
+                        name: upperCaseFirst(name),
+                        complexity,
+                    },
+                });
+            },
+
+            // report enums, so that we can match them against the coverage data
+            TSEnumDeclaration: (node: any) => {
+                context.report({
+                    node,
+                    messageId: "enum",
+                    data: {
+                        name: `Enum '${node.id.name}'`,
+                        foo: 3,
+                    },
+                });
             },
         };
     },
