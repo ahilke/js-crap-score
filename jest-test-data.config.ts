@@ -13,7 +13,8 @@ const config = {
         "^.+\\.ts$": ["ts-jest", { useESM: true }],
     },
     testMatch: ["**/test-data/**/*.test.ts"],
-    collectCoverageFrom: ["test-data/**/*.ts"],
+    collectCoverageFrom: ["test-data/**/*.[jt]s"],
+    coveragePathIgnorePatterns: ["coverage/"],
     coverageDirectory: "./test-data/coverage",
     coverageReporters: ["json", "html"],
 } satisfies JestConfigWithTsJest;
