@@ -54,6 +54,17 @@ export class FileSystemService {
             this.logger.error(`Failed to write CRAP score report to "${path}".`, { error });
         }
     }
+
+    public async writeHtmlReport(path: string, report: string): Promise<void> {
+        try {
+            await mkdir(dirname(path), { recursive: true });
+            await writeFile(path, report);
+
+            this.logger.log(`Wrote HTML report to "${path}".`);
+        } catch (error) {
+            this.logger.error(`Failed to write HTML report to "${path}".`, { error });
+        }
+    }
 }
 
 export class LoadCoverageError extends Error {

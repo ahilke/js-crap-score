@@ -45,6 +45,7 @@
         "@typescript-eslint/parser": "^5.55.0",
         "eslint": "^8.36.0",
         "eslint-plugin-crap": "file:eslint-plugin-crap",
+        "handlebars": "^4.7.7",
         "nest-commander": "^3.6.1",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.8.0"
