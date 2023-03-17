@@ -8,7 +8,7 @@ describe("enum", () => {
             filePath: "enum.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Enum 'MyEnum'",
+                functionDescriptor: "enum 'MyEnum'",
                 line: 2,
                 complexity: 1,
                 statements: {
@@ -27,7 +27,7 @@ describe("enum", () => {
             filePath: "enum.ts",
             istanbulFunctionName: "reverseEnum",
             expectedReport: {
-                functionDescriptor: "Function 'reverseEnum'",
+                functionDescriptor: "function 'reverseEnum'",
                 line: 8,
                 complexity: 4,
                 statements: {

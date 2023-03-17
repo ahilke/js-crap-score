@@ -8,7 +8,7 @@ describe("eslint-comments", () => {
             filePath: "eslint-comments.ts",
             istanbulFunctionName: "tooComplex",
             expectedReport: {
-                functionDescriptor: "Function 'tooComplex'",
+                functionDescriptor: "function 'tooComplex'",
                 line: 2,
                 complexity: 7,
                 statements: {

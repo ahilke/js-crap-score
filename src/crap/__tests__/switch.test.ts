@@ -8,7 +8,7 @@ describe("switch", () => {
             filePath: "switch.ts",
             istanbulFunctionName: "switchCase",
             expectedReport: {
-                functionDescriptor: "Function 'switchCase'",
+                functionDescriptor: "function 'switchCase'",
                 line: 1,
                 complexity: 3,
                 statements: {

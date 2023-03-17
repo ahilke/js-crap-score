@@ -9,7 +9,7 @@ describe("no-op", () => {
                 filePath: "no-op/class.ts",
                 istanbulFunctionName: "(anonymous_0)",
                 expectedReport: {
-                    functionDescriptor: "Constructor",
+                    functionDescriptor: "constructor",
                     line: 2,
                     complexity: 1,
                     statements: {
@@ -28,7 +28,7 @@ describe("no-op", () => {
                 filePath: "no-op/class.ts",
                 istanbulFunctionName: "(anonymous_1)",
                 expectedReport: {
-                    functionDescriptor: "Method 'noOp'",
+                    functionDescriptor: "method 'noOp'",
                     line: 4,
                     complexity: 1,
                     statements: {
@@ -47,7 +47,7 @@ describe("no-op", () => {
                 filePath: "no-op/class.ts",
                 istanbulFunctionName: "(anonymous_2)",
                 expectedReport: {
-                    functionDescriptor: "Static method 'noOp'",
+                    functionDescriptor: "static method 'noOp'",
                     line: 6,
                     complexity: 1,
                     statements: {
@@ -67,7 +67,7 @@ describe("no-op", () => {
             filePath: "no-op/function-expression.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Arrow function 'noOp'",
+                functionDescriptor: "arrow function 'noOp'",
                 line: 1,
                 complexity: 1,
                 statements: {
@@ -86,7 +86,7 @@ describe("no-op", () => {
             filePath: "no-op/function.ts",
             istanbulFunctionName: "noOp",
             expectedReport: {
-                functionDescriptor: "Function 'noOp'",
+                functionDescriptor: "function 'noOp'",
                 line: 1,
                 complexity: 1,
                 statements: {

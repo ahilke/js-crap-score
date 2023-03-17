@@ -8,7 +8,7 @@ describe("anonymous", () => {
             filePath: "anonymous/class-function.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Method 'classFunction'",
+                functionDescriptor: "method 'classFunction'",
                 line: 3,
                 complexity: 3,
                 statements: {
@@ -27,7 +27,7 @@ describe("anonymous", () => {
             filePath: "anonymous/function-expression.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Arrow function 'functionExpression'",
+                functionDescriptor: "arrow function 'functionExpression'",
                 line: 1,
                 complexity: 2,
                 statements: {

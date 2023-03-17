@@ -8,7 +8,7 @@ describe("if-else", () => {
             filePath: "if-else/uncovered.ts",
             istanbulFunctionName: "uncovered",
             expectedReport: {
-                functionDescriptor: "Function 'uncovered'",
+                functionDescriptor: "function 'uncovered'",
                 line: 1,
                 complexity: 2,
                 statements: {
@@ -27,7 +27,7 @@ describe("if-else", () => {
             filePath: "if-else/if-covered.ts",
             istanbulFunctionName: "ifCovered",
             expectedReport: {
-                functionDescriptor: "Function 'ifCovered'",
+                functionDescriptor: "function 'ifCovered'",
                 line: 1,
                 complexity: 2,
                 statements: {
@@ -46,7 +46,7 @@ describe("if-else", () => {
             filePath: "if-else/else-covered.ts",
             istanbulFunctionName: "elseCovered",
             expectedReport: {
-                functionDescriptor: "Function 'elseCovered'",
+                functionDescriptor: "function 'elseCovered'",
                 line: 1,
                 complexity: 2,
                 statements: {
@@ -65,7 +65,7 @@ describe("if-else", () => {
             filePath: "if-else/fully-covered.ts",
             istanbulFunctionName: "fullyCovered",
             expectedReport: {
-                functionDescriptor: "Function 'fullyCovered'",
+                functionDescriptor: "function 'fullyCovered'",
                 line: 1,
                 complexity: 2,
                 statements: {

@@ -6,13 +6,6 @@
 
 import { ASTUtils } from "@typescript-eslint/utils";
 
-function upperCaseFirst(s: string): string {
-    if (s.length === 0) {
-        return s;
-    }
-    return s[0].toUpperCase() + s.slice(1);
-}
-
 function isLogicalAssignmentOperator(operator: string): boolean {
     return ["&&=", "||=", "??="].includes(operator);
 }
@@ -84,7 +77,7 @@ export default {
                     node,
                     messageId: "complex",
                     data: {
-                        name: upperCaseFirst(name),
+                        name,
                         complexity,
                     },
                 });
@@ -96,7 +89,7 @@ export default {
                     node,
                     messageId: "enum",
                     data: {
-                        name: `Enum '${node.id.name}'`,
+                        name: `enum '${node.id.name}'`,
                         foo: 3,
                     },
                 });

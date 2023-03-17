@@ -8,7 +8,7 @@ describe("class-field-initializer", () => {
             filePath: "class-initializer.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Method 'checkIfTest'",
+                functionDescriptor: "method 'checkIfTest'",
                 line: 8,
                 complexity: 2,
                 statements: {
@@ -27,7 +27,7 @@ describe("class-field-initializer", () => {
             filePath: "class-initializer.ts",
             istanbulFunctionName: "(anonymous_1)",
             expectedReport: {
-                functionDescriptor: "Method 'getSupportedLanguages'",
+                functionDescriptor: "method 'getSupportedLanguages'",
                 line: 25,
                 complexity: 1,
                 statements: {
