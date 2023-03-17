@@ -39,7 +39,7 @@ export class CrapReportService {
         );
 
         if (options?.writeReportAt) {
-            this.fileSystemService.writeCrapReport(options.writeReportAt, result);
+            await this.fileSystemService.writeCrapReport(options.writeReportAt, result);
         }
 
         return result;
