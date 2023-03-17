@@ -1,4 +1,3 @@
-import { Logger } from "@nestjs/common";
 import { CommandRunner, InquirerService, RootCommand } from "nest-commander";
 import { CrapReportService } from "../crap/crap-report.service.js";
 import { FileSystemService } from "../crap/file-system.service.js";
@@ -7,11 +6,12 @@ import { FileSystemService } from "../crap/file-system.service.js";
     arguments: "[testCoveragePath]",
 })
 export class ComputeCrapCommand extends CommandRunner {
+    private crapReportPath = "./crap-report.json";
+
     public constructor(
         private readonly inquirer: InquirerService,
         private readonly crapReportService: CrapReportService,
         private readonly fileSystemService: FileSystemService,
-        private readonly logger: Logger,
     ) {
         super();
     }
@@ -20,8 +20,10 @@ export class ComputeCrapCommand extends CommandRunner {
         const testCoveragePath = await this.getTestCoveragePath(inputs);
         const coverageReport = this.fileSystemService.loadCoverageReport(testCoveragePath);
 
-        const crapReport = await this.crapReportService.createReport({ testCoverage: coverageReport });
-        this.logger.log(crapReport);
+        await this.crapReportService.createReport({
+            testCoverage: coverageReport,
+            options: { writeReportAt: this.crapReportPath },
+        });
     }
 
     private async getTestCoveragePath(inputs: string[]): Promise<string> {

@@ -1,6 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { readFileSync } from "fs";
+import { writeFile } from "fs/promises";
 import { CoverageMapData } from "istanbul-lib-coverage";
+import { CrapReport } from "./crap-report.service.js";
 
 @Injectable()
 export class FileSystemService {
@@ -22,5 +24,15 @@ export class FileSystemService {
 
         this.logger.debug(`Loading source file from "${fileUrl}".`);
         return readFileSync(fileUrl, "utf-8");
+    }
+
+    public writeCrapReport(path: string, report: CrapReport): void {
+        try {
+            writeFile(path, JSON.stringify(report));
+
+            this.logger.log(`Wrote CRAP score report to "${path}".`);
+        } catch (error) {
+            this.logger.error(`Failed to write CRAP score report to "${path}".`, { error });
+        }
     }
 }

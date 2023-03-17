@@ -2,13 +2,32 @@ import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData, FunctionMapping } from "istanbul-lib-coverage";
 import { ComplexityService, FunctionComplexity } from "./complexity.service.js";
 import { crap } from "./crap-score.js";
+import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
+
+export interface CreateReportOptions {
+    /**
+     * Specifies path where the JSON report will be written to.
+     * If undefined, the report is returned without being written to disk.
+     */
+    writeReportAt?: string;
+}
 
 @Injectable()
 export class CrapReportService {
-    public constructor(private readonly logger: Logger, private readonly complexityService: ComplexityService) {}
+    public constructor(
+        private readonly complexityService: ComplexityService,
+        private readonly fileSystemService: FileSystemService,
+        private readonly logger: Logger,
+    ) {}
 
-    public async createReport({ testCoverage }: { testCoverage: CoverageMapData }): Promise<CrapReport> {
+    public async createReport({
+        testCoverage,
+        options,
+    }: {
+        testCoverage: CoverageMapData;
+        options?: CreateReportOptions;
+    }): Promise<CrapReport> {
         const result: CrapReport = {};
 
         await Promise.all(
@@ -18,6 +37,10 @@ export class CrapReportService {
                 result[sourcePath] = await this.processFile({ fileCoverage });
             }),
         );
+
+        if (options?.writeReportAt) {
+            this.fileSystemService.writeCrapReport(options.writeReportAt, result);
+        }
 
         return result;
     }
