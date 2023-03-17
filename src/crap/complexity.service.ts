@@ -49,7 +49,7 @@ export class ComplexityService {
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
     public async getComplexity({ sourcePath }: { sourcePath: string }): Promise<Array<FunctionComplexity | null>> {
-        const source = this.fileSystemService.loadSourceFile(sourcePath);
+        const source = await this.fileSystemService.loadSourceFile(sourcePath);
         const [result] = await this.eslint.lintText(source);
 
         return result.messages.map((messageData) => {

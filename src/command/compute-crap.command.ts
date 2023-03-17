@@ -18,7 +18,7 @@ export class ComputeCrapCommand extends CommandRunner {
 
     public async run(inputs: string[]): Promise<void> {
         const testCoveragePath = await this.getTestCoveragePath(inputs);
-        const coverageReport = this.fileSystemService.loadCoverageReport(testCoveragePath);
+        const coverageReport = await this.fileSystemService.loadCoverageReport(testCoveragePath);
 
         await this.crapReportService.createReport({
             testCoverage: coverageReport,

@@ -45,7 +45,7 @@ async function getCrapReport(): Promise<CrapReport> {
     const fileSystemService = appModule.get(FileSystemService);
     const crapReportService = appModule.get(CrapReportService);
 
-    const coverageReport = fileSystemService.loadCoverageReport("../../test-data/coverage/coverage-final.json");
+    const coverageReport = await fileSystemService.loadCoverageReport("../../test-data/coverage/coverage-final.json");
     crapReport = await crapReportService.createReport({ testCoverage: coverageReport });
     return crapReport;
 }
