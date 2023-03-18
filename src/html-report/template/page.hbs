@@ -1,6 +1,6 @@
 <html lang="en">
     <head>
-        <title>CRAP: {{functionDescriptor}} - {{filePath}}</title>
+        <title>{{title}}</title>
         <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -17,7 +17,7 @@
 
     <body>
         <div class="container">
-            {{functionDescriptor}}
+            {{> (lookup . "content")}}
         </div>
     </body>
 </html>

@@ -1,0 +1,23 @@
+{{! TODO: show top 50, each redirecting to a detail page }}
+{{! overview just shows function name, maybe file name, crap score }}
+{{! detail page shows coverage info, complexity, code snippet }}
+<ul class="collection with-header">
+    <li class="collection-header"><h4>Crappiest Functions (by Statements)</h4></li>
+    {{#each functions}}
+
+        <li class="collection-item">
+            <span class="title">{{this.functionDescriptor}}</span>
+            <a href="{{functionReportPath this.filePath this.fileIndex}}" class="secondary-content">
+                <i class="material-icons">send</i>
+            </a>
+
+            <p>
+                CRAP score:
+                {{decimal this.statements.crap}}
+                <br />
+                File:
+                {{this.filePath}}
+            </p>
+        </li>
+    {{/each}}
+</ul>
