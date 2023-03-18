@@ -1,33 +1,22 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData, FunctionMapping } from "istanbul-lib-coverage";
 import { ComplexityService, FunctionComplexity } from "./complexity.service.js";
+import { ConfigService } from "./config.service.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
-
-export interface CreateReportOptions {
-    /**
-     * Specifies path where the JSON report will be written to.
-     * If undefined, the report is returned without being written to disk.
-     */
-    writeReportAt?: string;
-}
 
 @Injectable()
 export class CrapReportService {
     public constructor(
         private readonly complexityService: ComplexityService,
         private readonly fileSystemService: FileSystemService,
+        private readonly configService: ConfigService,
         private readonly logger: Logger,
     ) {}
 
-    public async createReport({
-        testCoverage,
-        options,
-    }: {
-        testCoverage: CoverageMapData;
-        options?: CreateReportOptions;
-    }): Promise<CrapReport> {
+    public async createReport({ testCoverage }: { testCoverage: CoverageMapData }): Promise<CrapReport> {
+        const { jsonReportFile } = this.configService.config;
         const result: CrapReport = {};
 
         await Promise.all(
@@ -38,8 +27,8 @@ export class CrapReportService {
             }),
         );
 
-        if (options?.writeReportAt) {
-            await this.fileSystemService.writeCrapReport(options.writeReportAt, result);
+        if (jsonReportFile) {
+            await this.fileSystemService.writeCrapReport(jsonReportFile, result);
         }
 
         return result;
@@ -95,6 +84,9 @@ export class CrapReportService {
                     crap: crapScore,
                 },
             };
+            if (lintFunction.sourceCode) {
+                result[coverageFunction.name].sourceCode = lintFunction.sourceCode;
+            }
 
             this.logger.debug(`Computed CRAP score for '${lintFunction.functionName}'.`, {
                 coverage,
@@ -146,9 +138,10 @@ export interface CrapFile {
 }
 
 export interface CrapFunction {
-    complexity: number;
     functionDescriptor: string | undefined;
     line: number;
+    sourceCode?: string;
+    complexity: number;
     statements: {
         covered: number;
         total: number;

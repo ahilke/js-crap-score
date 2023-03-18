@@ -27,7 +27,7 @@ export function testCrapFunctionReport({
         const crapFile = findFileInCrapReport(crapReport, `test-data/${filePath}`);
 
         expect(crapFile).toBeDefined();
-        // Asserting keys, as this gives a better error message if it fails rather than just checking `toBeDefined()`
+        // Asserting keys, as this gives a better error message if it fails compared to just checking `toBeDefined()`.
         expect(Object.keys(crapFile!)).toContain(istanbulFunctionName);
         expect(crapFile?.[istanbulFunctionName]).toStrictEqual(expectedReport);
     };

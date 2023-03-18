@@ -1,13 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import Handlebars from "handlebars";
+import { join } from "path";
+import { ConfigService } from "../crap/config.service.js";
 import { CrapFunction, CrapReport } from "../crap/crap-report.service.js";
 import { FileSystemService } from "../crap/file-system.service.js";
 
 @Injectable()
 export class HtmlReportService {
-    public constructor(private readonly fileSystemService: FileSystemService) {}
+    public constructor(
+        private readonly fileSystemService: FileSystemService,
+        private readonly configService: ConfigService,
+    ) {}
 
     public async createReport(crapReport: CrapReport): Promise<void> {
+        const { htmlReportDir } = this.configService.config;
+        if (!htmlReportDir) {
+            throw new Error("No HTML report directory specified.");
+        }
+
         await this.initHandlebars();
 
         const functions: FunctionReport[] = [];
@@ -25,8 +35,9 @@ export class HtmlReportService {
                     content: "function",
                     title: `CRAP: ${functionReport.functionDescriptor} - ${functionReport.filePath}`,
                 });
+
                 this.fileSystemService.writeHtmlReport(
-                    `./crap-report/${functionReport.filePath}/${functionReport.fileIndex}.html`,
+                    join(htmlReportDir, functionReport.filePath, `${functionReport.fileIndex}.html`),
                     html,
                 );
             }),
@@ -34,7 +45,7 @@ export class HtmlReportService {
 
         const result = pageTemplate({ functions, content: "overview", title: "CRAP" });
 
-        await this.fileSystemService.writeHtmlReport("./crap-report/report.html", result);
+        await this.fileSystemService.writeHtmlReport(join(htmlReportDir, "report.html"), result);
     }
 
     private async initHandlebars(): Promise<void> {
