@@ -1,10 +1,13 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { mkdir, readFile, writeFile } from "fs/promises";
+import Handlebars from "handlebars";
 import { CoverageMapData } from "istanbul-lib-coverage";
 import { dirname } from "path";
 import { CrapReport } from "./crap-report.service.js";
 
-export type LoadedFile = "coverage report" | "source file";
+const { compile } = Handlebars;
+
+export type LoadedFile = "coverage report" | "source file" | "handlebars template";
 
 @Injectable()
 export class FileSystemService {
@@ -22,14 +25,22 @@ export class FileSystemService {
 
     // TODO: recover if file not found and continue with other files
     /**
-     * @throws LoadCoverageError if the file could not be loaded.
+     * @throws LoadFileError if the file could not be loaded.
      */
     public async loadSourceFile(path: string): Promise<string> {
         return await this.loadFile({ path, type: "source file" });
     }
 
     /**
-     * @throws LoadCoverageError if the file could not be loaded.
+     * @throws LoadFileError if the file could not be loaded.
+     */
+    public async loadHandlebarsTemplate(path: string): Promise<Handlebars.TemplateDelegate> {
+        const source = await this.loadFile({ path, type: "handlebars template" });
+        return compile(source);
+    }
+
+    /**
+     * @throws LoadFileError if the file could not be loaded.
      */
     private async loadFile({ path, type }: { path: string; type: LoadedFile }): Promise<string> {
         const fileUrl = new URL(path, import.meta.url);
@@ -40,7 +51,7 @@ export class FileSystemService {
             return data;
         } catch (error) {
             this.logger.error(`Failed to load ${type} from "${fileUrl}".`, { error });
-            throw new LoadCoverageError({ fileUrl, type });
+            throw new LoadFileError({ fileUrl, type });
         }
     }
 
@@ -67,7 +78,7 @@ export class FileSystemService {
     }
 }
 
-export class LoadCoverageError extends Error {
+export class LoadFileError extends Error {
     public readonly fileUrl: URL;
     public readonly type: LoadedFile;
 

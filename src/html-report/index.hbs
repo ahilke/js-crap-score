@@ -1,6 +1,6 @@
 <html lang="en">
     <head>
-        <title>HTML CRAP Report</title>
+        <title>CRAP</title>
         <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -9,7 +9,10 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/@materializecss/materialize/dist/css/materialize.min.css"
         />
-
+        <script
+            type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/@materializecss/materialize/dist/js/materialize.min.js"
+        ></script>
     </head>
 
     <body>
@@ -23,6 +26,9 @@
 
                     <li class="collection-item">
                         <span class="title">{{this.functionDescriptor}}</span>
+                        <a href="{{functionReportPath this.filePath this.fileIndex}}" class="secondary-content">
+                            <i class="material-icons">send</i>
+                        </a>
 
                         <p>
                             CRAP score:
@@ -35,11 +41,5 @@
                 {{/each}}
             </ul>
         </div>
-
-        <!--JavaScript at end of body for optimized loading-->
-        <script
-            type="text/javascript"
-            src="https://cdn.jsdelivr.net/npm/@materializecss/materialize/dist/js/materialize.min.js"
-        ></script>
     </body>
 </html>
