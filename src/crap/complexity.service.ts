@@ -1,7 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
 import { ConfigService } from "./config.service.js";
-import { CrapFunction } from "./crap-report.service.js";
 import { FileSystemService } from "./file-system.service.js";
 import { Location } from "./location-in-range.js";
 

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import Handlebars from "handlebars";
 import { join } from "path";
 import { ConfigService } from "../crap/config.service.js";
-import { CrapFunction, CrapReport } from "../crap/crap-report.service.js";
+import { CrapFunction, CrapReport } from "../crap/crap-report.js";
 import { FileSystemService } from "../crap/file-system.service.js";
 
 @Injectable()

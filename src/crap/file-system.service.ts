@@ -2,8 +2,9 @@ import { Injectable, Logger } from "@nestjs/common";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import Handlebars from "handlebars";
 import { CoverageMapData } from "istanbul-lib-coverage";
+import { mapValues, omit } from "lodash-es";
 import { dirname } from "path";
-import { CrapReport } from "./crap-report.service.js";
+import { CrapReport, CrapReportJsonObject } from "./crap-report.js";
 
 const { compile } = Handlebars;
 
@@ -56,9 +57,13 @@ export class FileSystemService {
     }
 
     public async writeCrapReport(path: string, report: CrapReport): Promise<void> {
+        const data: CrapReportJsonObject = mapValues(report, (crapFile) =>
+            mapValues(crapFile, (crapFunction) => omit(crapFunction, ["sourceCode"])),
+        );
+
         try {
             await mkdir(dirname(path), { recursive: true });
-            await writeFile(path, JSON.stringify(report));
+            await writeFile(path, JSON.stringify(data));
 
             this.logger.log(`Wrote CRAP score report to "${path}".`);
         } catch (error) {

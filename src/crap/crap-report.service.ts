@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData, FunctionMapping } from "istanbul-lib-coverage";
 import { ComplexityService, FunctionComplexity } from "./complexity.service.js";
 import { ConfigService } from "./config.service.js";
+import { CrapFile, CrapReport } from "./crap-report.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
@@ -127,25 +128,4 @@ export class CrapReportService {
 
         return matchedByStartLine[0];
     }
-}
-
-export interface CrapReport {
-    [sourcePath: string]: CrapFile;
-}
-
-export interface CrapFile {
-    [functionName: string]: CrapFunction;
-}
-
-export interface CrapFunction {
-    functionDescriptor: string | undefined;
-    line: number;
-    sourceCode?: string;
-    complexity: number;
-    statements: {
-        covered: number;
-        total: number;
-        coverage: number;
-        crap: number;
-    };
 }

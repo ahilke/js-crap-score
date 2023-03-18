@@ -1,6 +1,7 @@
 import { expect } from "@jest/globals";
 import { Test } from "@nestjs/testing";
-import { CrapFile, CrapFunction, CrapReport, CrapReportService } from "../crap-report.service.js";
+import { CrapFile, CrapFunction, CrapReport } from "../crap-report.js";
+import { CrapReportService } from "../crap-report.service.js";
 import { CrapModule } from "../crap.module.js";
 import { FileSystemService } from "../file-system.service.js";
 
