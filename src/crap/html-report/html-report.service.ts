@@ -34,6 +34,7 @@ export class HtmlReportService {
                     ...functionReport,
                     content: "function",
                     title: `CRAP: ${functionReport.functionDescriptor} - ${functionReport.filePath}`,
+                    sourceCode: this.trimStart(functionReport.sourceCode),
                 });
 
                 this.fileSystemService.writeHtmlReport(
@@ -63,6 +64,25 @@ export class HtmlReportService {
             "function",
             await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/function.hbs"),
         );
+    }
+
+    /**
+     * Trims spaces from all lines in a multi-line string until the first non-space character is reached on any line.
+     */
+    private trimStart(source: string | undefined): string | undefined {
+        if (!source) {
+            return source;
+        }
+
+        const lines = source.split("\n");
+        // filter out empty lines, as these should not prevent un-indenting a block
+        const leadingSpaces = lines.filter((line) => line.trim()).map((line) => line.match(/^(\s+)/)?.[0].length ?? 0);
+        const minSpaces = Math.min(...leadingSpaces);
+        if (minSpaces === 0) {
+            return source;
+        }
+
+        return lines.map((line) => line.slice(minSpaces)).join("\n");
     }
 }
 

@@ -37,7 +37,7 @@ export class FileSystemService {
      */
     public async loadHandlebarsTemplate(path: string): Promise<Handlebars.TemplateDelegate> {
         const source = await this.loadFile({ path, type: "handlebars template" });
-        return compile(source);
+        return compile(source, { preventIndent: true });
     }
 
     /**
