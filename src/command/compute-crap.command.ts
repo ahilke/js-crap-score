@@ -2,7 +2,7 @@ import { CommandRunner, InquirerService, RootCommand } from "nest-commander";
 import { ConfigService } from "../crap/config.service.js";
 import { CrapReportService } from "../crap/crap-report.service.js";
 import { FileSystemService } from "../crap/file-system.service.js";
-import { HtmlReportService } from "../html-report/html-report.service.js";
+import { HtmlReportService } from "../crap/html-report/html-report.service.js";
 
 @RootCommand({
     arguments: "[testCoveragePath]",

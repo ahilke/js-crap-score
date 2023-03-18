@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import Handlebars from "handlebars";
 import { join } from "path";
-import { ConfigService } from "../crap/config.service.js";
-import { CrapFunction, CrapReport } from "../crap/crap-report.js";
-import { FileSystemService } from "../crap/file-system.service.js";
+import { ConfigService } from "../config.service.js";
+import { CrapFunction, CrapReport } from "../crap-report.js";
+import { FileSystemService } from "../file-system.service.js";
 
 @Injectable()
 export class HtmlReportService {
@@ -27,7 +27,7 @@ export class HtmlReportService {
             });
         });
         functions.sort((a, b) => b.statements.crap - a.statements.crap);
-        const pageTemplate = await this.fileSystemService.loadHandlebarsTemplate("../html-report/template/page.hbs");
+        const pageTemplate = await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/page.hbs");
         await Promise.all(
             functions.map(async (functionReport) => {
                 const html = pageTemplate({
@@ -57,11 +57,11 @@ export class HtmlReportService {
 
         Handlebars.registerPartial(
             "overview",
-            await this.fileSystemService.loadHandlebarsTemplate("../html-report/template/overview.hbs"),
+            await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/overview.hbs"),
         );
         Handlebars.registerPartial(
             "function",
-            await this.fileSystemService.loadHandlebarsTemplate("../html-report/template/function.hbs"),
+            await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/function.hbs"),
         );
     }
 }

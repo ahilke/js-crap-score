@@ -1,5 +1,5 @@
 import { Logger, Module } from "@nestjs/common";
-import { HtmlReportService } from "../html-report/html-report.service.js";
+import { HtmlReportService } from "./html-report/html-report.service.js";
 import { ComplexityService } from "./complexity.service.js";
 import { ConfigService } from "./config.service.js";
 import { CrapReportService } from "./crap-report.service.js";
