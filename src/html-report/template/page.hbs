@@ -3,16 +3,26 @@
         <title>{{title}}</title>
         <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0" />
 
+        <!-- Materialize, see https://materializeweb.com -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         <link
             type="text/css"
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/@materializecss/materialize/dist/css/materialize.min.css"
+            href="https://unpkg.com/@materializecss/materialize/dist/css/materialize.min.css"
         />
         <script
             type="text/javascript"
-            src="https://cdn.jsdelivr.net/npm/@materializecss/materialize/dist/js/materialize.min.js"
+            src="https://unpkg.com/@materializecss/materialize/dist/js/materialize.min.js"
         ></script>
+
+        <!-- highlight.js, see https://highlightjs.org -->
+        <link 
+            type="text/css" 
+            rel="stylesheet" 
+            href="https://unpkg.com/@highlightjs/cdn-assets/styles/default.min.css"
+        />
+        <script type="text/javascript" src="https://unpkg.com/@highlightjs/cdn-assets/highlight.min.js"></script>  
+        <script>hljs.highlightAll();</script>
     </head>
 
     <body>
