@@ -1,6 +1,10 @@
-<div class="collection with-header">
+<div class="collection z-depth-1" style="border: none">
     {{#each functions}}
-        <a href="{{functionReportPath this.filePath this.fileIndex}}" class="collection-item row black-text">
+        <a
+            href="{{functionReportPath this.filePath this.fileIndex}}"
+            class="collection-item row black-text"
+            style="border: none"
+        >
             <div class="valign-wrapper">
                 <span class="col s10">
                     <div>{{{highlightName this.functionDescriptor}}}</div>
