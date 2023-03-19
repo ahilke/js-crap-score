@@ -87,8 +87,16 @@ export class HtmlReportService {
             await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/overview.hbs"),
         );
         Handlebars.registerPartial(
+            "overview_header",
+            await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/overview_header.hbs"),
+        );
+        Handlebars.registerPartial(
             "function",
             await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/function.hbs"),
+        );
+        Handlebars.registerPartial(
+            "function_header",
+            await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/function_header.hbs"),
         );
     }
 
