@@ -19,12 +19,14 @@ export class CrapReportService {
     public async createReport({ testCoverage }: { testCoverage: CoverageMapData }): Promise<CrapReport> {
         const { jsonReportFile } = this.configService.config;
         const result: CrapReport = {};
+        const rootDir = this.getRootDir(Object.keys(testCoverage)) + "/";
 
         await Promise.all(
             Object.values(testCoverage).map(async (fileCoverage) => {
                 const { path: sourcePath } = fileCoverage;
+                const relativePath = sourcePath.replace(rootDir, "");
 
-                result[sourcePath] = await this.processFile({ fileCoverage });
+                result[relativePath] = await this.processFile({ fileCoverage });
             }),
         );
 
@@ -124,5 +126,29 @@ export class CrapReportService {
         }
 
         return matchedByStartLine[0];
+    }
+
+    /**
+     * Returns the root directory of the given paths.
+     *
+     * The root directory is determined as the longest common prefix of all paths.
+     */
+    private getRootDir(paths: string[]): string {
+        const sharedDirectories = paths.reduce((commonPrefixParts, path) => {
+            const pathParts = path.split("/");
+
+            const newCommonPrefixParts = [];
+            for (let i = 0; i < pathParts.length; i++) {
+                if (pathParts[i] !== commonPrefixParts[i]) {
+                    break;
+                }
+
+                newCommonPrefixParts.push(pathParts[i]);
+            }
+
+            return newCommonPrefixParts;
+        }, paths[0].split("/"));
+
+        return sharedDirectories.join("/");
     }
 }

@@ -25,7 +25,7 @@ export function testCrapFunctionReport({
 }) {
     return async () => {
         const crapReport = await getCrapReport();
-        const crapFile = findFileInCrapReport(crapReport, `test-data/${filePath}`);
+        const crapFile = findFileInCrapReport(crapReport, filePath);
 
         expect(crapFile).toBeDefined();
         // Asserting keys, as this gives a better error message if it fails compared to just checking `toBeDefined()`.

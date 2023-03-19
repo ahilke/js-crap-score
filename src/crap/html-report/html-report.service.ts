@@ -80,7 +80,7 @@ export class HtmlReportService {
         });
         Handlebars.registerHelper(
             "functionReportPath",
-            (filePath: string, fileIndex: number): string => `.${filePath}/${fileIndex}.html`,
+            (filePath: string, fileIndex: number): string => `./${filePath}/${fileIndex}.html`,
         );
         Handlebars.registerHelper("functionLineNumber", (report: FunctionReport): string => {
             if (report.end.line != undefined && report.start.line !== report.end.line) {
