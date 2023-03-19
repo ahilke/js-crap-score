@@ -9,7 +9,14 @@ describe("switch", () => {
             istanbulFunctionName: "switchCase",
             expectedReport: {
                 functionDescriptor: "function 'switchCase'",
-                line: 1,
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 10,
+                    column: 2,
+                },
                 complexity: 3,
                 statements: {
                     covered: 3,

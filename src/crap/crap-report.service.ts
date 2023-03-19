@@ -71,14 +71,11 @@ export class CrapReportService {
 
             const crapScore = crap({ complexity, coverage });
 
-            // TODO: add location, so it's more useful with anonymous functions
-            // TODO: add human readable descriptor (function at line X, function Y)
-            // TODO: what else to add from `lintFunction`?
             result[coverageFunction.name] = {
                 complexity,
                 functionDescriptor: lintFunction.functionName,
-                // TODO: which location to use, istanbul's or ESLint's? -> add log if different
-                line: lintFunction.start.line,
+                start: lintFunction.start,
+                end: lintFunction.end,
                 statements: {
                     ...coverageData,
                     coverage,

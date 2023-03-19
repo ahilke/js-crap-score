@@ -9,7 +9,14 @@ describe("eslint-comments", () => {
             istanbulFunctionName: "tooComplex",
             expectedReport: {
                 functionDescriptor: "function 'tooComplex'",
-                line: 2,
+                start: {
+                    line: 2,
+                    column: 1,
+                },
+                end: {
+                    line: 24,
+                    column: 2,
+                },
                 complexity: 7,
                 statements: {
                     covered: 0,

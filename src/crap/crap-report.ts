@@ -1,9 +1,15 @@
+import { Location, MaybeLocation } from "./location-in-range.js";
+
 /**
  * A JSON serializable object containing a function's statistics.
+ *
+ * Location of the function is taken from ESLint,
+ * as it is taken directly from the source code and thus more accurate, especially for TypeScript.
  */
 export interface CrapFunctionJsonObject {
-    functionDescriptor: string | undefined;
-    line: number;
+    functionDescriptor: string;
+    start: Location;
+    end: MaybeLocation;
     complexity: number;
     statements: {
         covered: number;

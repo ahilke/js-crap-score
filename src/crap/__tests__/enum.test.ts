@@ -9,7 +9,14 @@ describe("enum", () => {
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "enum 'MyEnum'",
-                line: 2,
+                start: {
+                    line: 2,
+                    column: 8,
+                },
+                end: {
+                    line: 6,
+                    column: 2,
+                },
                 complexity: 1,
                 statements: {
                     covered: 4,
@@ -28,7 +35,14 @@ describe("enum", () => {
             istanbulFunctionName: "reverseEnum",
             expectedReport: {
                 functionDescriptor: "function 'reverseEnum'",
-                line: 8,
+                start: {
+                    line: 8,
+                    column: 8,
+                },
+                end: {
+                    line: 17,
+                    column: 2,
+                },
                 complexity: 4,
                 statements: {
                     covered: 2,

@@ -9,7 +9,14 @@ describe("constructor", () => {
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "constructor",
-                line: 4,
+                start: {
+                    line: 4,
+                    column: 23,
+                },
+                end: {
+                    line: 10,
+                    column: 6,
+                },
                 complexity: 2,
                 statements: {
                     covered: 2,

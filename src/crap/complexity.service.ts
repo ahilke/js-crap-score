@@ -2,14 +2,11 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
 import { ConfigService } from "./config.service.js";
 import { FileSystemService } from "./file-system.service.js";
-import { Location } from "./location-in-range.js";
+import { Location, MaybeLocation } from "./location-in-range.js";
 
 export interface FunctionComplexity {
     start: Location;
-    end: {
-        line: number | undefined;
-        column: number | undefined;
-    };
+    end: MaybeLocation;
     complexity: number;
     functionName: string;
     sourceCode?: string;

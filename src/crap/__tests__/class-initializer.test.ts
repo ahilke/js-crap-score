@@ -9,7 +9,14 @@ describe("class-field-initializer", () => {
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "method 'checkIfTest'",
-                line: 8,
+                start: {
+                    line: 8,
+                    column: 27,
+                },
+                end: {
+                    line: 13,
+                    column: 6,
+                },
                 complexity: 2,
                 statements: {
                     covered: 0,
@@ -28,7 +35,14 @@ describe("class-field-initializer", () => {
             istanbulFunctionName: "(anonymous_1)",
             expectedReport: {
                 functionDescriptor: "method 'getSupportedLanguages'",
-                line: 25,
+                start: {
+                    line: 25,
+                    column: 34,
+                },
+                end: {
+                    line: 27,
+                    column: 6,
+                },
                 complexity: 1,
                 statements: {
                     covered: 0,

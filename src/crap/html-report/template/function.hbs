@@ -1,3 +1,18 @@
-{{functionDescriptor}}
-{{!-- TODO show line numbers, file name --}}
+<div class="card-panel orange accent-2">
+    <h4>{{functionDescriptor}}</h4>
+    <p>
+        CRAP:
+        {{decimal statements.crap}}
+        -- Coverage:
+        {{statements.covered}}/{{statements.total}}
+        ({{percentage statements.coverage}})
+    </p>
+
+    <p>
+        {{filePath}}
+        ({{functionLineNumber this}})
+    </p>
+</div>
+
+{{! TODO give this some highlight/border/shadow & make it scrollable so header is always visible }}
 <pre><code class="language-typescript">{{sourceCode}}</code></pre>

@@ -9,7 +9,14 @@ describe("if-else", () => {
             istanbulFunctionName: "uncovered",
             expectedReport: {
                 functionDescriptor: "function 'uncovered'",
-                line: 1,
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 7,
+                    column: 2,
+                },
                 complexity: 2,
                 statements: {
                     covered: 0,
@@ -28,7 +35,14 @@ describe("if-else", () => {
             istanbulFunctionName: "ifCovered",
             expectedReport: {
                 functionDescriptor: "function 'ifCovered'",
-                line: 1,
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 7,
+                    column: 2,
+                },
                 complexity: 2,
                 statements: {
                     covered: 2,
@@ -47,7 +61,14 @@ describe("if-else", () => {
             istanbulFunctionName: "elseCovered",
             expectedReport: {
                 functionDescriptor: "function 'elseCovered'",
-                line: 1,
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 7,
+                    column: 2,
+                },
                 complexity: 2,
                 statements: {
                     covered: 2,
@@ -66,7 +87,14 @@ describe("if-else", () => {
             istanbulFunctionName: "fullyCovered",
             expectedReport: {
                 functionDescriptor: "function 'fullyCovered'",
-                line: 1,
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 7,
+                    column: 2,
+                },
                 complexity: 2,
                 statements: {
                     covered: 3,

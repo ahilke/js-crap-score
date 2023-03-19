@@ -10,7 +10,14 @@ describe("no-op", () => {
                 istanbulFunctionName: "(anonymous_0)",
                 expectedReport: {
                     functionDescriptor: "constructor",
-                    line: 2,
+                    start: {
+                        line: 2,
+                        column: 23,
+                    },
+                    end: {
+                        line: 2,
+                        column: 54,
+                    },
                     complexity: 1,
                     statements: {
                         covered: 0,
@@ -29,7 +36,14 @@ describe("no-op", () => {
                 istanbulFunctionName: "(anonymous_1)",
                 expectedReport: {
                     functionDescriptor: "method 'noOp'",
-                    line: 4,
+                    start: {
+                        line: 4,
+                        column: 16,
+                    },
+                    end: {
+                        line: 4,
+                        column: 21,
+                    },
                     complexity: 1,
                     statements: {
                         covered: 0,
@@ -48,7 +62,14 @@ describe("no-op", () => {
                 istanbulFunctionName: "(anonymous_2)",
                 expectedReport: {
                     functionDescriptor: "static method 'noOp'",
-                    line: 6,
+                    start: {
+                        line: 6,
+                        column: 23,
+                    },
+                    end: {
+                        line: 6,
+                        column: 28,
+                    },
                     complexity: 1,
                     statements: {
                         covered: 0,
@@ -68,7 +89,14 @@ describe("no-op", () => {
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "arrow function 'noOp'",
-                line: 1,
+                start: {
+                    line: 1,
+                    column: 21,
+                },
+                end: {
+                    line: 1,
+                    column: 29,
+                },
                 complexity: 1,
                 statements: {
                     covered: 0,
@@ -87,7 +115,14 @@ describe("no-op", () => {
             istanbulFunctionName: "noOp",
             expectedReport: {
                 functionDescriptor: "function 'noOp'",
-                line: 1,
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 1,
+                    column: 26,
+                },
                 complexity: 1,
                 statements: {
                     covered: 0,

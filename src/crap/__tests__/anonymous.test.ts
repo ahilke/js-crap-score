@@ -9,7 +9,14 @@ describe("anonymous", () => {
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "method 'classFunction'",
-                line: 3,
+                start: {
+                    line: 3,
+                    column: 18,
+                },
+                end: {
+                    line: 11,
+                    column: 6,
+                },
                 complexity: 3,
                 statements: {
                     covered: 3,
@@ -28,7 +35,14 @@ describe("anonymous", () => {
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "arrow function 'functionExpression'",
-                line: 1,
+                start: {
+                    line: 1,
+                    column: 35,
+                },
+                end: {
+                    line: 1,
+                    column: 74,
+                },
                 complexity: 2,
                 statements: {
                     covered: 2,

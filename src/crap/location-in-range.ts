@@ -27,8 +27,13 @@ export function locationIsInRange({ location, range }: { location: Location; ran
     return true;
 }
 
-export interface Location {
+export interface Location extends MaybeLocation {
     line: number;
+    column: number;
+}
+
+export interface MaybeLocation {
+    line: number | undefined;
     column: number | undefined;
 }
 
