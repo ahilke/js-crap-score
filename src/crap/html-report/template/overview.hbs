@@ -1,20 +1,20 @@
-{{! TODO: scroll list after x entries }}
-{{! overview just shows function name, maybe file name, crap score }}
-{{! detail page shows coverage info, complexity, code snippet }}
-<ul class="collection with-header">
+<div class="collection with-header">
     {{#each functions}}
-
-        <li class="collection-item">
-            <span class="title">{{this.functionDescriptor}} ({{this.filePath}})</span>
-
-            <span>
-                CRAP:
-                {{decimal this.statements.crap}}
-            </span>
-
-            <a href="{{functionReportPath this.filePath this.fileIndex}}" class="secondary-content">
-                <i class="material-icons">read_more</i>
-            </a>
-        </li>
+        <a href="{{functionReportPath this.filePath this.fileIndex}}" class="collection-item row black-text">
+            <div class="valign-wrapper">
+                <span class="col s10">
+                    <div>{{{highlightName this.functionDescriptor}}}</div>
+                    <div style="margin-left: 2em">{{this.filePath}}</div>
+                </span>
+                <span class="col s1">
+                    {{decimal this.statements.crap}}
+                </span>
+                <span class="col s1">
+                    <div class="secondary-content">
+                        <i class="material-icons">read_more</i>
+                    </div>
+                </span>
+            </div>
+        </a>
     {{/each}}
-</ul>
+</div>

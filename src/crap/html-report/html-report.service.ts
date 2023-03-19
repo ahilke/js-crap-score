@@ -70,6 +70,14 @@ export class HtmlReportService {
         Handlebars.registerHelper("equals", (a: unknown, b: unknown): boolean => a === b);
         Handlebars.registerHelper("decimal", (x: number): string => x.toFixed(2));
         Handlebars.registerHelper("percentage", (x: number): string => `${(x * 100).toFixed(2)}%`);
+        Handlebars.registerHelper("highlightName", (s: string): string => {
+            const match = s.match(/^(?<prefix>.*)'(?<name>.*)'(?<suffix>.*)$/);
+            if (!match) {
+                return s;
+            }
+
+            return `${match.groups?.prefix}'<b>${match.groups?.name}</b>${match.groups?.suffix}'`;
+        });
         Handlebars.registerHelper(
             "functionReportPath",
             (filePath: string, fileIndex: number): string => `.${filePath}/${fileIndex}.html`,
