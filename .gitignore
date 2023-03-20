@@ -1,8 +1,8 @@
 # Artifacts
 coverage/
+crap-report/
 dist/
 node_modules/
-crap-report/
 
 # Operating System
 .DS_Store
