@@ -4,13 +4,13 @@
  * @see https://github.com/eslint/eslint/blob/v8.36.0/lib/rules/complexity.js
  */
 
-import { ASTUtils } from "@typescript-eslint/utils";
+import { ASTUtils, ESLintUtils } from "@typescript-eslint/utils";
 
 function isLogicalAssignmentOperator(operator: string): boolean {
     return ["&&=", "||=", "??="].includes(operator);
 }
 
-export default {
+export default ESLintUtils.RuleCreator.withoutDocs({
     meta: {
         type: "suggestion",
         schema: [],
@@ -19,7 +19,8 @@ export default {
             enum: "TypeScript Enum {{name}}.",
         },
     },
-    create(context: any) {
+    defaultOptions: [],
+    create(context) {
         // Using a stack to store complexity per code path
         const complexities: number[] = [];
 
@@ -54,7 +55,7 @@ export default {
                 }
             },
 
-            onCodePathEnd(codePath: any, node: any) {
+            onCodePathEnd: ((codePath: any, node: any) => {
                 const complexity = complexities.pop()!;
 
                 /*
@@ -81,7 +82,7 @@ export default {
                         complexity,
                     },
                 });
-            },
+            }) as any, // onCodePathEnd is not typed in @typescript-eslint/utils, neither is CodePath
 
             // report enums, so that we can match them against the coverage data
             TSEnumDeclaration: (node: any) => {
@@ -96,4 +97,4 @@ export default {
             },
         };
     },
-};
+});
