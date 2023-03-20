@@ -31,7 +31,7 @@ export class CrapReportService {
         );
 
         if (jsonReportFile) {
-            await this.fileSystemService.writeCrapReport(jsonReportFile, result);
+            await this.fileSystemService.writeJsonReport(jsonReportFile, result);
         }
 
         return result;

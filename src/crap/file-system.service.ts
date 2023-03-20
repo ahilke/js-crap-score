@@ -9,6 +9,7 @@ import { CrapReport, CrapReportJsonObject } from "./crap-report.js";
 const { compile } = Handlebars;
 
 export type LoadedFile = "coverage report" | "source file" | "handlebars template";
+export type WrittenFile = "JSON report" | "HTML report";
 
 @Injectable()
 export class FileSystemService {
@@ -56,29 +57,26 @@ export class FileSystemService {
         }
     }
 
-    public async writeCrapReport(path: string, report: CrapReport): Promise<void> {
+    public async writeJsonReport(path: string, report: CrapReport): Promise<void> {
         const data: CrapReportJsonObject = mapValues(report, (crapFile) =>
             mapValues(crapFile, (crapFunction) => omit(crapFunction, ["sourceCode"])),
         );
 
-        try {
-            await mkdir(dirname(path), { recursive: true });
-            await writeFile(path, JSON.stringify(data));
-
-            this.logger.log(`Wrote CRAP score report to "${path}".`);
-        } catch (error) {
-            this.logger.error(`Failed to write CRAP score report to "${path}".`, { error });
-        }
+        await this.writeFile({ path, type: "JSON report", data: JSON.stringify(data) });
     }
 
     public async writeHtmlReport(path: string, report: string): Promise<void> {
+        await this.writeFile({ path, type: "HTML report", data: report });
+    }
+
+    private async writeFile({ path, type, data }: { path: string; type: WrittenFile; data: string }): Promise<void> {
         try {
             await mkdir(dirname(path), { recursive: true });
-            await writeFile(path, report);
+            await writeFile(path, data);
 
-            this.logger.log(`Wrote HTML report to "${path}".`);
+            this.logger.log(`Wrote ${type} to "${path}".`);
         } catch (error) {
-            this.logger.error(`Failed to write HTML report to "${path}".`, { error });
+            this.logger.error(`Failed to write ${type} to "${path}".`, { error });
         }
     }
 }
