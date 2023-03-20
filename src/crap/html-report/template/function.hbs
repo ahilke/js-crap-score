@@ -1,16 +1,24 @@
-<div class="card-panel orange accent-2">
-    <p>
-        CRAP:
-        {{decimal statements.crap}}
-        -- Coverage:
-        {{statements.covered}}/{{statements.total}}
-        ({{percentage statements.coverage}})
-    </p>
+<table class="striped">
+    <thead>
+        <tr>
+            <th>CRAP</th>
+            <th>Complexity</th>
+            <th>Coverage</th>
+            <th>Location</th>
+        </tr>
+    </thead>
 
-    <p>
-        {{filePath}}
-        ({{functionLineNumber this}})
-    </p>
-</div>
+    <tbody>
+        <tr>
+            <td>{{decimal statements.crap}}</td>
+            <td>{{complexity}}</td>
+            <td>{{statements.covered}}/{{statements.total}} ({{percentage statements.coverage}})</td>
+            <td>
+                {{filePath}}
+                ({{functionLineNumber this}})
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 <pre><code class="language-typescript z-depth-1">{{sourceCode}}</code></pre>
