@@ -139,6 +139,7 @@ export class CrapReportService {
         this.logger.error(
             `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
             {
+                location: coverageFunction.loc,
                 found: matchedByStartLine,
                 all: lintReport,
             },

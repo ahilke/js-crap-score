@@ -3,11 +3,11 @@ import { testCrapFunctionReport } from "../crap-report.js";
 
 describe("re-export", () => {
     test(
-        "abs",
+        "abs re-export",
         testCrapFunctionReport({
             filePath: "re-export.ts",
             project: "cjs",
-            istanbulFunctionName: "(anonymous_4)",
+            istanbulFunctionName: "(anonymous_6)",
             expectedReport: {
                 functionDescriptor: "export",
                 start: {
@@ -51,6 +51,33 @@ describe("re-export", () => {
                     total: 4,
                     coverage: 0.75,
                     crap: 2.0625,
+                },
+            },
+        }),
+    );
+
+    test(
+        "abs multi-line re-export",
+        testCrapFunctionReport({
+            filePath: "re-export.ts",
+            project: "cjs",
+            istanbulFunctionName: "(anonymous_8)",
+            expectedReport: {
+                functionDescriptor: "export",
+                start: {
+                    line: 27,
+                    column: 8,
+                },
+                end: {
+                    line: 27,
+                    column: 2,
+                },
+                complexity: 1,
+                statements: {
+                    covered: 2,
+                    total: 2,
+                    coverage: 1,
+                    crap: 1,
                 },
             },
         }),
