@@ -58,6 +58,8 @@ export class CrapReportService {
             if (!lintFunction) {
                 this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`, {
                     file: fileCoverage.path,
+                    start: coverageFunction.loc.start,
+                    end: coverageFunction.loc.end,
                 });
                 return;
             }
