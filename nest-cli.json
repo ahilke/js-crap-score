@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
-        "deleteOutDir": true
+        "deleteOutDir": true,
+        "assets": ["**/*.hbs"]
     }
 }

@@ -2,7 +2,7 @@
 coverage/
 dist/
 node_modules/
-crap-report.json
+crap-report/
 
 # Operating System
 .DS_Store

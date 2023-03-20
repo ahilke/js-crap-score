@@ -1,6 +1,7 @@
 import { expect } from "@jest/globals";
 import { Test } from "@nestjs/testing";
-import { CrapFile, CrapFunction, CrapReport, CrapReportService } from "../crap-report.service.js";
+import { CrapFile, CrapFunction, CrapReport } from "../crap-report.js";
+import { CrapReportService } from "../crap-report.service.js";
 import { CrapModule } from "../crap.module.js";
 import { FileSystemService } from "../file-system.service.js";
 
@@ -24,10 +25,10 @@ export function testCrapFunctionReport({
 }) {
     return async () => {
         const crapReport = await getCrapReport();
-        const crapFile = findFileInCrapReport(crapReport, `test-data/${filePath}`);
+        const crapFile = findFileInCrapReport(crapReport, filePath);
 
         expect(crapFile).toBeDefined();
-        // Asserting keys, as this gives a better error message if it fails rather than just checking `toBeDefined()`
+        // Asserting keys, as this gives a better error message if it fails compared to just checking `toBeDefined()`.
         expect(Object.keys(crapFile!)).toContain(istanbulFunctionName);
         expect(crapFile?.[istanbulFunctionName]).toStrictEqual(expectedReport);
     };

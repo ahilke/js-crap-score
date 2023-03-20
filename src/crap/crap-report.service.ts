@@ -1,45 +1,37 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData, FunctionMapping } from "istanbul-lib-coverage";
 import { ComplexityService, FunctionComplexity } from "./complexity.service.js";
+import { ConfigService } from "./config.service.js";
+import { CrapFile, CrapReport } from "./crap-report.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
-
-export interface CreateReportOptions {
-    /**
-     * Specifies path where the JSON report will be written to.
-     * If undefined, the report is returned without being written to disk.
-     */
-    writeReportAt?: string;
-}
 
 @Injectable()
 export class CrapReportService {
     public constructor(
         private readonly complexityService: ComplexityService,
         private readonly fileSystemService: FileSystemService,
+        private readonly configService: ConfigService,
         private readonly logger: Logger,
     ) {}
 
-    public async createReport({
-        testCoverage,
-        options,
-    }: {
-        testCoverage: CoverageMapData;
-        options?: CreateReportOptions;
-    }): Promise<CrapReport> {
+    public async createReport({ testCoverage }: { testCoverage: CoverageMapData }): Promise<CrapReport> {
+        const { jsonReportFile } = this.configService.config;
         const result: CrapReport = {};
+        const rootDir = this.getRootDir(Object.keys(testCoverage)) + "/";
 
         await Promise.all(
             Object.values(testCoverage).map(async (fileCoverage) => {
                 const { path: sourcePath } = fileCoverage;
+                const relativePath = sourcePath.replace(rootDir, "");
 
-                result[sourcePath] = await this.processFile({ fileCoverage });
+                result[relativePath] = await this.processFile({ fileCoverage });
             }),
         );
 
-        if (options?.writeReportAt) {
-            this.fileSystemService.writeCrapReport(options.writeReportAt, result);
+        if (jsonReportFile) {
+            await this.fileSystemService.writeJsonReport(jsonReportFile, result);
         }
 
         return result;
@@ -81,20 +73,20 @@ export class CrapReportService {
 
             const crapScore = crap({ complexity, coverage });
 
-            // TODO: add location, so it's more useful with anonymous functions
-            // TODO: add human readable descriptor (function at line X, function Y)
-            // TODO: what else to add from `lintFunction`?
             result[coverageFunction.name] = {
                 complexity,
                 functionDescriptor: lintFunction.functionName,
-                // TODO: which location to use, istanbul's or ESLint's? -> add log if different
-                line: lintFunction.start.line,
+                start: lintFunction.start,
+                end: lintFunction.end,
                 statements: {
                     ...coverageData,
                     coverage,
                     crap: crapScore,
                 },
             };
+            if (lintFunction.sourceCode) {
+                result[coverageFunction.name].sourceCode = lintFunction.sourceCode;
+            }
 
             this.logger.debug(`Computed CRAP score for '${lintFunction.functionName}'.`, {
                 coverage,
@@ -135,24 +127,28 @@ export class CrapReportService {
 
         return matchedByStartLine[0];
     }
-}
 
-export interface CrapReport {
-    [sourcePath: string]: CrapFile;
-}
+    /**
+     * Returns the root directory of the given paths.
+     *
+     * The root directory is determined as the longest common prefix of all paths.
+     */
+    private getRootDir(paths: string[]): string {
+        const sharedDirectories = paths.reduce((commonPrefixParts, path) => {
+            const pathParts = path.split("/");
 
-export interface CrapFile {
-    [functionName: string]: CrapFunction;
-}
+            const newCommonPrefixParts = [];
+            for (let i = 0; i < pathParts.length; i++) {
+                if (pathParts[i] !== commonPrefixParts[i]) {
+                    break;
+                }
 
-export interface CrapFunction {
-    complexity: number;
-    functionDescriptor: string | undefined;
-    line: number;
-    statements: {
-        covered: number;
-        total: number;
-        coverage: number;
-        crap: number;
-    };
+                newCommonPrefixParts.push(pathParts[i]);
+            }
+
+            return newCommonPrefixParts;
+        }, paths[0].split("/"));
+
+        return sharedDirectories.join("/");
+    }
 }

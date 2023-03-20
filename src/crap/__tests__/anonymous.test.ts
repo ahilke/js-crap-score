@@ -8,8 +8,15 @@ describe("anonymous", () => {
             filePath: "anonymous/class-function.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Method 'classFunction'",
-                line: 3,
+                functionDescriptor: "method 'classFunction'",
+                start: {
+                    line: 3,
+                    column: 18,
+                },
+                end: {
+                    line: 11,
+                    column: 6,
+                },
                 complexity: 3,
                 statements: {
                     covered: 3,
@@ -27,8 +34,15 @@ describe("anonymous", () => {
             filePath: "anonymous/function-expression.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Arrow function 'functionExpression'",
-                line: 1,
+                functionDescriptor: "arrow function 'functionExpression'",
+                start: {
+                    line: 1,
+                    column: 35,
+                },
+                end: {
+                    line: 1,
+                    column: 74,
+                },
                 complexity: 2,
                 statements: {
                     covered: 2,

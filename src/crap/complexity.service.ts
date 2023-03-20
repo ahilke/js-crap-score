@@ -1,16 +1,15 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
+import { ConfigService } from "./config.service.js";
 import { FileSystemService } from "./file-system.service.js";
-import { Location } from "./location-in-range.js";
+import { Location, MaybeLocation } from "./location-in-range.js";
 
 export interface FunctionComplexity {
     start: Location;
-    end: {
-        line: number | undefined;
-        column: number | undefined;
-    };
+    end: MaybeLocation;
     complexity: number;
     functionName: string;
+    sourceCode?: string;
 }
 
 @Injectable()
@@ -38,7 +37,11 @@ export class ComplexityService {
         },
     });
 
-    public constructor(private readonly fileSystemService: FileSystemService, private readonly logger: Logger) {}
+    public constructor(
+        private readonly fileSystemService: FileSystemService,
+        private readonly configService: ConfigService,
+        private readonly logger: Logger,
+    ) {}
 
     /**
      * Gets cyclomatic complexity from ESLint.
@@ -49,7 +52,10 @@ export class ComplexityService {
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
     public async getComplexity({ sourcePath }: { sourcePath: string }): Promise<Array<FunctionComplexity | null>> {
+        const { htmlReportDir } = this.configService.config;
+
         const source = await this.fileSystemService.loadSourceFile(sourcePath);
+        const lines = source.split("\n");
         const [result] = await this.eslint.lintText(source);
 
         return result.messages.map((messageData) => {
@@ -73,7 +79,7 @@ export class ComplexityService {
                 return null;
             }
 
-            return {
+            const result: FunctionComplexity = {
                 start: {
                     line: messageData.line,
                     column: messageData.column,
@@ -85,6 +91,12 @@ export class ComplexityService {
                 complexity: parseInt(complexity, 10),
                 functionName,
             };
+
+            if (htmlReportDir) {
+                result.sourceCode = lines.slice(messageData.line - 1, messageData.endLine).join("\n");
+            }
+
+            return result;
         });
     }
 }

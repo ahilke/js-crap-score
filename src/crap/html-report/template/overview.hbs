@@ -1,0 +1,24 @@
+<div class="collection z-depth-1" style="border: none">
+    {{#each functions}}
+        <a
+            href="{{functionReportPath this.filePath this.fileIndex}}"
+            class="collection-item row black-text"
+            style="border: none"
+        >
+            <div class="valign-wrapper">
+                <span class="col s10">
+                    <div>{{{highlightName this.functionDescriptor}}}</div>
+                    <div style="margin-left: 2em">{{this.filePath}}</div>
+                </span>
+                <span class="col s1">
+                    {{decimal this.statements.crap}}
+                </span>
+                <span class="col s1">
+                    <div class="secondary-content">
+                        <i class="material-icons">read_more</i>
+                    </div>
+                </span>
+            </div>
+        </a>
+    {{/each}}
+</div>

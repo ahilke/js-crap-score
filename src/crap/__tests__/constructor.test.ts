@@ -8,8 +8,15 @@ describe("constructor", () => {
             filePath: "constructor.ts",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
-                functionDescriptor: "Constructor",
-                line: 4,
+                functionDescriptor: "constructor",
+                start: {
+                    line: 4,
+                    column: 23,
+                },
+                end: {
+                    line: 10,
+                    column: 6,
+                },
                 complexity: 2,
                 statements: {
                     covered: 2,

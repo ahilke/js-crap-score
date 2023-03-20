@@ -1,29 +1,33 @@
 import { CommandRunner, InquirerService, RootCommand } from "nest-commander";
+import { ConfigService } from "../crap/config.service.js";
 import { CrapReportService } from "../crap/crap-report.service.js";
 import { FileSystemService } from "../crap/file-system.service.js";
+import { HtmlReportService } from "../crap/html-report/html-report.service.js";
 
 @RootCommand({
     arguments: "[testCoveragePath]",
 })
 export class ComputeCrapCommand extends CommandRunner {
-    private crapReportPath = "./crap-report.json";
-
     public constructor(
         private readonly inquirer: InquirerService,
         private readonly crapReportService: CrapReportService,
         private readonly fileSystemService: FileSystemService,
+        private readonly htmlReportService: HtmlReportService,
+        private readonly configService: ConfigService,
     ) {
         super();
     }
 
     public async run(inputs: string[]): Promise<void> {
+        this.configService.config.jsonReportFile = "./crap-report/crap-report.json";
+        this.configService.config.htmlReportDir = "./crap-report/html/";
+
         const testCoveragePath = await this.getTestCoveragePath(inputs);
         const coverageReport = await this.fileSystemService.loadCoverageReport(testCoveragePath);
 
-        await this.crapReportService.createReport({
-            testCoverage: coverageReport,
-            options: { writeReportAt: this.crapReportPath },
-        });
+        const result = await this.crapReportService.createReport({ testCoverage: coverageReport });
+
+        await this.htmlReportService.createReport(result);
     }
 
     private async getTestCoveragePath(inputs: string[]): Promise<string> {

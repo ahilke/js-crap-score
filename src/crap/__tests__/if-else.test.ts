@@ -8,8 +8,15 @@ describe("if-else", () => {
             filePath: "if-else/uncovered.ts",
             istanbulFunctionName: "uncovered",
             expectedReport: {
-                functionDescriptor: "Function 'uncovered'",
-                line: 1,
+                functionDescriptor: "function 'uncovered'",
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 7,
+                    column: 2,
+                },
                 complexity: 2,
                 statements: {
                     covered: 0,
@@ -27,8 +34,15 @@ describe("if-else", () => {
             filePath: "if-else/if-covered.ts",
             istanbulFunctionName: "ifCovered",
             expectedReport: {
-                functionDescriptor: "Function 'ifCovered'",
-                line: 1,
+                functionDescriptor: "function 'ifCovered'",
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 7,
+                    column: 2,
+                },
                 complexity: 2,
                 statements: {
                     covered: 2,
@@ -46,8 +60,15 @@ describe("if-else", () => {
             filePath: "if-else/else-covered.ts",
             istanbulFunctionName: "elseCovered",
             expectedReport: {
-                functionDescriptor: "Function 'elseCovered'",
-                line: 1,
+                functionDescriptor: "function 'elseCovered'",
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 7,
+                    column: 2,
+                },
                 complexity: 2,
                 statements: {
                     covered: 2,
@@ -65,8 +86,15 @@ describe("if-else", () => {
             filePath: "if-else/fully-covered.ts",
             istanbulFunctionName: "fullyCovered",
             expectedReport: {
-                functionDescriptor: "Function 'fullyCovered'",
-                line: 1,
+                functionDescriptor: "function 'fullyCovered'",
+                start: {
+                    line: 1,
+                    column: 8,
+                },
+                end: {
+                    line: 7,
+                    column: 2,
+                },
                 complexity: 2,
                 statements: {
                     covered: 3,
