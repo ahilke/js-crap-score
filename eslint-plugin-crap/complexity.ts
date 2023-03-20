@@ -15,8 +15,9 @@ export default ESLintUtils.RuleCreator.withoutDocs({
         type: "suggestion",
         schema: [],
         messages: {
-            complex: "{{name}} has a complexity of {{complexity}}.",
+            function: "{{name}} has a complexity of {{complexity}}.",
             enum: "TypeScript Enum {{name}}.",
+            export: "Export.",
         },
     },
     defaultOptions: [],
@@ -49,7 +50,7 @@ export default ESLintUtils.RuleCreator.withoutDocs({
             "SwitchCase[test]": increaseComplexity,
 
             // Logical assignment operators have short-circuiting behavior
-            AssignmentExpression(node: any) {
+            AssignmentExpression(node) {
                 if (isLogicalAssignmentOperator(node.operator)) {
                     increaseComplexity();
                 }
@@ -76,7 +77,7 @@ export default ESLintUtils.RuleCreator.withoutDocs({
 
                 context.report({
                     node,
-                    messageId: "complex",
+                    messageId: "function",
                     data: {
                         name,
                         complexity,
@@ -85,7 +86,7 @@ export default ESLintUtils.RuleCreator.withoutDocs({
             }) as any, // onCodePathEnd is not typed in @typescript-eslint/utils, neither is CodePath
 
             // report enums, so that we can match them against the coverage data
-            TSEnumDeclaration: (node: any) => {
+            TSEnumDeclaration: (node) => {
                 context.report({
                     node,
                     messageId: "enum",
@@ -93,6 +94,26 @@ export default ESLintUtils.RuleCreator.withoutDocs({
                         name: `enum '${node.id.name}'`,
                         foo: 3,
                     },
+                });
+            },
+
+            // report exports, so that we can match them against the coverage data
+            ExportAllDeclaration: (node) => {
+                context.report({
+                    node,
+                    messageId: "export",
+                });
+            },
+            ExportDefaultDeclaration: (node) => {
+                context.report({
+                    node,
+                    messageId: "export",
+                });
+            },
+            ExportNamedDeclaration: (node) => {
+                context.report({
+                    node,
+                    messageId: "export",
                 });
             },
         };

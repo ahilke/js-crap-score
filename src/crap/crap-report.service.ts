@@ -116,18 +116,34 @@ export class CrapReportService {
             return lintFunction.start.line === coverageFunctionStartLine;
         });
 
-        if (matchedByStartLine.length !== 1) {
-            this.logger.error(
-                `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
-                {
-                    found: matchedByStartLine,
-                    all: lintReport,
-                },
-            );
-            return null;
+        const matchingFunctions = matchedByStartLine.filter((lintFunction) => lintFunction?.type === "function");
+        if (matchingFunctions.length === 1) {
+            return matchingFunctions[0];
         }
 
-        return matchedByStartLine[0];
+        /*
+         * If no matching function was found by ESLint, we fall back to other types like enum, which are
+         * sometimes wrongly reported as "function" by istanbul.
+         */
+
+        const matchingEnums = matchedByStartLine.filter((lintFunction) => lintFunction?.type === "enum");
+        if (matchingEnums.length === 1) {
+            return matchingEnums[0];
+        }
+
+        const matchingExports = matchedByStartLine.filter((lintFunction) => lintFunction?.type === "export");
+        if (matchingExports.length === 1) {
+            return matchingExports[0];
+        }
+
+        this.logger.error(
+            `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
+            {
+                found: matchedByStartLine,
+                all: lintReport,
+            },
+        );
+        return null;
     }
 
     /**

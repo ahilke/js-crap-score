@@ -10,6 +10,7 @@ export interface FunctionComplexity {
     complexity: number;
     functionName: string;
     sourceCode?: string;
+    type: "function" | "enum" | "export";
 }
 
 @Injectable()
@@ -17,7 +18,7 @@ export class ComplexityService {
     /**
      * @see https://github.com/eslint/eslint/blob/main/lib/rules/complexity.js - source of the `complexity` rule
      */
-    private complexityRegex = /(?<name>.*) has a complexity of (?<complexity>\d*)\./;
+    private functionRegex = /(?<name>.*) has a complexity of (?<complexity>\d*)\./;
     private enumRegex = /TypeScript Enum (?<name>.*)\./;
 
     private eslint = new ESLint({
@@ -65,8 +66,11 @@ export class ComplexityService {
                 const matches = messageData.message.match(this.enumRegex);
                 complexity = "1";
                 functionName = matches?.groups?.name;
-            } else if (messageData.messageId === "complex") {
-                const matches = messageData.message.match(this.complexityRegex);
+            } else if (messageData.messageId === "export") {
+                complexity = "1";
+                functionName = "export";
+            } else if (messageData.messageId === "function") {
+                const matches = messageData.message.match(this.functionRegex);
                 complexity = matches?.groups?.complexity;
                 functionName = matches?.groups?.name;
             } else {
@@ -90,6 +94,7 @@ export class ComplexityService {
                 },
                 complexity: parseInt(complexity, 10),
                 functionName,
+                type: messageData.messageId,
             };
 
             if (htmlReportDir) {
