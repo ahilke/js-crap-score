@@ -12,10 +12,11 @@ const config = {
     transform: {
         "^.+\\.ts$": ["ts-jest", { useESM: true }],
     },
-    testMatch: ["**/test-data/**/*.test.ts"],
-    collectCoverageFrom: ["test-data/**/*.[jt]s"],
-    coveragePathIgnorePatterns: ["coverage/"],
-    coverageDirectory: "./test-data/coverage",
+    testMatch: ["**/*.test.ts"],
+    collectCoverage: true,
+    collectCoverageFrom: ["./src/**/*.[jt]s"],
+    coveragePathIgnorePatterns: ["./coverage/"],
+    coverageDirectory: "./coverage/",
     coverageReporters: ["json", "html"],
 } satisfies JestConfigWithTsJest;
 

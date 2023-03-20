@@ -1,11 +1,12 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
 describe("constructor", () => {
     test(
         "MyClass constructor",
         testCrapFunctionReport({
             filePath: "constructor.ts",
+            project: "esm",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "constructor",

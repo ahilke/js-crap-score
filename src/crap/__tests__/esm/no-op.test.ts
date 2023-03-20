@@ -1,5 +1,5 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
 describe("no-op", () => {
     describe("class", () => {
@@ -7,6 +7,7 @@ describe("no-op", () => {
             "NoOpClass constructor",
             testCrapFunctionReport({
                 filePath: "no-op/class.ts",
+                project: "esm",
                 istanbulFunctionName: "(anonymous_0)",
                 expectedReport: {
                     functionDescriptor: "constructor",
@@ -33,6 +34,7 @@ describe("no-op", () => {
             "noOp instance method",
             testCrapFunctionReport({
                 filePath: "no-op/class.ts",
+                project: "esm",
                 istanbulFunctionName: "(anonymous_1)",
                 expectedReport: {
                     functionDescriptor: "method 'noOp'",
@@ -59,6 +61,7 @@ describe("no-op", () => {
             "noOp class method",
             testCrapFunctionReport({
                 filePath: "no-op/class.ts",
+                project: "esm",
                 istanbulFunctionName: "(anonymous_2)",
                 expectedReport: {
                     functionDescriptor: "static method 'noOp'",
@@ -86,6 +89,7 @@ describe("no-op", () => {
         "function-expression",
         testCrapFunctionReport({
             filePath: "no-op/function-expression.ts",
+            project: "esm",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "arrow function 'noOp'",
@@ -112,6 +116,7 @@ describe("no-op", () => {
         "function",
         testCrapFunctionReport({
             filePath: "no-op/function.ts",
+            project: "esm",
             istanbulFunctionName: "noOp",
             expectedReport: {
                 functionDescriptor: "function 'noOp'",

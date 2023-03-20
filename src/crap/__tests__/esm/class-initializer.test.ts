@@ -1,11 +1,12 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
 describe("class-field-initializer", () => {
     test(
         "checkIfTest",
         testCrapFunctionReport({
             filePath: "class-initializer.ts",
+            project: "esm",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "method 'checkIfTest'",
@@ -32,6 +33,7 @@ describe("class-field-initializer", () => {
         "getSupportedLanguages",
         testCrapFunctionReport({
             filePath: "class-initializer.ts",
+            project: "esm",
             istanbulFunctionName: "(anonymous_1)",
             expectedReport: {
                 functionDescriptor: "method 'getSupportedLanguages'",

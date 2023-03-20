@@ -1,13 +1,13 @@
 # Test Data
 
-This folder contains code and tests to generate an `istanbul` test coverage report. This report, located under `test-data/coverage/coverage-final.json`, is used as input for tests of the actual source code in `src`.
+This folder contains code and tests for several test projects to generate an `istanbul` test coverage report. These reports, located under `test-data/<PROJECT>/coverage/coverage-final.json`, are used as input for tests of the actual source code in `src`.
 
 ## Running the Test Suite
 
-To run the tests and generate the coverage report, run the following script in the root directory:
+To run the tests and generate the coverage reports, run the following script in the root directory:
 
 ```sh
 npm run test:generate-data
 ```
 
-This will also generate an HTML report under `test-data/coverage/index.html` which can be used to check stats reported by `istanbul`, like number of (covered statements).
+This will also generate an HTML report under `test-data/<PROJECT>/coverage/index.html` which can be used to check stats reported by `istanbul`, like number of (covered) statements.

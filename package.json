@@ -32,7 +32,7 @@
         "test:dev": "npm run test -- --watch",
         "test:debug": "node --experimental-vm-modules --no-warnings --inspect ./node_modules/.bin/jest --runInBand",
         "test:cov": "npm run test -- --coverage",
-        "test:generate-data": "npm run test -- --coverage --config=jest-test-data.config.ts",
+        "test:generate-data": "npm run test -- --config=./test-data/esm/jest.config.ts && jest --config=./test-data/cjs/jest.config.ts",
         "prettier": "prettier --write ."
     },
     "engines": {

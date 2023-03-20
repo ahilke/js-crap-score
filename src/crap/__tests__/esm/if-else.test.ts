@@ -1,11 +1,12 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
 describe("if-else", () => {
     test(
         "uncovered",
         testCrapFunctionReport({
             filePath: "if-else/uncovered.ts",
+            project: "esm",
             istanbulFunctionName: "uncovered",
             expectedReport: {
                 functionDescriptor: "function 'uncovered'",
@@ -32,6 +33,7 @@ describe("if-else", () => {
         "ifCovered",
         testCrapFunctionReport({
             filePath: "if-else/if-covered.ts",
+            project: "esm",
             istanbulFunctionName: "ifCovered",
             expectedReport: {
                 functionDescriptor: "function 'ifCovered'",
@@ -58,6 +60,7 @@ describe("if-else", () => {
         "elseCovered",
         testCrapFunctionReport({
             filePath: "if-else/else-covered.ts",
+            project: "esm",
             istanbulFunctionName: "elseCovered",
             expectedReport: {
                 functionDescriptor: "function 'elseCovered'",
@@ -84,6 +87,7 @@ describe("if-else", () => {
         "fullyCovered",
         testCrapFunctionReport({
             filePath: "if-else/fully-covered.ts",
+            project: "esm",
             istanbulFunctionName: "fullyCovered",
             expectedReport: {
                 functionDescriptor: "function 'fullyCovered'",

@@ -1,11 +1,12 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
 describe("anonymous", () => {
     test(
         "classFunction",
         testCrapFunctionReport({
             filePath: "anonymous/class-function.ts",
+            project: "esm",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "method 'classFunction'",
@@ -32,6 +33,7 @@ describe("anonymous", () => {
         "functionExpression",
         testCrapFunctionReport({
             filePath: "anonymous/function-expression.ts",
+            project: "esm",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "arrow function 'functionExpression'",
