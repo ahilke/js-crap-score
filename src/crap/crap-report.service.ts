@@ -107,7 +107,7 @@ export class CrapReportService {
         coverageFunction: FunctionMapping;
         lintReport: Array<FunctionComplexity | null>;
     }): FunctionComplexity | null {
-        const coverageFunctionStartLine = coverageFunction.decl.start.line;
+        const coverageFunctionStartLine = coverageFunction.loc.start.line;
         const matchedByStartLine = lintReport.filter((lintFunction) => {
             if (!lintFunction) {
                 return false;
