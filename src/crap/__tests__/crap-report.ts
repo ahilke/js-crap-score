@@ -7,6 +7,8 @@ import { FileSystemService } from "../file-system.service.js";
 
 let crapReport: CrapReport | undefined;
 
+type TestProject = "cjs" | "esm";
+
 /**
  * Standardized test case to assert CRAP report for a given function.
  *
@@ -16,15 +18,17 @@ let crapReport: CrapReport | undefined;
  */
 export function testCrapFunctionReport({
     filePath,
+    project,
     istanbulFunctionName,
     expectedReport,
 }: {
     filePath: string;
+    project: TestProject;
     istanbulFunctionName: string;
     expectedReport: CrapFunction;
 }) {
     return async () => {
-        const crapReport = await getCrapReport();
+        const crapReport = await getCrapReport({ project });
         const crapFile = findFileInCrapReport(crapReport, filePath);
 
         expect(crapFile).toBeDefined();
@@ -34,7 +38,7 @@ export function testCrapFunctionReport({
     };
 }
 
-async function getCrapReport(): Promise<CrapReport> {
+async function getCrapReport({ project }: { project: TestProject }): Promise<CrapReport> {
     if (crapReport) {
         return crapReport;
     }
@@ -46,7 +50,9 @@ async function getCrapReport(): Promise<CrapReport> {
     const fileSystemService = appModule.get(FileSystemService);
     const crapReportService = appModule.get(CrapReportService);
 
-    const coverageReport = await fileSystemService.loadCoverageReport("../../test-data/coverage/coverage-final.json");
+    const coverageReport = await fileSystemService.loadCoverageReport(
+        `../../test-data/${project}/coverage/coverage-final.json`,
+    );
     crapReport = await crapReportService.createReport({ testCoverage: coverageReport });
     return crapReport;
 }

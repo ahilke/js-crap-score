@@ -9,7 +9,8 @@ const config = {
     transform: {
         "^.+\\.ts$": ["ts-jest", { useESM: true }],
     },
-    testMatch: ["**/src/**/*.test.ts"],
+    testMatch: ["**/*.test.ts"],
+    testPathIgnorePatterns: ["<rootDir>/test-data/"],
     collectCoverageFrom: ["src/**/*.ts"],
     coverageDirectory: "./coverage",
     coverageReporters: ["json", "html"],

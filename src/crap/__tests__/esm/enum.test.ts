@@ -1,11 +1,12 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
 describe("enum", () => {
     test(
         "MyEnum",
         testCrapFunctionReport({
             filePath: "enum.ts",
+            project: "esm",
             istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "enum 'MyEnum'",
@@ -32,6 +33,7 @@ describe("enum", () => {
         "reverseEnum",
         testCrapFunctionReport({
             filePath: "enum.ts",
+            project: "esm",
             istanbulFunctionName: "reverseEnum",
             expectedReport: {
                 functionDescriptor: "function 'reverseEnum'",

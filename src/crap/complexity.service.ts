@@ -2,14 +2,15 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
 import { ConfigService } from "./config.service.js";
 import { FileSystemService } from "./file-system.service.js";
-import { Location, MaybeLocation } from "./location-in-range.js";
+import { Location } from "./location-in-range.js";
 
 export interface FunctionComplexity {
     start: Location;
-    end: MaybeLocation;
+    end: Location;
     complexity: number;
     functionName: string;
     sourceCode?: string;
+    type: "function" | "enum" | "class" | "export";
 }
 
 @Injectable()
@@ -17,8 +18,9 @@ export class ComplexityService {
     /**
      * @see https://github.com/eslint/eslint/blob/main/lib/rules/complexity.js - source of the `complexity` rule
      */
-    private complexityRegex = /(?<name>.*) has a complexity of (?<complexity>\d*)\./;
-    private enumRegex = /TypeScript Enum (?<name>.*)\./;
+    private functionRegex = /(?<name>.*) has a complexity of (?<complexity>\d*)\./;
+    private enumRegex = /Found TypeScript Enum (?<name>.*)\./;
+    private classRegex = /Found Class (?<name>.*)\./;
 
     private eslint = new ESLint({
         useEslintrc: false,
@@ -65,12 +67,24 @@ export class ComplexityService {
                 const matches = messageData.message.match(this.enumRegex);
                 complexity = "1";
                 functionName = matches?.groups?.name;
-            } else if (messageData.messageId === "complex") {
-                const matches = messageData.message.match(this.complexityRegex);
+            } else if (messageData.messageId === "class") {
+                const matches = messageData.message.match(this.classRegex);
+                complexity = "1";
+                functionName = matches?.groups?.name;
+            } else if (messageData.messageId === "export") {
+                complexity = "1";
+                functionName = "export";
+            } else if (messageData.messageId === "function") {
+                const matches = messageData.message.match(this.functionRegex);
                 complexity = matches?.groups?.complexity;
                 functionName = matches?.groups?.name;
             } else {
                 this.logger.error("Unknown message ID.", { messageData, path: sourcePath });
+                return null;
+            }
+
+            if (!messageData.endLine || !messageData.endColumn) {
+                this.logger.error("No end location.", { messageData, path: sourcePath });
                 return null;
             }
 
@@ -90,6 +104,7 @@ export class ComplexityService {
                 },
                 complexity: parseInt(complexity, 10),
                 functionName,
+                type: messageData.messageId,
             };
 
             if (htmlReportDir) {

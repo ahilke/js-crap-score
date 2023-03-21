@@ -1,0 +1,5 @@
+{
+    "name": "cjs",
+    "description": "Project to generate test data for the CommonJS module format.",
+    "type": "commonjs"
+}

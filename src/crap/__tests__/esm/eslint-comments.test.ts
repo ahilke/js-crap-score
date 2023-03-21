@@ -1,11 +1,12 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
 describe("eslint-comments", () => {
     test(
         "tooComplex",
         testCrapFunctionReport({
             filePath: "eslint-comments.ts",
+            project: "esm",
             istanbulFunctionName: "tooComplex",
             expectedReport: {
                 functionDescriptor: "function 'tooComplex'",

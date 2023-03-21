@@ -1,0 +1,5 @@
+{
+    "name": "esm",
+    "description": "Project to generate test data for the ES module format.",
+    "type": "module"
+}

@@ -6,11 +6,13 @@ import { CrapFile, CrapReport } from "./crap-report.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
+import { LintService } from "./lint.service.js";
 
 @Injectable()
 export class CrapReportService {
     public constructor(
         private readonly complexityService: ComplexityService,
+        private readonly lintService: LintService,
         private readonly fileSystemService: FileSystemService,
         private readonly configService: ConfigService,
         private readonly logger: Logger,
@@ -54,10 +56,12 @@ export class CrapReportService {
         const lintReport = await this.complexityService.getComplexity({ sourcePath });
         Object.keys(fnMap).forEach((key) => {
             const coverageFunction = fnMap[key];
-            const lintFunction = this.getLintFunctionForCoverageFunction({ coverageFunction, lintReport });
+            const lintFunction = this.lintService.getLintFunctionForCoverageFunction({ coverageFunction, lintReport });
             if (!lintFunction) {
                 this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`, {
                     file: fileCoverage.path,
+                    start: coverageFunction.loc.start,
+                    end: coverageFunction.loc.end,
                 });
                 return;
             }
@@ -96,36 +100,6 @@ export class CrapReportService {
         });
 
         return result;
-    }
-
-    private getLintFunctionForCoverageFunction({
-        coverageFunction,
-        lintReport,
-    }: {
-        coverageFunction: FunctionMapping;
-        lintReport: Array<FunctionComplexity | null>;
-    }): FunctionComplexity | null {
-        const coverageFunctionStartLine = coverageFunction.decl.start.line;
-        const matchedByStartLine = lintReport.filter((lintFunction) => {
-            if (!lintFunction) {
-                return false;
-            }
-
-            return lintFunction.start.line === coverageFunctionStartLine;
-        });
-
-        if (matchedByStartLine.length !== 1) {
-            this.logger.error(
-                `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
-                {
-                    found: matchedByStartLine,
-                    all: lintReport,
-                },
-            );
-            return null;
-        }
-
-        return matchedByStartLine[0];
     }
 
     /**

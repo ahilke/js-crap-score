@@ -1,28 +1,29 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
-describe("switch", () => {
+describe("if-else", () => {
     test(
-        "switchCase",
+        "ifCovered",
         testCrapFunctionReport({
-            filePath: "switch.ts",
-            istanbulFunctionName: "switchCase",
+            filePath: "if-else/if-covered.ts",
+            project: "cjs",
+            istanbulFunctionName: "ifCovered",
             expectedReport: {
-                functionDescriptor: "function 'switchCase'",
+                functionDescriptor: "function 'ifCovered'",
                 start: {
                     line: 1,
                     column: 8,
                 },
                 end: {
-                    line: 10,
+                    line: 7,
                     column: 2,
                 },
-                complexity: 3,
+                complexity: 2,
                 statements: {
                     covered: 3,
                     total: 4,
                     coverage: 0.75,
-                    crap: 3.140625,
+                    crap: 2.0625,
                 },
             },
         }),

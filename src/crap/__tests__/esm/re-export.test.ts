@@ -1,21 +1,22 @@
 import { describe, test } from "@jest/globals";
-import { testCrapFunctionReport } from "./crap-report.js";
+import { testCrapFunctionReport } from "../crap-report.js";
 
-describe("constructor", () => {
+describe("re-export", () => {
     test(
-        "MyClass constructor",
+        "localAbs",
         testCrapFunctionReport({
-            filePath: "constructor.ts",
-            istanbulFunctionName: "(anonymous_0)",
+            filePath: "re-export.ts",
+            project: "esm",
+            istanbulFunctionName: "localAbs",
             expectedReport: {
-                functionDescriptor: "constructor",
+                functionDescriptor: "function 'localAbs'",
                 start: {
-                    line: 4,
-                    column: 23,
+                    line: 3,
+                    column: 8,
                 },
                 end: {
-                    line: 10,
-                    column: 6,
+                    line: 9,
+                    column: 2,
                 },
                 complexity: 2,
                 statements: {
