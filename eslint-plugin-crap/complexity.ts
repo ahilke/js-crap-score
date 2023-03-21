@@ -16,8 +16,9 @@ export default ESLintUtils.RuleCreator.withoutDocs({
         schema: [],
         messages: {
             function: "{{name}} has a complexity of {{complexity}}.",
-            enum: "TypeScript Enum {{name}}.",
-            export: "Export.",
+            enum: "Found TypeScript Enum {{name}}.",
+            export: "Found export statement.",
+            class: "Found Class {{name}}.",
         },
     },
     defaultOptions: [],
@@ -66,20 +67,11 @@ export default ESLintUtils.RuleCreator.withoutDocs({
                     return;
                 }
 
-                let name;
-                if (codePath.origin === "class-field-initializer") {
-                    name = "class field initializer";
-                } else if (codePath.origin === "class-static-block") {
-                    name = "class static block";
-                } else {
-                    name = ASTUtils.getFunctionNameWithKind(node);
-                }
-
                 context.report({
                     node,
                     messageId: "function",
                     data: {
-                        name,
+                        name: ASTUtils.getFunctionNameWithKind(node),
                         complexity,
                     },
                 });
@@ -93,6 +85,28 @@ export default ESLintUtils.RuleCreator.withoutDocs({
                     data: {
                         name: `enum '${node.id.name}'`,
                         foo: 3,
+                    },
+                });
+            },
+
+            // report classes, so that we can match them against the coverage data
+            ClassDeclaration: (node) => {
+                const name = node.id ? node.id.name : "anonymous";
+                context.report({
+                    node,
+                    messageId: "class",
+                    data: {
+                        name: `class '${name}'`,
+                    },
+                });
+            },
+            ClassExpression: (node) => {
+                const name = node.id ? node.id.name : "anonymous";
+                context.report({
+                    node,
+                    messageId: "class",
+                    data: {
+                        name: `class '${name}'`,
                     },
                 });
             },

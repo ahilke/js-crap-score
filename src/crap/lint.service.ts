@@ -29,6 +29,11 @@ export class LintService {
             return matchedEnums[0];
         }
 
+        const matchedClasses = this.matchLintClass({ coverageFunction, lintReport });
+        if (matchedClasses.length === 1) {
+            return matchedClasses[0];
+        }
+
         const matchedExports = this.matchLintExport({ coverageFunction, lintReport });
         if (matchedExports.length === 1) {
             return matchedExports[0];
@@ -38,7 +43,7 @@ export class LintService {
             `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
             {
                 location: coverageFunction.loc,
-                found: { matchedFunctions, matchedEnums, matchedExports },
+                found: { matchedFunctions, matchedEnums, matchedClasses, matchedExports },
                 all: lintReport,
             },
         );
@@ -70,6 +75,22 @@ export class LintService {
     }) {
         return lintReport.filter((lintFunction) => {
             if (!lintFunction || lintFunction.type !== "enum") {
+                return false;
+            }
+
+            return lintFunction.start.line === coverageFunction.decl.start.line;
+        });
+    }
+
+    private matchLintClass({
+        coverageFunction,
+        lintReport,
+    }: {
+        coverageFunction: FunctionMapping;
+        lintReport: Array<FunctionComplexity | null>;
+    }) {
+        return lintReport.filter((lintFunction) => {
+            if (!lintFunction || lintFunction.type !== "class") {
                 return false;
             }
 
