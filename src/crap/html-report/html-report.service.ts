@@ -63,7 +63,7 @@ export class HtmlReportService {
 
         const result = pageTemplate({ functions, content: "overview", title: "CRAP" });
 
-        await this.fileSystemService.writeHtmlReport(join(htmlReportDir, "report.html"), result);
+        await this.fileSystemService.writeHtmlReport(join(htmlReportDir, "index.html"), result);
     }
 
     private async initHandlebars(): Promise<void> {
