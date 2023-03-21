@@ -12,6 +12,7 @@ const config = {
     testMatch: ["**/*.test.ts"],
     testPathIgnorePatterns: ["<rootDir>/test-data/"],
     collectCoverageFrom: ["src/**/*.ts"],
+    coveragePathIgnorePatterns: ["__tests__/"],
     coverageDirectory: "./coverage",
     coverageReporters: ["json", "html"],
 } satisfies JestConfigWithTsJest;
