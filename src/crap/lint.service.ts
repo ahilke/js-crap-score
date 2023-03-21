@@ -14,64 +14,28 @@ export class LintService {
         coverageFunction: FunctionMapping;
         lintReport: Array<FunctionComplexity | null>;
     }): FunctionComplexity | null {
-        const matchedFunctions = this.match({ coverageFunction, lintReport, type: "function" });
-        if (matchedFunctions.length === 1) {
-            return matchedFunctions[0];
-        }
-        if (matchedFunctions.length > 1) {
-            this.logger.error(
-                `Found multiple matching functions in ESLint data for coverage function '${coverageFunction.name}'.`,
-                { coverageFunction, matchedFunctions },
-            );
-            return null;
-        }
-
         /*
-         * If no matching function was found by ESLint, we fall back to other types like enum, which are
-         * sometimes wrongly reported as "function" by istanbul.
+         * Try to match against an actual function (as reported by ESLint), but fall back to other types
+         * sometimes reported by istanbul as functions in specified order.
          */
-
-        const matchedEnums = this.match({ coverageFunction, lintReport, type: "enum" });
-        if (matchedEnums.length === 1) {
-            return matchedEnums[0];
-        }
-        if (matchedEnums.length > 1) {
-            this.logger.error(
-                `Found multiple matching enums in ESLint data for coverage function '${coverageFunction.name}'.`,
-                { coverageFunction, matchedEnums },
-            );
-            return null;
-        }
-
-        const matchedClasses = this.match({ coverageFunction, lintReport, type: "class" });
-        if (matchedClasses.length === 1) {
-            return matchedClasses[0];
-        }
-        if (matchedClasses.length > 1) {
-            this.logger.error(
-                `Found multiple matching classes in ESLint data for coverage function '${coverageFunction.name}'.`,
-                { coverageFunction, matchedClasses },
-            );
-            return null;
-        }
-
-        const matchedExports = this.match({ coverageFunction, lintReport, type: "export" });
-        if (matchedExports.length === 1) {
-            return matchedExports[0];
-        }
-        if (matchedExports.length > 1) {
-            this.logger.error(
-                `Found multiple matching exports in ESLint data for coverage function '${coverageFunction.name}'.`,
-                { coverageFunction, matchedExports },
-            );
-            return null;
+        for (const type of ["function", "enum", "class", "export"] as const) {
+            const matches = this.match({ coverageFunction, lintReport, type });
+            if (matches.length === 1) {
+                return matches[0];
+            }
+            if (matches.length > 1) {
+                this.logger.error(
+                    `Found multiple matches for ${type} in ESLint data for coverage function '${coverageFunction.name}'.`,
+                    { coverageFunction, matches },
+                );
+                return null;
+            }
         }
 
         this.logger.error(
             `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
             {
                 location: coverageFunction.loc,
-                found: { matchedFunctions, matchedEnums, matchedClasses, matchedExports },
                 all: lintReport,
             },
         );
