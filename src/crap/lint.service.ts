@@ -18,6 +18,13 @@ export class LintService {
         if (matchedFunctions.length === 1) {
             return matchedFunctions[0];
         }
+        if (matchedFunctions.length > 1) {
+            this.logger.error(
+                `Found multiple matching functions in ESLint data for coverage function '${coverageFunction.name}'.`,
+                { coverageFunction, matchedFunctions },
+            );
+            return null;
+        }
 
         /*
          * If no matching function was found by ESLint, we fall back to other types like enum, which are
@@ -28,15 +35,36 @@ export class LintService {
         if (matchedEnums.length === 1) {
             return matchedEnums[0];
         }
+        if (matchedEnums.length > 1) {
+            this.logger.error(
+                `Found multiple matching enums in ESLint data for coverage function '${coverageFunction.name}'.`,
+                { coverageFunction, matchedEnums },
+            );
+            return null;
+        }
 
         const matchedClasses = this.matchLintClass({ coverageFunction, lintReport });
         if (matchedClasses.length === 1) {
             return matchedClasses[0];
         }
+        if (matchedClasses.length > 1) {
+            this.logger.error(
+                `Found multiple matching classes in ESLint data for coverage function '${coverageFunction.name}'.`,
+                { coverageFunction, matchedClasses },
+            );
+            return null;
+        }
 
         const matchedExports = this.matchLintExport({ coverageFunction, lintReport });
         if (matchedExports.length === 1) {
             return matchedExports[0];
+        }
+        if (matchedExports.length > 1) {
+            this.logger.error(
+                `Found multiple matching exports in ESLint data for coverage function '${coverageFunction.name}'.`,
+                { coverageFunction, matchedExports },
+            );
+            return null;
         }
 
         this.logger.error(
