@@ -1,49 +1,49 @@
 import { describe, test } from "@jest/globals";
 import { testCrapFunctionReport } from "../crap-report.js";
 
-describe("nested-functions", () => {
-    describe("getFunction", () => {
+describe("multi-function-line", () => {
+    describe("evenCubes", () => {
         test(
-            "outer function",
+            "evenCubes",
             testCrapFunctionReport({
-                filePath: "nested-functions.ts",
-                project: "cjs",
-                istanbulFunctionName: "getFunction",
+                filePath: "multi-function-line.ts",
+                project: "esm",
+                istanbulFunctionName: "evenCubes",
                 expectedReport: {
-                    functionDescriptor: "function 'getFunction'",
+                    functionDescriptor: "function 'evenCubes'",
                     start: {
                         line: 1,
                         column: 8,
                     },
                     end: {
-                        line: 11,
+                        line: 4,
                         column: 2,
                     },
-                    complexity: 2,
+                    complexity: 1,
                     statements: {
                         covered: 0,
-                        total: 7,
+                        total: 3,
                         coverage: 0,
-                        crap: 6,
+                        crap: 2,
                     },
                 },
             }),
         );
 
         test(
-            "inner function 'id'",
+            "map function",
             testCrapFunctionReport({
-                filePath: "nested-functions.ts",
-                project: "cjs",
+                filePath: "multi-function-line.ts",
+                project: "esm",
                 istanbulFunctionName: "(anonymous_1)",
                 expectedReport: {
-                    functionDescriptor: "arrow function 'result'",
+                    functionDescriptor: "arrow function",
                     start: {
-                        line: 5,
-                        column: 18,
+                        line: 3,
+                        column: 21,
                     },
                     end: {
-                        line: 5,
+                        line: 3,
                         column: 34,
                     },
                     complexity: 1,
@@ -58,20 +58,20 @@ describe("nested-functions", () => {
         );
 
         test(
-            "inner function 'inverse'",
+            "filter function",
             testCrapFunctionReport({
-                filePath: "nested-functions.ts",
-                project: "cjs",
+                filePath: "multi-function-line.ts",
+                project: "esm",
                 istanbulFunctionName: "(anonymous_2)",
                 expectedReport: {
-                    functionDescriptor: "arrow function 'result'",
+                    functionDescriptor: "arrow function",
                     start: {
-                        line: 7,
-                        column: 18,
+                        line: 3,
+                        column: 43,
                     },
                     end: {
-                        line: 7,
-                        column: 35,
+                        line: 3,
+                        column: 61,
                     },
                     complexity: 1,
                     statements: {

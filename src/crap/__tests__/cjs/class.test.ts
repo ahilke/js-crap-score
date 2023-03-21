@@ -66,7 +66,7 @@ describe("class", () => {
                 project: "cjs",
                 istanbulFunctionName: "(anonymous_2)",
                 expectedReport: {
-                    functionDescriptor: "class 'anonymous'",
+                    functionDescriptor: "anonymous class",
                     start: {
                         line: 16,
                         column: 25,
