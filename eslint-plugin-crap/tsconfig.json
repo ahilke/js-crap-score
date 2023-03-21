@@ -2,8 +2,6 @@
     "compilerOptions": {
         // Project
         "outDir": "dist/",
-        "declaration": true,
-        "sourceMap": true,
         "moduleResolution": "node16",
 
         // Language

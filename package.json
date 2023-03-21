@@ -22,6 +22,9 @@
         "url": "https://github.com/ahilke/js-crap-score/issues"
     },
     "type": "module",
+    "workspaces": [
+        "eslint-plugin-crap"
+    ],
     "scripts": {
         "build": "nest build",
         "start": "nest start",
@@ -45,7 +48,6 @@
         "@nestjs/core": "^9.3.10",
         "@typescript-eslint/parser": "^5.55.0",
         "eslint": "^8.36.0",
-        "eslint-plugin-crap": "file:eslint-plugin-crap",
         "handlebars": "^4.7.7",
         "lodash-es": "^4.17.21",
         "nest-commander": "^3.6.1",
