@@ -7,7 +7,7 @@ describe("re-export", () => {
         testCrapFunctionReport({
             filePath: "re-export.ts",
             project: "cjs",
-            istanbulFunctionName: "(anonymous_6)",
+            istanbulFunctionName: "(anonymous_0)",
             expectedReport: {
                 functionDescriptor: "export",
                 start: {
@@ -61,7 +61,7 @@ describe("re-export", () => {
         testCrapFunctionReport({
             filePath: "re-export.ts",
             project: "cjs",
-            istanbulFunctionName: "(anonymous_8)",
+            istanbulFunctionName: "(anonymous_2)",
             expectedReport: {
                 functionDescriptor: "export",
                 start: {
