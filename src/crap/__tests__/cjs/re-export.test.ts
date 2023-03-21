@@ -65,17 +65,17 @@ describe("re-export", () => {
             expectedReport: {
                 functionDescriptor: "export",
                 start: {
-                    line: 27,
-                    column: 8,
+                    line: 26,
+                    column: 1,
                 },
                 end: {
-                    line: 27,
-                    column: 2,
+                    line: 29,
+                    column: 3,
                 },
                 complexity: 1,
                 statements: {
-                    covered: 2,
-                    total: 2,
+                    covered: 1,
+                    total: 1,
                     coverage: 1,
                     crap: 1,
                 },

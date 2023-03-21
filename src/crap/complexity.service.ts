@@ -2,11 +2,11 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
 import { ConfigService } from "./config.service.js";
 import { FileSystemService } from "./file-system.service.js";
-import { Location, MaybeLocation } from "./location-in-range.js";
+import { Location } from "./location-in-range.js";
 
 export interface FunctionComplexity {
     start: Location;
-    end: MaybeLocation;
+    end: Location;
     complexity: number;
     functionName: string;
     sourceCode?: string;
@@ -75,6 +75,11 @@ export class ComplexityService {
                 functionName = matches?.groups?.name;
             } else {
                 this.logger.error("Unknown message ID.", { messageData, path: sourcePath });
+                return null;
+            }
+
+            if (!messageData.endLine || !messageData.endColumn) {
+                this.logger.error("No end location.", { messageData, path: sourcePath });
                 return null;
             }
 

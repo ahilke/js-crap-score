@@ -6,11 +6,13 @@ import { CrapFile, CrapReport } from "./crap-report.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
+import { LintService } from "./lint.service.js";
 
 @Injectable()
 export class CrapReportService {
     public constructor(
         private readonly complexityService: ComplexityService,
+        private readonly lintService: LintService,
         private readonly fileSystemService: FileSystemService,
         private readonly configService: ConfigService,
         private readonly logger: Logger,
@@ -54,7 +56,7 @@ export class CrapReportService {
         const lintReport = await this.complexityService.getComplexity({ sourcePath });
         Object.keys(fnMap).forEach((key) => {
             const coverageFunction = fnMap[key];
-            const lintFunction = this.getLintFunctionForCoverageFunction({ coverageFunction, lintReport });
+            const lintFunction = this.lintService.getLintFunctionForCoverageFunction({ coverageFunction, lintReport });
             if (!lintFunction) {
                 this.logger.error(`Function '${coverageFunction.name}' not found in ESLint data.`, {
                     file: fileCoverage.path,
@@ -98,53 +100,6 @@ export class CrapReportService {
         });
 
         return result;
-    }
-
-    private getLintFunctionForCoverageFunction({
-        coverageFunction,
-        lintReport,
-    }: {
-        coverageFunction: FunctionMapping;
-        lintReport: Array<FunctionComplexity | null>;
-    }): FunctionComplexity | null {
-        const coverageFunctionStartLine = coverageFunction.loc.start.line;
-        const matchedByStartLine = lintReport.filter((lintFunction) => {
-            if (!lintFunction) {
-                return false;
-            }
-
-            return lintFunction.start.line === coverageFunctionStartLine;
-        });
-
-        const matchingFunctions = matchedByStartLine.filter((lintFunction) => lintFunction?.type === "function");
-        if (matchingFunctions.length === 1) {
-            return matchingFunctions[0];
-        }
-
-        /*
-         * If no matching function was found by ESLint, we fall back to other types like enum, which are
-         * sometimes wrongly reported as "function" by istanbul.
-         */
-
-        const matchingEnums = matchedByStartLine.filter((lintFunction) => lintFunction?.type === "enum");
-        if (matchingEnums.length === 1) {
-            return matchingEnums[0];
-        }
-
-        const matchingExports = matchedByStartLine.filter((lintFunction) => lintFunction?.type === "export");
-        if (matchingExports.length === 1) {
-            return matchingExports[0];
-        }
-
-        this.logger.error(
-            `Could not find matching function in ESLint data for coverage function '${coverageFunction.name}'.`,
-            {
-                location: coverageFunction.loc,
-                found: matchedByStartLine,
-                all: lintReport,
-            },
-        );
-        return null;
     }
 
     /**

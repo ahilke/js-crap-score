@@ -7,20 +7,29 @@
  * @param range     Range to check against.
  * @returns         True if location is within range, false otherwise.
  */
-export function locationIsInRange({ location, range }: { location: Location; range: Range }): boolean {
+export function locationIsInRange({
+    location,
+    range,
+}: {
+    location: { line: number; column: number | undefined };
+    range: {
+        start: { line: number; column: number | undefined };
+        end: { line: number; column: number | undefined };
+    };
+}): boolean {
     if (location.line < range.start.line || location.line > range.end.line) {
         return false;
     }
 
-    if (!location.column) {
+    if (location.column == undefined) {
         return true;
     }
 
-    if (range.start.column && location.line === range.start.line) {
+    if (range.start.column != undefined && location.line === range.start.line) {
         return location.column >= range.start.column;
     }
 
-    if (range.end.column && location.line === range.end.line) {
+    if (range.end.column != undefined && location.line === range.end.line) {
         return location.column <= range.end.column;
     }
 
