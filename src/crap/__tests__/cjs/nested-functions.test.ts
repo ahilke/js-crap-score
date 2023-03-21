@@ -49,7 +49,7 @@ describe("nested-functions", () => {
                     complexity: 1,
                     statements: {
                         covered: 0,
-                        total: 2,
+                        total: 1,
                         coverage: 0,
                         crap: 2,
                     },
@@ -76,7 +76,7 @@ describe("nested-functions", () => {
                     complexity: 1,
                     statements: {
                         covered: 0,
-                        total: 2,
+                        total: 1,
                         coverage: 0,
                         crap: 2,
                     },

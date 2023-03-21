@@ -14,7 +14,7 @@ export class LintService {
         coverageFunction: FunctionMapping;
         lintReport: Array<FunctionComplexity | null>;
     }): FunctionComplexity | null {
-        const matchedFunctions = this.matchLintFunction({ coverageFunction, lintReport });
+        const matchedFunctions = this.match({ coverageFunction, lintReport, type: "function" });
         if (matchedFunctions.length === 1) {
             return matchedFunctions[0];
         }
@@ -31,7 +31,7 @@ export class LintService {
          * sometimes wrongly reported as "function" by istanbul.
          */
 
-        const matchedEnums = this.matchLintEnum({ coverageFunction, lintReport });
+        const matchedEnums = this.match({ coverageFunction, lintReport, type: "enum" });
         if (matchedEnums.length === 1) {
             return matchedEnums[0];
         }
@@ -43,7 +43,7 @@ export class LintService {
             return null;
         }
 
-        const matchedClasses = this.matchLintClass({ coverageFunction, lintReport });
+        const matchedClasses = this.match({ coverageFunction, lintReport, type: "class" });
         if (matchedClasses.length === 1) {
             return matchedClasses[0];
         }
@@ -55,7 +55,7 @@ export class LintService {
             return null;
         }
 
-        const matchedExports = this.matchLintExport({ coverageFunction, lintReport });
+        const matchedExports = this.match({ coverageFunction, lintReport, type: "export" });
         if (matchedExports.length === 1) {
             return matchedExports[0];
         }
@@ -78,79 +78,45 @@ export class LintService {
         return null;
     }
 
-    private matchLintFunction({
+    private match({
         coverageFunction,
         lintReport,
+        type,
     }: {
         coverageFunction: FunctionMapping;
         lintReport: Array<FunctionComplexity | null>;
+        type: "function" | "enum" | "class" | "export";
     }) {
-        return lintReport.filter((lintFunction) => {
-            if (!lintFunction || lintFunction.type !== "function") {
+        const overlappingLintFunctions = lintReport.filter((lintFunction): lintFunction is FunctionComplexity => {
+            if (!lintFunction || lintFunction.type !== type) {
                 return false;
             }
 
-            return lintFunction.start.line === coverageFunction.decl.start.line;
+            /*
+             * The istanbul function is reported sometimes to start just before the range reported by ESLint,
+             * so we also check for the end of the range.
+             */
+            return (
+                locationIsInRange({ location: coverageFunction.loc.start, range: lintFunction }) ||
+                locationIsInRange({ location: coverageFunction.loc.end, range: lintFunction })
+            );
         });
-    }
 
-    private matchLintEnum({
-        coverageFunction,
-        lintReport,
-    }: {
-        coverageFunction: FunctionMapping;
-        lintReport: Array<FunctionComplexity | null>;
-    }) {
-        return lintReport.filter((lintFunction) => {
-            if (!lintFunction || lintFunction.type !== "enum") {
-                return false;
-            }
+        /*
+         * Filter out lint functions that contain other matching functions,
+         * so when matching functions inside functions we find the inner-most function that matches the position of the
+         * coverage function.
+         */
+        return overlappingLintFunctions.filter((lintFunction) => {
+            return !overlappingLintFunctions.some((containedLintFunction) => {
+                if (containedLintFunction === lintFunction) {
+                    return false;
+                }
 
-            return lintFunction.start.line === coverageFunction.decl.start.line;
-        });
-    }
-
-    private matchLintClass({
-        coverageFunction,
-        lintReport,
-    }: {
-        coverageFunction: FunctionMapping;
-        lintReport: Array<FunctionComplexity | null>;
-    }) {
-        return lintReport.filter((lintFunction) => {
-            if (!lintFunction || lintFunction.type !== "class") {
-                return false;
-            }
-
-            return lintFunction.start.line === coverageFunction.decl.start.line;
-        });
-    }
-
-    /**
-     * Matches exports reported by ESLint to a function reported by istanbul.
-     *
-     * Exports are matched more loosely, the istanbul function just has to start within the range reported by ESLint.
-     * This is because istanbul reports the line of a re-exported function, while ESLint reports the whole export block.
-     * Thus, reported starting lines are different if the export block spans multiple lines.
-     */
-    private matchLintExport({
-        coverageFunction,
-        lintReport,
-    }: {
-        coverageFunction: FunctionMapping;
-        lintReport: Array<FunctionComplexity | null>;
-    }) {
-        return lintReport.filter((lintFunction) => {
-            if (!lintFunction || lintFunction.type !== "export") {
-                return false;
-            }
-
-            return locationIsInRange({
-                location: {
-                    line: coverageFunction.decl.start.line,
-                    column: undefined,
-                },
-                range: lintFunction,
+                return locationIsInRange({
+                    location: containedLintFunction.start,
+                    range: lintFunction,
+                });
             });
         });
     }
