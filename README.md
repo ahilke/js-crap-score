@@ -2,6 +2,10 @@
 
 Calculate and visualise the CRAP score of a JS/TS project using the provided API or CLI.
 
+## Example
+
+The CRAP report of the project itself can be found under <https://ahilke.github.io/js-crap-score/>.
+
 ## What is CRAP?
 
 The CRAP score is a measure of the risk of a function ranging from 1 (best) to infinity (worst). It stands for Change Risk Anti-Patterns and is computed as follows:
