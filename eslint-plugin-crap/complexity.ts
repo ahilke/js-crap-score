@@ -91,22 +91,22 @@ export default ESLintUtils.RuleCreator.withoutDocs({
 
             // report classes, so that we can match them against the coverage data
             ClassDeclaration: (node) => {
-                const name = node.id ? node.id.name : "anonymous";
+                const name = node.id ? `class '${node.id.name}'` : "anonymous class";
                 context.report({
                     node,
                     messageId: "class",
                     data: {
-                        name: `class '${name}'`,
+                        name,
                     },
                 });
             },
             ClassExpression: (node) => {
-                const name = node.id ? node.id.name : "anonymous";
+                const name = node.id ? `class '${node.id.name}'` : "anonymous class";
                 context.report({
                     node,
                     messageId: "class",
                     data: {
-                        name: `class '${name}'`,
+                        name,
                     },
                 });
             },
