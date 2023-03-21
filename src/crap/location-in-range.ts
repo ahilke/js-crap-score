@@ -25,6 +25,15 @@ export function locationIsInRange({
         return true;
     }
 
+    if (
+        range.start.column != undefined &&
+        range.end.column != undefined &&
+        location.line === range.start.line &&
+        location.line === range.end.line
+    ) {
+        return location.column >= range.start.column && location.column <= range.end.column;
+    }
+
     if (range.start.column != undefined && location.line === range.start.line) {
         return location.column >= range.start.column;
     }
