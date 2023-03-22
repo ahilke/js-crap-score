@@ -21,6 +21,9 @@
         "url": "https://github.com/ahilke/js-crap-score/issues"
     },
     "type": "module",
+    "main": "./dist/index.js",
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "bin": {
         "crap": "./dist/crap.js"
     },

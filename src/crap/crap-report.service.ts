@@ -77,6 +77,10 @@ export class CrapReportService {
 
             const crapScore = crap({ complexity, coverage });
 
+            /*
+             * Location of the function is taken from ESLint,
+             * as it is taken directly from the source code and thus more accurate, especially for TypeScript.
+             */
             result[coverageFunction.name] = {
                 complexity,
                 functionDescriptor: lintFunction.functionName,
