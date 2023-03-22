@@ -1,0 +1,17 @@
+# This follows an allow-list approach, so all files are ignored by default.
+# 
+# To include a whole directory, make sure to use `**` at the end instead of just specifying the directory
+# because of the way ignored directories are resolved.
+# For a similar reason `!*/` is needed, so it still checks sub-directories for negated rules.
+
+*
+!*/ 
+
+!/dist/**
+
+# Ignore test files.
+test-data
+__tests__
+*.test.js
+*.test.d.ts
+*.test.js.map

@@ -13,7 +13,6 @@
         "name": "Arno Hilke",
         "email": "arno.hilke@tum.de"
     },
-    "private": true,
     "repository": {
         "type": "git",
         "url": "https://github.com/ahilke/js-crap-score.git"
@@ -22,8 +21,13 @@
         "url": "https://github.com/ahilke/js-crap-score/issues"
     },
     "type": "module",
+    "bin": {
+        "crap": "./dist/crap.js"
+    },
+    },
     "scripts": {
         "build": "nest build",
+        "prepublishOnly": "npm run build",
         "start": "nest start",
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug",

@@ -1,4 +1,5 @@
 {
+    "entryFile": "crap",
     "compilerOptions": {
         "deleteOutDir": true,
         "assets": ["**/*.hbs"]
