@@ -13,7 +13,6 @@
         "name": "Arno Hilke",
         "email": "arno.hilke@tum.de"
     },
-    "private": true,
     "repository": {
         "type": "git",
         "url": "https://github.com/ahilke/js-crap-score.git"
@@ -22,11 +21,16 @@
         "url": "https://github.com/ahilke/js-crap-score/issues"
     },
     "type": "module",
-    "workspaces": [
-        "eslint-plugin-crap"
-    ],
+    "main": "./dist/index.js",
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "bin": {
+        "crap": "./dist/crap.js"
+    },
+    },
     "scripts": {
         "build": "nest build",
+        "prepublishOnly": "npm run build",
         "start": "nest start",
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug",
@@ -47,6 +51,7 @@
         "@nestjs/common": "^9.3.11",
         "@nestjs/core": "^9.3.11",
         "@typescript-eslint/parser": "^5.56.0",
+        "@typescript-eslint/utils": "^5.56.0",
         "eslint": "^8.36.0",
         "handlebars": "^4.7.7",
         "lodash-es": "^4.17.21",

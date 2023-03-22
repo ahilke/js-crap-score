@@ -44,7 +44,9 @@ export class HtmlReportService {
             });
         });
         functions.sort((a, b) => b.statements.crap - a.statements.crap);
-        const pageTemplate = await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/page.hbs");
+        const pageTemplate = await this.fileSystemService.loadHandlebarsTemplate(
+            new URL("./template/page.hbs", import.meta.url),
+        );
         await Promise.all(
             functions.map(async (functionReport) => {
                 const html = pageTemplate({
@@ -92,19 +94,23 @@ export class HtmlReportService {
 
         Handlebars.registerPartial(
             "overview",
-            await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/overview.hbs"),
+            await this.fileSystemService.loadHandlebarsTemplate(new URL("./template/overview.hbs", import.meta.url)),
         );
         Handlebars.registerPartial(
             "overview_header",
-            await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/overview_header.hbs"),
+            await this.fileSystemService.loadHandlebarsTemplate(
+                new URL("./template/overview_header.hbs", import.meta.url),
+            ),
         );
         Handlebars.registerPartial(
             "function",
-            await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/function.hbs"),
+            await this.fileSystemService.loadHandlebarsTemplate(new URL("./template/function.hbs", import.meta.url)),
         );
         Handlebars.registerPartial(
             "function_header",
-            await this.fileSystemService.loadHandlebarsTemplate("./html-report/template/function_header.hbs"),
+            await this.fileSystemService.loadHandlebarsTemplate(
+                new URL("./template/function_header.hbs", import.meta.url),
+            ),
         );
     }
 

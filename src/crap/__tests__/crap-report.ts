@@ -51,7 +51,7 @@ async function getCrapReport({ project }: { project: TestProject }): Promise<Cra
     const crapReportService = appModule.get(CrapReportService);
 
     const coverageReport = await fileSystemService.loadCoverageReport(
-        `../../test-data/${project}/coverage/coverage-final.json`,
+        new URL(`../../../test-data/${project}/coverage/coverage-final.json`, import.meta.url),
     );
     crapReport = await crapReportService.createReport({ testCoverage: coverageReport });
     return crapReport;

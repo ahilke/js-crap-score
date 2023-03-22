@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
+import { crapPlugin } from "../eslint-plugin-crap/index.js";
 import { ConfigService } from "./config.service.js";
 import { FileSystemService } from "./file-system.service.js";
 import { Location } from "./location-in-range.js";
@@ -30,12 +31,15 @@ export class ComplexityService {
          *  2. A disable comment on the `complexity` rule would prevent us from detecting the complexity.
          */
         allowInlineConfig: false,
-        overrideConfig: {
+        baseConfig: {
             parser: "@typescript-eslint/parser",
             plugins: ["crap"],
             rules: {
                 "crap/complexity": "error",
             },
+        },
+        plugins: {
+            crap: crapPlugin as unknown as ESLint.Plugin,
         },
     });
 

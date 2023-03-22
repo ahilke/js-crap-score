@@ -10,7 +10,7 @@ function isLogicalAssignmentOperator(operator: string): boolean {
     return ["&&=", "||=", "??="].includes(operator);
 }
 
-export default ESLintUtils.RuleCreator.withoutDocs({
+export const complexityRule = ESLintUtils.RuleCreator.withoutDocs({
     meta: {
         type: "suggestion",
         schema: [],

@@ -20,7 +20,7 @@ export class FileSystemService {
      *
      * @see https://github.com/gotwarlost/istanbul/blob/master/coverage.json.md
      */
-    public async loadCoverageReport(path: string): Promise<CoverageMapData> {
+    public async loadCoverageReport(path: string | URL): Promise<CoverageMapData> {
         const coverageReport = await this.loadFile({ path, type: "coverage report" });
         return JSON.parse(coverageReport);
     }
@@ -29,14 +29,14 @@ export class FileSystemService {
     /**
      * @throws LoadFileError if the file could not be loaded.
      */
-    public async loadSourceFile(path: string): Promise<string> {
+    public async loadSourceFile(path: string | URL): Promise<string> {
         return await this.loadFile({ path, type: "source file" });
     }
 
     /**
      * @throws LoadFileError if the file could not be loaded.
      */
-    public async loadHandlebarsTemplate(path: string): Promise<Handlebars.TemplateDelegate> {
+    public async loadHandlebarsTemplate(path: string | URL): Promise<Handlebars.TemplateDelegate> {
         const source = await this.loadFile({ path, type: "handlebars template" });
         return compile(source, { preventIndent: true });
     }
@@ -44,16 +44,14 @@ export class FileSystemService {
     /**
      * @throws LoadFileError if the file could not be loaded.
      */
-    private async loadFile({ path, type }: { path: string; type: LoadedFile }): Promise<string> {
-        const fileUrl = new URL(path, import.meta.url);
-
+    private async loadFile({ path, type }: { path: string | URL; type: LoadedFile }): Promise<string> {
         try {
-            const data = await readFile(fileUrl, "utf-8");
-            this.logger.log(`Loaded ${type} from "${fileUrl}".`);
+            const data = await readFile(path, "utf-8");
+            this.logger.log(`Loaded ${type} from "${path}".`);
             return data;
         } catch (error) {
-            this.logger.error(`Failed to load ${type} from "${fileUrl}".`, { error });
-            throw new LoadFileError({ fileUrl, type });
+            this.logger.error(`Failed to load ${type} from "${path}".`, { error });
+            throw new LoadFileError({ path, type });
         }
     }
 
@@ -82,12 +80,12 @@ export class FileSystemService {
 }
 
 export class LoadFileError extends Error {
-    public readonly fileUrl: URL;
+    public readonly path: string | URL;
     public readonly type: LoadedFile;
 
-    public constructor({ fileUrl, type }: { fileUrl: URL; type: LoadedFile }) {
-        super(`Failed to load ${type} from "${fileUrl}".`);
-        this.fileUrl = fileUrl;
+    public constructor({ path, type }: { path: string | URL; type: LoadedFile }) {
+        super(`Failed to load ${type} from "${path}".`);
+        this.path = path;
         this.type = type;
     }
 }
