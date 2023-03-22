@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ESLint } from "eslint";
-import eslintCrapPlugin from "eslint-plugin-crap";
+import { crapPlugin } from "../eslint-plugin-crap/index.js";
 import { ConfigService } from "./config.service.js";
 import { FileSystemService } from "./file-system.service.js";
 import { Location } from "./location-in-range.js";
@@ -39,7 +39,7 @@ export class ComplexityService {
             },
         },
         plugins: {
-            crap: eslintCrapPlugin as unknown as ESLint.Plugin,
+            crap: crapPlugin as unknown as ESLint.Plugin,
         },
     });
 

@@ -18,17 +18,7 @@ Combining complexity and coverage information, the CRAP score gives you insight 
 
 ## How to Use
 
-For the initial setup:
-
-```sh
-cd eslint-plugin-crap
-npm ci
-npm run build
-cd ..
-npm ci
-```
-
-Afterwards, use `npm run start` or any of the other start commands and provide an istanbul JSON coverage report as input. This will generate both a HTML and a JSON report in the `crap-report` folder with the CRAP score of each function in the original istanbul report.
+Use `npm run start` or any of the other start commands and provide an istanbul JSON coverage report as input. This will generate both a HTML and a JSON report in the `crap-report` folder with the CRAP score of each function in the original istanbul report.
 
 ### istanbul JSON Coverage Report
 
