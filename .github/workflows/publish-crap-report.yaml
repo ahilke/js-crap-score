@@ -20,9 +20,6 @@ jobs:
             - name: Install NPM Packages
               run: npm ci
 
-            - name: Build ESLint Plugin
-              run: npm --prefix ./eslint-plugin-crap run build
-
             - name: Generate Test Data
               run: npm run test:generate-data
 
@@ -30,7 +27,7 @@ jobs:
               run: npm run test:cov
 
             - name: Generate CRAP Report
-              run: npm run start -- -- ../../coverage/coverage-final.json
+              run: npm run start -- -- ./coverage/coverage-final.json
 
             - name: Upload Pages Artifact
               uses: actions/upload-pages-artifact@v1

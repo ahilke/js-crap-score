@@ -27,7 +27,6 @@
     "bin": {
         "crap": "./dist/crap.js"
     },
-    },
     "scripts": {
         "build": "nest build",
         "prepublishOnly": "npm run build",
@@ -48,8 +47,8 @@
     },
     "dependencies": {
         "@nestjs/cli": "^9.3.0",
-        "@nestjs/common": "^9.3.11",
-        "@nestjs/core": "^9.3.11",
+        "@nestjs/common": "^9.3.12",
+        "@nestjs/core": "^9.3.12",
         "@typescript-eslint/parser": "^5.56.0",
         "@typescript-eslint/utils": "^5.56.0",
         "eslint": "^8.36.0",
@@ -60,7 +59,7 @@
         "rxjs": "^7.8.0"
     },
     "devDependencies": {
-        "@nestjs/testing": "^9.3.11",
+        "@nestjs/testing": "^9.3.12",
         "@types/jshint": "^2.12.1",
         "@types/lodash-es": "^4.17.7",
         "prettier": "^2.8.6",
