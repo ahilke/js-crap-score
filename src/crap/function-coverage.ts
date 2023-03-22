@@ -8,7 +8,6 @@ export function getCoverageForFunction({
     functionId: string;
     fileCoverage: FileCoverageData;
 }): { covered: number; total: number } {
-    // TODO: this can probably be more efficient - e.g., stop after first statement out of range
     const statementsIdsInFunction = Object.entries(fileCoverage.statementMap)
         .filter(
             ([, { start, end }]) =>
