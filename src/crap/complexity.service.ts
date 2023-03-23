@@ -32,8 +32,13 @@ export class ComplexityService {
          */
         allowInlineConfig: false,
         baseConfig: {
-            parser: "@typescript-eslint/parser",
             plugins: ["crap"],
+            parser: "@typescript-eslint/parser",
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
+            },
             rules: {
                 "crap/complexity": "error",
             },
