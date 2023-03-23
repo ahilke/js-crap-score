@@ -27,7 +27,7 @@ jobs:
               run: npm run test:cov
 
             - name: Generate CRAP Report
-              run: npm run start -- -- ./coverage/coverage-final.json
+              run: npm run start -- -- ./coverage/coverage-final.json --html
 
             - name: Upload Pages Artifact
               uses: actions/upload-pages-artifact@v1
