@@ -23,5 +23,4 @@ const ClassExpression = class {
     };
 };
 
-
 export default MyClass;
