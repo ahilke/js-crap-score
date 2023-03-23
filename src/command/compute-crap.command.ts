@@ -1,4 +1,4 @@
-import { Logger } from "@nestjs/common";
+import { Logger, LogLevel } from "@nestjs/common";
 import { CommandRunner, Help, InquirerService, Option, RootCommand } from "nest-commander";
 import { ConfigService } from "../crap/config.service.js";
 import { CrapReportService } from "../crap/crap-report.service.js";
@@ -26,6 +26,7 @@ export class ComputeCrapCommand extends CommandRunner {
         options: {
             json?: string | true;
             html?: string | true;
+            verbosity?: LogLevel[];
         },
     ): Promise<void> {
         this.processOptions(options);
@@ -35,7 +36,7 @@ export class ComputeCrapCommand extends CommandRunner {
 
         const result = await this.crapReportService.createReport({ testCoverage: coverageReport });
 
-        if (this.configService.config.htmlReportDir) {
+        if (this.configService.getHtmlReportDir()) {
             await this.htmlReportService.createReport(result);
         }
     }
@@ -59,6 +60,29 @@ export class ComputeCrapCommand extends CommandRunner {
     }
 
     @Option({
+        flags: "-v, --verbosity <verbosity>",
+        description:
+            "Minimum verbosity/log level. Defaults to 'warn'. Use 'silent' to disable logging. Choices: 'silent', 'error', 'warn', 'log', 'debug'.",
+    })
+    public parseVerbosity(verbosity: string): string[] {
+        const logLevels = this.getLogLevels();
+        const index = logLevels.indexOf(verbosity);
+        if (index === -1) {
+            throw new Error(`Invalid log level: ${verbosity}. Valid log levels are: ${logLevels.join(", ")}.`);
+        }
+
+        if (verbosity === "silent") {
+            return [];
+        }
+
+        return logLevels.reverse().slice(logLevels.indexOf(verbosity));
+    }
+
+    public getLogLevels(): string[] {
+        return ["error", "warn", "log", "debug", "silent"];
+    }
+
+    @Option({
         flags: "-h, --help",
         description: "Display this help message.",
     })
@@ -72,20 +96,21 @@ export class ComputeCrapCommand extends CommandRunner {
             "",
             "Examples:",
             "  crap --html",
-            "  crap --html -- ./coverage/coverage-final.json        # use `--` to separate options from arguments when not passing a value to `--html`",
+            "  crap --html -- ./coverage/coverage-final.json        # use `--` to separate options from coverage path when not passing a value to `--html`",
             "  crap --html ./html/ ./coverage/coverage-final.json",
             "  crap --html=./html/ ./coverage/coverage-final.json",
         ].join("\n");
     }
 
-    private processOptions(options: { json?: string | true; html?: string | true }): void {
-        this.configService.config.jsonReportFile =
-            options.json === true ? "./crap-report/crap-report.json" : options.json;
-        this.configService.config.htmlReportDir = options.html === true ? "./crap-report/html/" : options.html;
-        if (
-            this.configService.config.jsonReportFile == undefined &&
-            this.configService.config.htmlReportDir == undefined
-        ) {
+    private processOptions(options: { json?: string | true; html?: string | true; verbosity?: LogLevel[] }): void {
+        this.configService.setJsonReportFile(options.json === true ? "./crap-report/crap-report.json" : options.json);
+        this.configService.setHtmlReportDir(options.html === true ? "./crap-report/html/" : options.html);
+
+        if (options.verbosity != undefined) {
+            this.configService.setLogLevels(options.verbosity);
+        }
+
+        if (this.configService.getJsonReportFile() == undefined && this.configService.getHtmlReportDir() == undefined) {
             this.logger.warn("No report will be written. Use --json or --html to specify where to write the report.");
         }
     }

@@ -19,7 +19,6 @@ export class CrapReportService {
     ) {}
 
     public async createReport({ testCoverage }: { testCoverage: CoverageMapData }): Promise<CrapReport> {
-        const { jsonReportFile } = this.configService.config;
         const result: CrapReport = {};
         const rootDir = this.getRootDir(Object.keys(testCoverage)) + "/";
 
@@ -32,6 +31,7 @@ export class CrapReportService {
             }),
         );
 
+        const jsonReportFile = this.configService.getJsonReportFile();
         if (jsonReportFile) {
             await this.fileSystemService.writeJsonReport(jsonReportFile, result);
         }

@@ -47,7 +47,7 @@ export class FileSystemService {
     private async loadFile({ path, type }: { path: string | URL; type: LoadedFile }): Promise<string> {
         try {
             const data = await readFile(path, "utf-8");
-            this.logger.log(`Loaded ${type} from "${path}".`);
+            this.logger.debug(`Loaded ${type} from "${path}".`);
             return data;
         } catch (error) {
             this.logger.error(`Failed to load ${type} from "${path}".`, { error });

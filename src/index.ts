@@ -1,3 +1,4 @@
+import { LogLevel } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { CoverageMapData } from "istanbul-lib-coverage";
 import { ConfigService } from "./crap/config.service.js";
@@ -23,6 +24,11 @@ export interface CrapReportOptions {
      * If undefined, no report is written to the disk.
      */
     htmlReportDir?: string | undefined;
+    /**
+     * Specifies log levels that should be logged. Defaults to `["error", "warn"]`.
+     * If empty, no logs are written.
+     */
+    logLevels?: LogLevel[];
 }
 
 /**
@@ -34,12 +40,16 @@ export async function getCrapReport({
     testCoverage,
     jsonReportFile,
     htmlReportDir,
+    logLevels,
 }: CrapReportOptions): Promise<CrapReport> {
     const app = await NestFactory.create(CrapModule);
 
     const configService = app.get(ConfigService);
-    configService.config.jsonReportFile = jsonReportFile;
-    configService.config.htmlReportDir = htmlReportDir;
+    configService.setJsonReportFile(jsonReportFile);
+    configService.setHtmlReportDir(htmlReportDir);
+    if (logLevels) {
+        configService.setLogLevels(logLevels);
+    }
 
     let coverageReport: CoverageMapData;
     if (typeof testCoverage === "string" || testCoverage instanceof URL) {
