@@ -1,4 +1,4 @@
-import { Injectable, Logger, LogLevel } from "@nestjs/common";
+import { Injectable, Logger, LoggerService, LogLevel } from "@nestjs/common";
 
 export interface Config {
     /**
@@ -11,25 +11,24 @@ export interface Config {
      * If undefined, no report is written to the disk.
      */
     htmlReportDir?: string | undefined;
-    /**
-     * Specifies log levels that should be logged. Defaults to `["error", "warn"]`.
-     * If empty, no logs are written.
-     */
-    logLevels: LogLevel[];
 }
 
 @Injectable()
 export class ConfigService {
-    private readonly config: Config = { logLevels: [] };
+    private readonly config: Config = {};
 
     public constructor() {
-        this.setLogLevels(["error", "warn"]);
+        this.setLogger(["error", "warn"]);
     }
 
     public getJsonReportFile(): string | undefined {
         return this.config.jsonReportFile;
     }
 
+    /**
+     * Specifies path where the JSON report will be written to.
+     * If undefined, no report is written to the disk.
+     */
     public setJsonReportFile(jsonReportFile: string | undefined): void {
         this.config.jsonReportFile = jsonReportFile;
     }
@@ -38,12 +37,21 @@ export class ConfigService {
         return this.config.htmlReportDir;
     }
 
+    /**
+     * Specifies path where the HTML report will be written to.
+     * If undefined, no report is written to the disk.
+     */
     public setHtmlReportDir(htmlReportDir: string | undefined): void {
         this.config.htmlReportDir = htmlReportDir;
     }
 
-    public setLogLevels(logLevels: LogLevel[]): void {
-        this.config.logLevels = logLevels;
-        Logger.overrideLogger(logLevels);
+    /**
+     * Specifies logger via log levels or a custom logger.
+     *
+     * If array, specifies log levels that should be logged. Defaults to `["error", "warn"]`.
+     * If empty, no logs are written.
+     */
+    public setLogger(log: LogLevel[] | LoggerService): void {
+        Logger.overrideLogger(log);
     }
 }

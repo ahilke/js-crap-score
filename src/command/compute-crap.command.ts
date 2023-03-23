@@ -102,7 +102,7 @@ export class ComputeCrapCommand extends CommandRunner {
         this.configService.setHtmlReportDir(options.html === true ? "./crap-report/html/" : options.html);
 
         if (options.verbosity != undefined) {
-            this.configService.setLogLevels(options.verbosity);
+            this.configService.setLogger(options.verbosity);
         }
 
         if (this.configService.getJsonReportFile() == undefined && this.configService.getHtmlReportDir() == undefined) {
