@@ -42,7 +42,7 @@ export async function getCrapReport({
     htmlReportDir,
     logLevels,
 }: CrapReportOptions): Promise<CrapReport> {
-    const app = await NestFactory.create(CrapModule);
+    const app = await NestFactory.create(CrapModule, { logger: [] });
 
     const configService = app.get(ConfigService);
     configService.setJsonReportFile(jsonReportFile);

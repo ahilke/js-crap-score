@@ -44,11 +44,9 @@ const report: CrapReport = await getCrapReport({
 To use the library API in a CommonJS project, you will need to use dynamic `import` statements as this is a ESM library:
 
 ```ts
-import type { CrapReport } from "crap-score";
-
 async function main() {
     const { getCrapReport } = await import("crap-score");
-    const report: CrapReport = await getCrapReport({
+    const report = await getCrapReport({
         testCoverage: "./coverage/coverage-final.json",
     });
 }
@@ -57,11 +55,9 @@ async function main() {
 If you are using TypeScript, make sure to have `"moduleResolution": "node16"` to avoid `import` being transformed into `require`. If that is not an option, you can work around it via `eval`:
 
 ```ts
-import type { CrapReport } from "crap-score";
-
 async function main() {
     const { getCrapReport } = await eval("import('crap-score')");
-    const report: CrapReport = await getCrapReport({
+    const report = await getCrapReport({
         testCoverage: "./coverage/coverage-final.json",
     });
 }

@@ -3,7 +3,6 @@ import { CommandRunner, Help, InquirerService, Option, RootCommand } from "nest-
 import { ConfigService } from "../crap/config.service.js";
 import { CrapReportService } from "../crap/crap-report.service.js";
 import { FileSystemService } from "../crap/file-system.service.js";
-import { HtmlReportService } from "../crap/html-report/html-report.service.js";
 
 @RootCommand({
     arguments: "[testCoveragePath]",
@@ -14,7 +13,6 @@ export class ComputeCrapCommand extends CommandRunner {
         private readonly inquirer: InquirerService,
         private readonly crapReportService: CrapReportService,
         private readonly fileSystemService: FileSystemService,
-        private readonly htmlReportService: HtmlReportService,
         private readonly configService: ConfigService,
         private readonly logger: Logger,
     ) {
@@ -35,10 +33,6 @@ export class ComputeCrapCommand extends CommandRunner {
         const coverageReport = await this.fileSystemService.loadCoverageReport(testCoveragePath);
 
         const result = await this.crapReportService.createReport({ testCoverage: coverageReport });
-
-        if (this.configService.getHtmlReportDir()) {
-            await this.htmlReportService.createReport(result);
-        }
     }
 
     @Option({
@@ -97,6 +91,7 @@ export class ComputeCrapCommand extends CommandRunner {
             "Examples:",
             "  crap --html",
             "  crap --html -- ./coverage/coverage-final.json        # use `--` to separate options from coverage path when not passing a value to `--html`",
+            "  crap ./coverage/coverage-final.json --html",
             "  crap --html ./html/ ./coverage/coverage-final.json",
             "  crap --html=./html/ ./coverage/coverage-final.json",
         ].join("\n");
