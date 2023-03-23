@@ -1,6 +1,6 @@
 # CRAP Score
 
-Calculate and visualise the CRAP score of a JS/TS project using the provided API or CLI.
+Calculate and visualize the CRAP score of a JS/TS project using the provided API or CLI.
 
 ## Example
 
@@ -21,7 +21,11 @@ Combining complexity and coverage information, the CRAP score gives you insight 
 ### CLI
 
 Install the package (or use it directly via npx), then just run `npx crap <path-to-coverage>`.
-The command expects an istanbul JSON coverage report as input and generates both an HTML and a JSON report in the `crap-report` folder, containing the CRAP score of each function in the original istanbul report.
+The command expects an istanbul JSON coverage report as input (see [JSON Coverage Report](#istanbul-json-coverage-report)) and generates both an HTML and a JSON report in the `crap-report` folder, containing the CRAP score of each function in the original istanbul report.
+
+```sh
+crap --help
+```
 
 ### API
 
@@ -40,11 +44,9 @@ const report: CrapReport = await getCrapReport({
 To use the library API in a CommonJS project, you will need to use dynamic `import` statements as this is a ESM library:
 
 ```ts
-import type { CrapReport } from "crap-score";
-
 async function main() {
     const { getCrapReport } = await import("crap-score");
-    const report: CrapReport = await getCrapReport({
+    const report = await getCrapReport({
         testCoverage: "./coverage/coverage-final.json",
     });
 }
@@ -53,11 +55,9 @@ async function main() {
 If you are using TypeScript, make sure to have `"moduleResolution": "node16"` to avoid `import` being transformed into `require`. If that is not an option, you can work around it via `eval`:
 
 ```ts
-import type { CrapReport } from "crap-score";
-
 async function main() {
     const { getCrapReport } = await eval("import('crap-score')");
-    const report: CrapReport = await getCrapReport({
+    const report = await getCrapReport({
         testCoverage: "./coverage/coverage-final.json",
     });
 }

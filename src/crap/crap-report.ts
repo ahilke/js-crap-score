@@ -50,7 +50,7 @@ export interface CrapFunctionJsonObject {
 
 /**
  * A JSON serializable object containing a file's statistics.
- * 
+ *
  * Map containing all functions as reported by istanbul for a given file using the name reported by istanbul.
  */
 export interface CrapFileJsonObject {
@@ -62,7 +62,7 @@ export interface CrapFileJsonObject {
 
 /**
  * A JSON serializable object containing a project's statistics.
- * 
+ *
  * Map containing all files as reported by istanbul for a given project using the path reported by istanbul.
  */
 export interface CrapReportJsonObject {

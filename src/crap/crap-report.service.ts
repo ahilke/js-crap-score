@@ -1,16 +1,18 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { CoverageMapData, FileCoverageData, FunctionMapping } from "istanbul-lib-coverage";
-import { ComplexityService, FunctionComplexity } from "./complexity.service.js";
+import { CoverageMapData, FileCoverageData } from "istanbul-lib-coverage";
+import { ComplexityService } from "./complexity.service.js";
 import { ConfigService } from "./config.service.js";
 import { CrapFile, CrapReport } from "./crap-report.js";
 import { crap } from "./crap-score.js";
 import { FileSystemService } from "./file-system.service.js";
 import { getCoverageForFunction } from "./function-coverage.js";
+import { HtmlReportService } from "./html-report/html-report.service.js";
 import { LintService } from "./lint.service.js";
 
 @Injectable()
 export class CrapReportService {
     public constructor(
+        private readonly htmlReportService: HtmlReportService,
         private readonly complexityService: ComplexityService,
         private readonly lintService: LintService,
         private readonly fileSystemService: FileSystemService,
@@ -19,7 +21,6 @@ export class CrapReportService {
     ) {}
 
     public async createReport({ testCoverage }: { testCoverage: CoverageMapData }): Promise<CrapReport> {
-        const { jsonReportFile } = this.configService.config;
         const result: CrapReport = {};
         const rootDir = this.getRootDir(Object.keys(testCoverage)) + "/";
 
@@ -32,8 +33,13 @@ export class CrapReportService {
             }),
         );
 
+        const jsonReportFile = this.configService.getJsonReportFile();
         if (jsonReportFile) {
             await this.fileSystemService.writeJsonReport(jsonReportFile, result);
+        }
+
+        if (this.configService.getHtmlReportDir()) {
+            await this.htmlReportService.createReport(result);
         }
 
         return result;

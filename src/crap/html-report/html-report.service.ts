@@ -30,7 +30,7 @@ export class HtmlReportService {
     ) {}
 
     public async createReport(crapReport: CrapReport): Promise<void> {
-        const { htmlReportDir } = this.configService.config;
+        const htmlReportDir = this.configService.getHtmlReportDir();
         if (!htmlReportDir) {
             throw new Error("No HTML report directory specified.");
         }

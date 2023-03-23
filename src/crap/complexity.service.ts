@@ -58,8 +58,6 @@ export class ComplexityService {
      * @see https://eslint.org/docs/latest/integrate/nodejs-api#-eslintlinttextcode-options
      */
     public async getComplexity({ sourcePath }: { sourcePath: string }): Promise<Array<FunctionComplexity | null>> {
-        const { htmlReportDir } = this.configService.config;
-
         const source = await this.fileSystemService.loadSourceFile(sourcePath);
         const lines = source.split("\n");
         const [result] = await this.eslint.lintText(source);
@@ -111,7 +109,7 @@ export class ComplexityService {
                 type: messageData.messageId,
             };
 
-            if (htmlReportDir) {
+            if (this.configService.getHtmlReportDir()) {
                 result.sourceCode = lines.slice(messageData.line - 1, messageData.endLine).join("\n");
             }
 
