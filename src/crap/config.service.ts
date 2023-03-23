@@ -5,12 +5,12 @@ export interface Config {
      * Specifies path where the JSON report will be written to.
      * If undefined, no report is written to the disk.
      */
-    jsonReportFile?: string;
+    jsonReportFile?: string | undefined;
     /**
      * Specifies path where the HTML report will be written to.
      * If undefined, no report is written to the disk.
      */
-    htmlReportDir?: string;
+    htmlReportDir?: string | undefined;
 }
 
 @Injectable()
