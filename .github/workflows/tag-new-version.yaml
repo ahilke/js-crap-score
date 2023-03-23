@@ -1,0 +1,22 @@
+name: tag-new-version
+run-name: Create new git tag if necesary for ${{ github.ref }}
+on:
+    push:
+        branches:
+            - main
+jobs:
+    tag-new-version:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout with History
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 2
+
+            - name: Tag if new version
+              uses: salsify/action-detect-and-tag-new-version@v2
+              with:
+                  version-command: npm pkg get version
+                  create-tag: true
+                  tag-template: "{VERSION}"
+                  tag-annotation-template: "{VERSION}"

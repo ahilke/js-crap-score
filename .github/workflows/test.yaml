@@ -1,9 +1,10 @@
-name: test-pr
+name: test
 run-name: Running tests for ${{ github.ref }}
 on:
     pull_request:
         branches:
             - main
+    workflow_call:
 
 jobs:
     test:

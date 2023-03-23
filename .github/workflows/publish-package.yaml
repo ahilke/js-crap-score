@@ -1,0 +1,32 @@
+name: publish-package
+run-name: Publish package to NPM for ${{ github.ref }}
+on:
+    push:
+        tags:
+            - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+    test:
+        uses: ./.github/workflows/test.yaml
+
+    npm-publish:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Setup Node
+              uses: actions/setup-node@v3
+              with:
+                  registry-url: https://registry.npmjs.org
+                  node-version-file: ./.nvmrc
+                  cache: npm
+
+            - name: Install NPM Packages
+              run: npm ci
+
+            - name: Publish
+              run: npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
