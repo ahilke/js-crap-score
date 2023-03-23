@@ -1,5 +1,5 @@
 import { Logger } from "@nestjs/common";
-import { CommandRunner, InquirerService, Option, RootCommand } from "nest-commander";
+import { CommandRunner, Help, InquirerService, Option, RootCommand } from "nest-commander";
 import { ConfigService } from "../crap/config.service.js";
 import { CrapReportService } from "../crap/crap-report.service.js";
 import { FileSystemService } from "../crap/file-system.service.js";
@@ -7,6 +7,7 @@ import { HtmlReportService } from "../crap/html-report/html-report.service.js";
 
 @RootCommand({
     arguments: "[testCoveragePath]",
+    description: "Calculate and visualize the CRAP score of a JS/TS project.",
 })
 export class ComputeCrapCommand extends CommandRunner {
     public constructor(
@@ -55,6 +56,26 @@ export class ComputeCrapCommand extends CommandRunner {
     })
     public parseHtmlReportDir(htmlReportDir: string): string {
         return htmlReportDir;
+    }
+
+    @Option({
+        flags: "-h, --help",
+        description: "Display this help message.",
+    })
+    public helpMessage(): void {
+        this.command.help();
+    }
+
+    @Help("afterAll")
+    public helpMessageExamples(): string {
+        return [
+            "",
+            "Examples:",
+            "  crap --html",
+            "  crap --html -- ./coverage/coverage-final.json        # use `--` to separate options from arguments when not passing a value to `--html`",
+            "  crap --html ./html/ ./coverage/coverage-final.json",
+            "  crap --html=./html/ ./coverage/coverage-final.json",
+        ].join("\n");
     }
 
     private processOptions(options: { json?: string | true; html?: string | true }): void {

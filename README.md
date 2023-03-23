@@ -1,6 +1,6 @@
 # CRAP Score
 
-Calculate and visualise the CRAP score of a JS/TS project using the provided API or CLI.
+Calculate and visualize the CRAP score of a JS/TS project using the provided API or CLI.
 
 ## Example
 
@@ -21,7 +21,11 @@ Combining complexity and coverage information, the CRAP score gives you insight 
 ### CLI
 
 Install the package (or use it directly via npx), then just run `npx crap <path-to-coverage>`.
-The command expects an istanbul JSON coverage report as input and generates both an HTML and a JSON report in the `crap-report` folder, containing the CRAP score of each function in the original istanbul report.
+The command expects an istanbul JSON coverage report as input (see [JSON Coverage Report](#istanbul-json-coverage-report)) and generates both an HTML and a JSON report in the `crap-report` folder, containing the CRAP score of each function in the original istanbul report.
+
+```sh
+crap --help
+```
 
 ### API
 
