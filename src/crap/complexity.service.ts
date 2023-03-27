@@ -23,31 +23,6 @@ export class ComplexityService {
     private enumRegex = /Found TypeScript Enum (?<name>.*)\./;
     private classRegex = /Found Class (?<name>.*)\./;
 
-    private eslint = new ESLint({
-        useEslintrc: false,
-        /*
-         * Disable ESLint comments. This solves multiple problems:
-         *  1. A disable comment on an unknown rule would cause an error, see https://stackoverflow.com/a/64650648/10380981.
-         *  2. A disable comment on the `complexity` rule would prevent us from detecting the complexity.
-         */
-        allowInlineConfig: false,
-        baseConfig: {
-            plugins: ["crap"],
-            parser: "@typescript-eslint/parser",
-            parserOptions: {
-                ecmaFeatures: {
-                    jsx: true,
-                },
-            },
-            rules: {
-                "crap/complexity": "error",
-            },
-        },
-        plugins: {
-            crap: crapPlugin as unknown as ESLint.Plugin,
-        },
-    });
-
     public constructor(
         private readonly fileSystemService: FileSystemService,
         private readonly configService: ConfigService,
@@ -65,9 +40,10 @@ export class ComplexityService {
     public async getComplexity({ sourcePath }: { sourcePath: string }): Promise<Array<FunctionComplexity | null>> {
         const source = await this.fileSystemService.loadSourceFile(sourcePath);
         const lines = source.split("\n");
-        const [result] = await this.eslint.lintText(source);
 
-        return result.messages.map((messageData) => {
+        const lintResult = await this.lint({ source });
+
+        return lintResult.messages.map((messageData) => {
             let complexity: string | undefined;
             let functionName: string | undefined;
             if (messageData.messageId === "enum") {
@@ -119,6 +95,49 @@ export class ComplexityService {
             }
 
             return result;
+        });
+    }
+
+    /**
+     * Lints file with ESLint and returns result.
+     *
+     * If a parsing error is encountered, tries to parse the file as JSX.
+     * We cannot always parse as JSX, as unary generics would be interpreted as JSX.
+     * We cannot rely on the file extension, as some conventions use `.js` for JSX files (e.g. Create React App).
+     */
+    private async lint({ source }: { source: string }): Promise<ESLint.LintResult> {
+        let [result] = await this.getEslint({ useJsx: false }).lintText(source);
+        if (result.fatalErrorCount > 0) {
+            [result] = await this.getEslint({ useJsx: true }).lintText(source);
+        }
+
+        return result;
+    }
+
+    private getEslint({ useJsx }: { useJsx: boolean }) {
+        return new ESLint({
+            useEslintrc: false,
+            /*
+             * Disable ESLint comments. This solves multiple problems:
+             *  1. A disable comment on an unknown rule would cause an error, see https://stackoverflow.com/a/64650648/10380981.
+             *  2. A disable comment on the `complexity` rule would prevent us from detecting the complexity.
+             */
+            allowInlineConfig: false,
+            baseConfig: {
+                plugins: ["crap"],
+                parser: "@typescript-eslint/parser",
+                parserOptions: {
+                    ecmaFeatures: {
+                        jsx: useJsx,
+                    },
+                },
+                rules: {
+                    "crap/complexity": "error",
+                },
+            },
+            plugins: {
+                crap: crapPlugin as unknown as ESLint.Plugin,
+            },
         });
     }
 }

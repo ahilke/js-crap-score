@@ -5,16 +5,16 @@ import type { JestConfigWithTsJest } from "ts-jest";
  */
 const config = {
     preset: "ts-jest/presets/default-esm",
-    extensionsToTreatAsEsm: [".ts"],
+    extensionsToTreatAsEsm: [".ts", ".tsx"],
     moduleNameMapper: {
-        "^(\\.{1,2}/.*)\\.js$": "$1",
+        "^(\\.{1,2}/.*)\\.jsx?$": "$1",
     },
     transform: {
-        "^.+\\.ts$": ["ts-jest", { useESM: true }],
+        "^.+\\.tsx?$": ["ts-jest", { useESM: true }],
     },
-    testMatch: ["**/*.test.ts"],
+    testMatch: ["**/*.test.{ts,tsx}"],
     collectCoverage: true,
-    collectCoverageFrom: ["./src/**/*.[jt]s"],
+    collectCoverageFrom: ["./src/**/*.{js,jsx,ts,tsx}"],
     coveragePathIgnorePatterns: ["./coverage/"],
     coverageDirectory: "./coverage/",
     coverageReporters: ["json", "html"],
