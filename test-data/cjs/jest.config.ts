@@ -5,8 +5,8 @@ import type { JestConfigWithTsJest } from "ts-jest";
  */
 const config = {
     preset: "ts-jest",
-    testMatch: ["**/*.test.ts"],
-    collectCoverageFrom: ["./src/**/*.[jt]s"],
+    testMatch: ["**/*.test.{ts,tsx}"],
+    collectCoverageFrom: ["./src/**/*.{js,jsx,ts,tsx}"],
     collectCoverage: true,
     coveragePathIgnorePatterns: ["./coverage/"],
     coverageDirectory: "./coverage/",
