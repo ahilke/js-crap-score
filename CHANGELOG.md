@@ -1,5 +1,11 @@
 # Changelog
 
+## NEXT
+
+### Changed
+
+-   Relax engine requirements and add indirect peer dependency. This should prevent warnings when installing the package.
+
 ## 1.0.1 - 2023-03-27
 
 ### Fixed
