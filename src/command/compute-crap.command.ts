@@ -1,5 +1,5 @@
 import { Logger, LogLevel } from "@nestjs/common";
-import { CommandRunner, Help, InquirerService, Option, RootCommand } from "nest-commander";
+import { CommandRunner, Help, Option, RootCommand } from "nest-commander";
 import { ConfigService } from "../crap/config.service.js";
 import { CrapReportService } from "../crap/crap-report.service.js";
 import { FileSystemService } from "../crap/file-system.service.js";
@@ -10,7 +10,6 @@ import { FileSystemService } from "../crap/file-system.service.js";
 })
 export class ComputeCrapCommand extends CommandRunner {
     public constructor(
-        private readonly inquirer: InquirerService,
         private readonly crapReportService: CrapReportService,
         private readonly fileSystemService: FileSystemService,
         private readonly configService: ConfigService,
@@ -27,12 +26,16 @@ export class ComputeCrapCommand extends CommandRunner {
             verbosity?: LogLevel[];
         },
     ): Promise<void> {
+        if (inputs.length === 0) {
+            this.helpMessage();
+        }
+
         this.processOptions(options);
 
-        const testCoveragePath = await this.getTestCoveragePath(inputs);
+        const testCoveragePath = inputs[0];
         const coverageReport = await this.fileSystemService.loadCoverageReport(testCoveragePath);
 
-        const result = await this.crapReportService.createReport({ testCoverage: coverageReport });
+        await this.crapReportService.createReport({ testCoverage: coverageReport });
     }
 
     @Option({
@@ -72,10 +75,6 @@ export class ComputeCrapCommand extends CommandRunner {
         return logLevels.reverse().slice(logLevels.indexOf(verbosity));
     }
 
-    public getLogLevels(): string[] {
-        return ["error", "warn", "log", "debug", "silent"];
-    }
-
     @Option({
         flags: "-h, --help",
         description: "Display this help message.",
@@ -97,6 +96,10 @@ export class ComputeCrapCommand extends CommandRunner {
         ].join("\n");
     }
 
+    private getLogLevels(): string[] {
+        return ["error", "warn", "log", "debug", "silent"];
+    }
+
     private processOptions(options: { json?: string | true; html?: string | true; verbosity?: LogLevel[] }): void {
         this.configService.setJsonReportFile(options.json === true ? "crap-report/crap-report.json" : options.json);
         this.configService.setHtmlReportDir(options.html === true ? "crap-report/html/" : options.html);
@@ -108,17 +111,5 @@ export class ComputeCrapCommand extends CommandRunner {
         if (this.configService.getJsonReportFile() == undefined && this.configService.getHtmlReportDir() == undefined) {
             this.logger.warn("No report will be written. Use --json or --html to specify where to write the report.");
         }
-    }
-
-    private async getTestCoveragePath(inputs: string[]): Promise<string> {
-        if (inputs[0]) {
-            return inputs[0];
-        }
-
-        const answers = await this.inquirer.ask<{ testCoveragePath: string }>(
-            "test-coverage-path-questions",
-            undefined,
-        );
-        return answers.testCoveragePath;
     }
 }
