@@ -98,8 +98,8 @@ export class ComputeCrapCommand extends CommandRunner {
     }
 
     private processOptions(options: { json?: string | true; html?: string | true; verbosity?: LogLevel[] }): void {
-        this.configService.setJsonReportFile(options.json === true ? "./crap-report/crap-report.json" : options.json);
-        this.configService.setHtmlReportDir(options.html === true ? "./crap-report/html/" : options.html);
+        this.configService.setJsonReportFile(options.json === true ? "crap-report/crap-report.json" : options.json);
+        this.configService.setHtmlReportDir(options.html === true ? "crap-report/html/" : options.html);
 
         if (options.verbosity != undefined) {
             this.configService.setLogger(options.verbosity);
