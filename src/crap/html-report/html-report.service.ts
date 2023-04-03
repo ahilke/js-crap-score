@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import Handlebars from "handlebars";
 import { join } from "path";
 import { ConfigService } from "../config.service.js";
@@ -27,6 +27,7 @@ export class HtmlReportService {
     public constructor(
         private readonly fileSystemService: FileSystemService,
         private readonly configService: ConfigService,
+        private readonly logger: Logger,
     ) {}
 
     public async createReport(crapReport: CrapReport): Promise<void> {
@@ -65,7 +66,7 @@ export class HtmlReportService {
 
         const result = pageTemplate({ functions, content: "overview", title: "CRAP" });
 
-        await this.fileSystemService.writeHtmlReport(join(htmlReportDir, "index.html"), result);
+        await this.fileSystemService.writeHtmlReport(join(htmlReportDir, "index.html"), result, { logLevel: "log" });
     }
 
     private async initHandlebars(): Promise<void> {

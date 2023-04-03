@@ -1,6 +1,17 @@
 # Changelog
 
-## 1.0.1 - 2023-03-27
+## NEXT
+
+### Changed
+
+-   Reduce logging noise. Saved files are now only logged as `debug` (was `log`), except for the main report files.
+-   Relax engine requirements and add indirect peer dependency. This should prevent warnings when installing the package.
+
+### Removed
+
+-   CLI no longer interactively asks for the test coverage path, instead printing the help text when invoked without an argument.
+
+## [1.0.1](https://github.com/ahilke/js-crap-score/releases/tag/1.0.1) - 2023-03-27
 
 ### Fixed
 

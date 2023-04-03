@@ -60,19 +60,29 @@ export class FileSystemService {
             mapValues(crapFile, (crapFunction) => omit(crapFunction, ["sourceCode"])),
         );
 
-        await this.writeFile({ path, type: "JSON report", data: JSON.stringify(data) });
+        await this.writeFile({ path, type: "JSON report", data: JSON.stringify(data), options: { logLevel: "log" } });
     }
 
-    public async writeHtmlReport(path: string, report: string): Promise<void> {
-        await this.writeFile({ path, type: "HTML report", data: report });
+    public async writeHtmlReport(path: string, report: string, options?: { logLevel: "log" | "debug" }): Promise<void> {
+        await this.writeFile({ path, type: "HTML report", data: report, options });
     }
 
-    private async writeFile({ path, type, data }: { path: string; type: WrittenFile; data: string }): Promise<void> {
+    private async writeFile({
+        path,
+        type,
+        data,
+        options = { logLevel: "debug" },
+    }: {
+        path: string;
+        type: WrittenFile;
+        data: string;
+        options?: { logLevel: "log" | "debug" } | undefined;
+    }): Promise<void> {
         try {
             await mkdir(dirname(path), { recursive: true });
             await writeFile(path, data);
 
-            this.logger.log(`Wrote ${type} to "${path}".`);
+            this.logger[options.logLevel](`Wrote ${type} to "${path}".`);
         } catch (error) {
             this.logger.error(`Failed to write ${type} to "${path}".`, { error });
         }
