@@ -1,7 +1,7 @@
 {
     "name": "crap-score",
-    "version": "1.0.1",
-    "description": "Calculate and visualize the CRAP score of a JS/TS project using the provided API or CLI.",
+    "version": "1.1.0",
+    "description": "Calculate and visualize the CRAP score of a JS/TS project using the provided `jest` integration, CLI, or API.",
     "license": "MIT",
     "keywords": [
         "CRAP Score",

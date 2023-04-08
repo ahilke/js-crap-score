@@ -1,20 +1,20 @@
 import type { Config, Reporter, ReporterContext, TestContext } from "@jest/reporters";
 import type { AggregatedResult } from "@jest/test-result";
 import type { LogLevel } from "@nestjs/common";
-import { getCrapReport } from "../index.js";
+import { getCrapReport } from "../api/crap-report.js";
 import { CrapReporterLogger } from "./logger.js";
 
 export interface ReporterOptions {
     /**
      * Specifies path where the JSON report will be written to.
-     * If undefined, no report is written to the disk.
+     * Defaults to `crap-report/crap-report.json`. Pass `false` to disable JSON report.
      */
-    jsonReportFile?: string;
+    jsonReportFile?: string | false;
     /**
      * Specifies path where the HTML report will be written to.
-     * If undefined, no report is written to the disk.
+     * Defaults to `crap-report/html/`. Pass `false` to disable HTML report.
      */
-    htmlReportDir?: string;
+    htmlReportDir?: string | false;
     /**
      * Changes log behaviour:
      *  - silent: suppress all logs
@@ -24,9 +24,11 @@ export interface ReporterOptions {
 }
 
 /**
+ * Custom jest reporter that generates a CRAP report when run with `jest --coverage`.
+ *
  * @see https://jestjs.io/docs/configuration#custom-reporters
  */
-export default class CrapReporter implements Reporter {
+export class CrapReporter implements Reporter {
     private readonly logger: CrapReporterLogger;
 
     private readonly jsonReportFile: string | undefined;
@@ -37,8 +39,8 @@ export default class CrapReporter implements Reporter {
         reporterOptions: ReporterOptions,
         private readonly reporterContext: ReporterContext,
     ) {
-        this.jsonReportFile = reporterOptions.jsonReportFile;
-        this.htmlReportDir = reporterOptions.htmlReportDir;
+        this.jsonReportFile = this.getJsonReportFile(reporterOptions.jsonReportFile);
+        this.htmlReportDir = this.getHtmlReportDir(reporterOptions.htmlReportDir);
 
         this.logger = new CrapReporterLogger(this.getLogLevels(reporterOptions.log));
     }
@@ -70,14 +72,42 @@ export default class CrapReporter implements Reporter {
         return new Error(lastError);
     }
 
-    private getLogLevels(log: "silent" | "debug" | undefined): LogLevel[] {
-        switch (log) {
-            case "silent":
-                return [];
-            case "debug":
-                return ["log", "warn", "error", "debug"];
-            default:
-                return ["log", "warn", "error"];
+    private getLogLevels(log: unknown): LogLevel[] {
+        if (log === undefined) {
+            return ["log", "warn", "error"];
         }
+        if (log === "silent") {
+            return [];
+        }
+        if (log === "debug") {
+            return ["log", "warn", "error", "debug"];
+        }
+        throw new Error(`Invalid option "log": ${log}`);
+    }
+
+    private getJsonReportFile(value: unknown): string | undefined {
+        if (value === undefined) {
+            return "crap-report/crap-report.json";
+        }
+        if (value === false) {
+            return undefined;
+        }
+        if (typeof value === "string") {
+            return value;
+        }
+        throw new Error(`Invalid option "jsonReportFile": ${value}`);
+    }
+
+    private getHtmlReportDir(value: unknown): string | undefined {
+        if (value === undefined) {
+            return "crap-report/html/";
+        }
+        if (value === false) {
+            return undefined;
+        }
+        if (typeof value === "string") {
+            return value;
+        }
+        throw new Error(`Invalid option "htmlReportDir": ${value}`);
     }
 }
