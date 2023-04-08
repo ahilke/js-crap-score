@@ -1,6 +1,10 @@
 # Changelog
 
-## NEXT
+## [1.1.0](https://github.com/ahilke/js-crap-score/releases/tag/1.1.0) - 2023-04-08
+
+### Added
+
+-   Direct integration with `jest` as a test reporter. See [README.md](README.md#jest-reporter) for details.
 
 ### Changed
 

@@ -1,6 +1,6 @@
 # CRAP Score
 
-Calculate and visualize the CRAP score of a JS/TS project using the provided API or CLI.
+Calculate and visualize the CRAP score of a JS/TS project using the provided `jest` integration, CLI, or API.
 
 ## Example
 
@@ -17,6 +17,39 @@ where complexity is the cyclomatic complexity of the function and coverage is th
 Combining complexity and coverage information, the CRAP score gives you insight into your riskiest functions, i.e. functions that are the most likely to contain bugs. You can reduce the risk and thus the CRAP score by either improving test coverage or refactoring your function to decrease complexity (e.g. by extracting functions).
 
 ## How to Use
+
+### Jest Reporter
+
+Add `crap-score` as [test reporter](https://jestjs.io/docs/configuration#reporters-arraymodulename--modulename-options) to jest.
+When `jest` is run with coverage enabled, this will also generate a CRAP report. Example for `jest.config.json`:
+
+```json
+"reporters": ["default", "crap-score"],
+```
+
+The reporter also accepts options, for example:
+
+```json
+"reporters": [
+    "default",
+    [
+        "crap-score",
+        {
+            "jsonReportFile": "crap.json",
+        }
+    ]
+]
+```
+
+A typed interface for the reporter options is available via `import type { ReporterOptions } from "crap-score";`.
+
+Available options:
+
+| Option         | Description                                                                                                                               |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| jsonReportFile | Specifies path where the JSON report will be written to. Defaults to `crap-report/crap-report.json`. Pass `false` to disable JSON report. |
+| htmlReportDir  | Specifies path where the HTML report will be written to. Defaults to `crap-report/html/`. Pass `false` to disable HTML report.            |
+| log            | Changes log behaviour. `"silent"` suppresses all logs. `"debug"` prints additional logs.                                                  |
 
 ### CLI
 
