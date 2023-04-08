@@ -18,6 +18,34 @@ Combining complexity and coverage information, the CRAP score gives you insight 
 
 ## How to Use
 
+### Test Reporter
+
+#### Jest
+
+Add `crap-score` as [test reporter to jest](https://jestjs.io/docs/configuration#reporters-arraymodulename--modulename-options).
+This only works when `jest` is run with `--coverage`. Example for `jest.config.json`:
+
+```json
+"reporters": [
+    "default",
+    [
+        "crap-score/dist/test-reporter/index.js",
+        {
+            "htmlReportDir": "./crap-report/html"
+        }
+    ]
+]
+```
+
+A typed interface for the reporter options is available under `import type { ReporterOptions } from "crap-score";`.
+Available options:
+
+| Option         | Description                                                                                              |
+| -------------- | -------------------------------------------------------------------------------------------------------- |
+| jsonReportFile | Specifies path where the JSON report will be written to. If undefined, no report is written to the disk. |
+| htmlReportDir  | Specifies path where the HTML report will be written to. If undefined, no report is written to the disk. |
+| log            | Changes log behaviour. `"silent"` suppresses all logs. `"debug"` prints additional logs.                 |
+
 ### CLI
 
 Install the package (or use it directly via npx), then just run `npx crap <path-to-coverage>`.

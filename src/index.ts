@@ -68,3 +68,5 @@ export async function getCrapReport({
 }
 
 export { CrapFile, CrapFunction, CrapReport } from "./crap/crap-report.js";
+
+export { ReporterOptions } from "./test-reporter/index.js";
