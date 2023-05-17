@@ -1,5 +1,9 @@
 # CRAP Score
 
+[![npm version](https://badge.fury.io/js/crap-score.svg)](https://badge.fury.io/js/crap-score)
+[![Maintainability](https://api.codeclimate.com/v1/badges/27c05623d7226a74a9b7/maintainability)](https://codeclimate.com/github/ahilke/js-crap-score/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/27c05623d7226a74a9b7/test_coverage)](https://codeclimate.com/github/ahilke/js-crap-score/test_coverage)
+
 Calculate and visualize the CRAP score of a JS/TS project using the provided `jest` integration, CLI, or API.
 
 ## Example
@@ -12,7 +16,7 @@ The CRAP score is a measure of the risk of a function ranging from 1 (best) to i
 
 > complexity^2 \* (1 - coverage)^3 + complexity
 
-where complexity is the cyclomatic complexity of the function and coverage is the statement coverage as number between 0 (no coverage) and 1 (fully covered).
+where `complexity` is the cyclomatic complexity of the function and `coverage` is the statement coverage as number between 0 (no coverage) and 1 (fully covered).
 
 Combining complexity and coverage information, the CRAP score gives you insight into your riskiest functions, i.e. functions that are the most likely to contain bugs. You can reduce the risk and thus the CRAP score by either improving test coverage or refactoring your function to decrease complexity (e.g. by extracting functions).
 
@@ -24,7 +28,7 @@ Add `crap-score` as [test reporter](https://jestjs.io/docs/configuration#reporte
 When `jest` is run with coverage enabled, this will also generate a CRAP report. Example for `jest.config.json`:
 
 ```json
-"reporters": ["default", "crap-score"],
+"reporters": ["default", "crap-score"]
 ```
 
 The reporter also accepts options, for example:

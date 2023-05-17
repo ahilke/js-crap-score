@@ -14,7 +14,8 @@ const config = {
     collectCoverageFrom: ["src/**/*.ts"],
     coveragePathIgnorePatterns: ["__tests__/"],
     coverageDirectory: "./coverage",
-    coverageReporters: ["json", "html"],
+    // "lcov" is required for Code Climate, "json" and "html" are purely informational
+    coverageReporters: ["lcov", "json", "html"],
 } satisfies JestConfigWithTsJest;
 
 export default config;
