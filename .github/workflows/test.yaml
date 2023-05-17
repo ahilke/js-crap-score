@@ -4,6 +4,9 @@ on:
     pull_request:
         branches:
             - main
+    push:
+        branches:
+            - main
     workflow_call:
 
 jobs:
@@ -25,5 +28,9 @@ jobs:
             - name: Generate Test Data
               run: npm run test:generate-data
 
-            - name: Run Tests
-              run: npm run test
+            - name: Run Tests & Publish Coverage to Code Climate
+              uses: paambaati/codeclimate-action@v4.0.0
+              env:
+                  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+              with:
+                  coverageCommand: npm run test:cov

@@ -3,7 +3,8 @@ run-name: Publishing CRAP report for ${{ github.ref }}
 on:
     push:
         branches:
-            - "main"
+            - main
+
 jobs:
     build:
         runs-on: ubuntu-latest
