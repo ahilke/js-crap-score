@@ -36,7 +36,9 @@ export class HtmlReportService {
         }
 
         await this.initHandlebars();
-        const prismStyles = await this.fileSystemService.loadSourceFile(new URL("./prism/prism.css", import.meta.url));
+        const prismStyles = await this.fileSystemService.loadSourceFile(
+            new URL("./prism/prism.min.css", import.meta.url),
+        );
         const prismScript = await this.fileSystemService.loadSourceFile(new URL("./prism/prism.js", import.meta.url));
 
         const functions: FunctionReport[] = [];

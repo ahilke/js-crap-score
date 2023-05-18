@@ -3,4 +3,4 @@ coverage/
 crap-report/
 dist/
 prism.js
-prism.css
+prism.min.css
