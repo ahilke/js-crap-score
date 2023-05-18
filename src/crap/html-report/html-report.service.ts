@@ -3,6 +3,8 @@ import Handlebars from "handlebars";
 import { join } from "path";
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/index.js";
+// @ts-ignore - no types available; TODO check again once prismjs@2 is released
+import Normalizer from "prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js";
 import { ConfigService } from "../config.service.js";
 import { CrapFunction, CrapReport } from "../crap-report.js";
 import { FileSystemService } from "../file-system.service.js";
@@ -26,6 +28,10 @@ import { FileSystemService } from "../file-system.service.js";
 
 @Injectable()
 export class HtmlReportService {
+    private readonly normalizer = new Normalizer({
+        "remove-indent": true,
+    });
+
     public constructor(
         private readonly fileSystemService: FileSystemService,
         private readonly configService: ConfigService,
@@ -59,7 +65,7 @@ export class HtmlReportService {
                     ...functionReport,
                     content: "function",
                     title: `CRAP: ${functionReport.functionDescriptor} - ${functionReport.filePath}`,
-                    highlightedSourceHtml: this.toHighlightedHtml(this.trimStart(functionReport.sourceCode)),
+                    highlightedSourceHtml: this.toHighlightedHtml(functionReport.sourceCode),
                     prismStyles,
                 });
 
@@ -121,31 +127,12 @@ export class HtmlReportService {
         );
     }
 
-    /**
-     * Trims spaces from all lines in a multi-line string until the first non-space character is reached on any line.
-     */
-    private trimStart(source: string | undefined): string | undefined {
-        if (!source) {
-            return source;
-        }
-
-        const lines = source.split("\n");
-        // filter out empty lines, as these should not prevent un-indenting a block
-        const leadingSpaces = lines.filter((line) => line.trim()).map((line) => line.match(/^(\s+)/)?.[0].length ?? 0);
-        const minSpaces = Math.min(...leadingSpaces);
-        if (minSpaces === 0) {
-            return source;
-        }
-
-        return lines.map((line) => line.slice(minSpaces)).join("\n");
-    }
-
     private toHighlightedHtml(source: string | undefined): string | undefined {
         if (!source) {
             return source;
         }
 
-        return Prism.highlight(source, Prism.languages.typescript, "typescript");
+        return Prism.highlight(this.normalizer.normalize(source), Prism.languages.typescript, "typescript");
     }
 }
 
