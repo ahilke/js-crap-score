@@ -37,6 +37,8 @@ export class HtmlReportService {
         }
 
         await this.initHandlebars();
+        const prismStyles = await this.fileSystemService.loadSourceFile(new URL("./prism/prism.css", import.meta.url));
+        const prismScript = await this.fileSystemService.loadSourceFile(new URL("./prism/prism.js", import.meta.url));
 
         const functions: FunctionReport[] = [];
         Object.entries(crapReport).forEach(([filePath, fileReport]) => {
@@ -55,6 +57,8 @@ export class HtmlReportService {
                     content: "function",
                     title: `CRAP: ${functionReport.functionDescriptor} - ${functionReport.filePath}`,
                     sourceCode: this.trimStart(functionReport.sourceCode),
+                    prismStyles,
+                    prismScript,
                 });
 
                 this.fileSystemService.writeHtmlReport(
@@ -64,7 +68,7 @@ export class HtmlReportService {
             }),
         );
 
-        const result = pageTemplate({ functions, content: "overview", title: "CRAP" });
+        const result = pageTemplate({ functions, content: "overview", title: "CRAP", prismStyles, prismScript });
 
         await this.fileSystemService.writeHtmlReport(join(htmlReportDir, "index.html"), result, { logLevel: "log" });
     }
