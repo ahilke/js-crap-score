@@ -26,4 +26,8 @@
     {{! <-- settings for https://prismjs.com/plugins/line-numbers/}}
     data-start="{{start.line}}"
     {{! --> }}
+    {{! <-- settings for https://prismjs.com/plugins/line-highlight}}
+    data-line="{{uncoveredLineList this}}"
+    data-line-offset="{{start.line}}"
+    {{! --> }}
 ><code class="language-typescript">{{sourceCode}}</code></pre>

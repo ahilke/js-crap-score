@@ -1,5 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { CoverageMapData, FileCoverageData } from "istanbul-lib-coverage";
+import { filter } from "lodash-es";
 import { ComplexityService } from "./complexity.service.js";
 import { ConfigService } from "./config.service.js";
 import { CrapFile, CrapReport } from "./crap-report.js";
@@ -59,6 +60,8 @@ export class CrapReportService {
 
         const { fnMap, path: sourcePath } = fileCoverage;
 
+        const uncoveredLinesInFile = this.getUncoveredLines(fileCoverage);
+
         const lintReport = await this.complexityService.getComplexity({ sourcePath });
         Object.keys(fnMap).forEach((key) => {
             const coverageFunction = fnMap[key];
@@ -97,6 +100,9 @@ export class CrapReportService {
                     coverage,
                     crap: crapScore,
                 },
+                uncoveredLines: uncoveredLinesInFile.filter(
+                    (line) => line >= lintFunction.start.line && line <= lintFunction.end.line,
+                ),
             };
             if (lintFunction.sourceCode) {
                 result[coverageFunction.name].sourceCode = lintFunction.sourceCode;
@@ -110,6 +116,19 @@ export class CrapReportService {
         });
 
         return result;
+    }
+
+    private getUncoveredLines(fileCoverage: FileCoverageData): number[] {
+        const uncoveredStatements = filter(fileCoverage.statementMap, (value, key) => fileCoverage.s[key] === 0);
+        const uncoveredLines = uncoveredStatements.reduce((lines, statement) => {
+            for (let line = statement.start.line; line <= statement.end.line; line++) {
+                lines.add(line);
+            }
+            return lines;
+        }, new Set<number>());
+        const uncoveredLinesOrdered = Array.from(uncoveredLines).sort((a, b) => a - b);
+
+        return uncoveredLinesOrdered;
     }
 
     /**

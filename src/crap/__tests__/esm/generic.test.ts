@@ -26,6 +26,7 @@ describe("generic", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [1],
                 },
             }),
         );
@@ -55,6 +56,7 @@ describe("generic", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [4],
                 },
             }),
         );
@@ -82,6 +84,7 @@ describe("generic", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [6],
                 },
             }),
         );

@@ -46,6 +46,10 @@ export interface CrapFunctionJsonObject {
          */
         crap: number;
     };
+    /**
+     * Ordered array of line numbers of lines containing an uncovered statement.
+     */
+    uncoveredLines: number[];
 }
 
 /**

@@ -25,6 +25,7 @@ describe("class-field-initializer", () => {
                     coverage: 0,
                     crap: 6,
                 },
+                uncoveredLines: [8, 9, 10, 11, 12, 13],
             },
         }),
     );
@@ -52,6 +53,7 @@ describe("class-field-initializer", () => {
                     coverage: 0,
                     crap: 2,
                 },
+                uncoveredLines: [26],
             },
         }),
     );

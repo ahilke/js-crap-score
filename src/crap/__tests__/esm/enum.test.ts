@@ -25,6 +25,7 @@ describe("enum", () => {
                     coverage: 1,
                     crap: 1,
                 },
+                uncoveredLines: [],
             },
         }),
     );
@@ -52,6 +53,7 @@ describe("enum", () => {
                     coverage: 0.5,
                     crap: 6,
                 },
+                uncoveredLines: [11, 15],
             },
         }),
     );

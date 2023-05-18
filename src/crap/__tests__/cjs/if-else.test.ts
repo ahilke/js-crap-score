@@ -25,6 +25,7 @@ describe("if-else", () => {
                     coverage: 0.75,
                     crap: 2.0625,
                 },
+                uncoveredLines: [5],
             },
         }),
     );

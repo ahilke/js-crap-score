@@ -26,6 +26,7 @@ describe("multi-function-line", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [3],
                 },
             }),
         );
@@ -53,6 +54,7 @@ describe("multi-function-line", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [3],
                 },
             }),
         );
@@ -80,6 +82,7 @@ describe("multi-function-line", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [3],
                 },
             }),
         );

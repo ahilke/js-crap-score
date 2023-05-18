@@ -94,6 +94,9 @@ export class HtmlReportService {
             }
             return `L${report.start.line}`;
         });
+        Handlebars.registerHelper("uncoveredLineList", (report: FunctionReport): string =>
+            report.uncoveredLines.join(","),
+        );
         Handlebars.registerHelper("header", (content: string): string => `${content}_header`);
 
         Handlebars.registerPartial(
