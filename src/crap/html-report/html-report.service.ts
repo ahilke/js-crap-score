@@ -1,6 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 import Handlebars from "handlebars";
 import { join } from "path";
+import Prism from "prismjs";
+import loadLanguages from "prismjs/components/index.js";
 import { ConfigService } from "../config.service.js";
 import { CrapFunction, CrapReport } from "../crap-report.js";
 import { FileSystemService } from "../file-system.service.js";
@@ -28,7 +30,9 @@ export class HtmlReportService {
         private readonly fileSystemService: FileSystemService,
         private readonly configService: ConfigService,
         private readonly logger: Logger,
-    ) {}
+    ) {
+        loadLanguages(["typescript"]);
+    }
 
     public async createReport(crapReport: CrapReport): Promise<void> {
         const htmlReportDir = this.configService.getHtmlReportDir();
@@ -38,7 +42,6 @@ export class HtmlReportService {
 
         await this.initHandlebars();
         const prismStyles = await this.fileSystemService.loadSourceFile(new URL("./prism/prism.css", import.meta.url));
-        const prismScript = await this.fileSystemService.loadSourceFile(new URL("./prism/prism.js", import.meta.url));
 
         const functions: FunctionReport[] = [];
         Object.entries(crapReport).forEach(([filePath, fileReport]) => {
@@ -56,9 +59,8 @@ export class HtmlReportService {
                     ...functionReport,
                     content: "function",
                     title: `CRAP: ${functionReport.functionDescriptor} - ${functionReport.filePath}`,
-                    sourceCode: this.trimStart(functionReport.sourceCode),
+                    highlightedSourceHtml: this.toHighlightedHtml(this.trimStart(functionReport.sourceCode)),
                     prismStyles,
-                    prismScript,
                 });
 
                 this.fileSystemService.writeHtmlReport(
@@ -68,7 +70,7 @@ export class HtmlReportService {
             }),
         );
 
-        const result = pageTemplate({ functions, content: "overview", title: "CRAP", prismStyles, prismScript });
+        const result = pageTemplate({ functions, content: "overview", title: "CRAP", prismStyles });
 
         await this.fileSystemService.writeHtmlReport(join(htmlReportDir, "index.html"), result, { logLevel: "log" });
     }
@@ -136,6 +138,14 @@ export class HtmlReportService {
         }
 
         return lines.map((line) => line.slice(minSpaces)).join("\n");
+    }
+
+    private toHighlightedHtml(source: string | undefined): string | undefined {
+        if (!source) {
+            return source;
+        }
+
+        return Prism.highlight(source, Prism.languages.typescript, "typescript");
     }
 }
 
