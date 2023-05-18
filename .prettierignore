@@ -2,3 +2,5 @@
 coverage/
 crap-report/
 dist/
+prism.js
+prism.css
