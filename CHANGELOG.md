@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.0](https://github.com/ahilke/js-crap-score/releases/tag/1.2.0) - 2023-05-20
+
+### Added
+
+-   HTML Report: Code block now highlights uncovered lines.
+-   HTML Report: Code block now shows line numbers.
+
+### Changed
+
+-   HTML Report: Switched to a new syntax highlighting theme.
+
 ## [1.1.0](https://github.com/ahilke/js-crap-score/releases/tag/1.1.0) - 2023-04-08
 
 ### Added
