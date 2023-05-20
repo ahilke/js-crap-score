@@ -8,6 +8,10 @@ on:
         branches:
             - main
     workflow_call:
+      secrets:
+        CC_TEST_REPORTER_ID:
+          description: 'Code Climate Test Reporter ID to publish test results to Code Climate.'
+          required: true
 
 jobs:
     test:
