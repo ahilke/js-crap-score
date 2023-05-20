@@ -84,7 +84,6 @@ export const complexityRule = ESLintUtils.RuleCreator.withoutDocs({
                     messageId: "enum",
                     data: {
                         name: `enum '${node.id.name}'`,
-                        foo: 3,
                     },
                 });
             },

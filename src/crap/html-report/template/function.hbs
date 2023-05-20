@@ -21,4 +21,14 @@
     </tbody>
 </table>
 
-<pre><code class="language-typescript z-depth-1">{{sourceCode}}</code></pre>
+<pre
+    class="line-numbers z-depth-1"
+    {{! <-- settings for https://prismjs.com/plugins/line-numbers/}}
+    data-start="{{start.line}}"
+    {{! --> }}
+    {{! <-- settings for https://prismjs.com/plugins/line-highlight}}
+    data-line="{{uncoveredLineList this}}"
+    data-line-offset="{{start.line}}"
+    {{! --> }}
+    style="margin: 1em 0;"
+><code class="language-typescript">{{sourceCode}}</code></pre>

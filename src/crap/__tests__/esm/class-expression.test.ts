@@ -26,6 +26,7 @@ describe("class-expression", () => {
                         coverage: 0,
                         crap: 6,
                     },
+                    uncoveredLines: [2, 3, 4, 5, 6, 7, 8],
                 },
             }),
         );

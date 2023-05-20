@@ -25,6 +25,7 @@ describe("anonymous", () => {
                     coverage: 0.75,
                     crap: 3.140625,
                 },
+                uncoveredLines: [8],
             },
         }),
     );
@@ -52,6 +53,7 @@ describe("anonymous", () => {
                     coverage: 1,
                     crap: 2,
                 },
+                uncoveredLines: [],
             },
         }),
     );

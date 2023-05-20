@@ -26,6 +26,7 @@ describe("class", () => {
                         coverage: 0.75,
                         crap: 1.015625,
                     },
+                    uncoveredLines: [11],
                 },
             }),
         );
@@ -53,6 +54,7 @@ describe("class", () => {
                         coverage: 0.6666666666666666,
                         crap: 2.1481481481481484,
                     },
+                    uncoveredLines: [11],
                 },
             }),
         );
@@ -82,6 +84,7 @@ describe("class", () => {
                         coverage: 0.2,
                         crap: 1.512,
                     },
+                    uncoveredLines: [17, 18, 19, 20, 21, 22, 23],
                 },
             }),
         );
@@ -109,6 +112,7 @@ describe("class", () => {
                         coverage: 0,
                         crap: 6,
                     },
+                    uncoveredLines: [17, 18, 19, 20, 21, 22, 23],
                 },
             }),
         );

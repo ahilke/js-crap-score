@@ -26,6 +26,7 @@ describe("no-op", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [2],
                 },
             }),
         );
@@ -53,6 +54,7 @@ describe("no-op", () => {
                         coverage: 1,
                         crap: 1,
                     },
+                    uncoveredLines: [],
                 },
             }),
         );
@@ -80,6 +82,7 @@ describe("no-op", () => {
                         coverage: 1,
                         crap: 1,
                     },
+                    uncoveredLines: [],
                 },
             }),
         );
@@ -108,6 +111,7 @@ describe("no-op", () => {
                     coverage: 0,
                     crap: 2,
                 },
+                uncoveredLines: [1],
             },
         }),
     );
@@ -135,6 +139,7 @@ describe("no-op", () => {
                     coverage: 1,
                     crap: 1,
                 },
+                uncoveredLines: [],
             },
         }),
     );

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import Handlebars from "handlebars";
 import { join } from "path";
 import { ConfigService } from "../config.service.js";
@@ -27,7 +27,6 @@ export class HtmlReportService {
     public constructor(
         private readonly fileSystemService: FileSystemService,
         private readonly configService: ConfigService,
-        private readonly logger: Logger,
     ) {}
 
     public async createReport(crapReport: CrapReport): Promise<void> {
@@ -37,6 +36,10 @@ export class HtmlReportService {
         }
 
         await this.initHandlebars();
+        const prismStyles = await this.fileSystemService.loadSourceFile(
+            new URL("./prism/prism.min.css", import.meta.url),
+        );
+        const prismScript = await this.fileSystemService.loadSourceFile(new URL("./prism/prism.js", import.meta.url));
 
         const functions: FunctionReport[] = [];
         Object.entries(crapReport).forEach(([filePath, fileReport]) => {
@@ -54,7 +57,9 @@ export class HtmlReportService {
                     ...functionReport,
                     content: "function",
                     title: `CRAP: ${functionReport.functionDescriptor} - ${functionReport.filePath}`,
-                    sourceCode: this.trimStart(functionReport.sourceCode),
+                    sourceCode: functionReport.sourceCode,
+                    prismStyles,
+                    prismScript,
                 });
 
                 this.fileSystemService.writeHtmlReport(
@@ -64,7 +69,7 @@ export class HtmlReportService {
             }),
         );
 
-        const result = pageTemplate({ functions, content: "overview", title: "CRAP" });
+        const result = pageTemplate({ functions, content: "overview", title: "CRAP", prismStyles, prismScript });
 
         await this.fileSystemService.writeHtmlReport(join(htmlReportDir, "index.html"), result, { logLevel: "log" });
     }
@@ -91,6 +96,9 @@ export class HtmlReportService {
             }
             return `L${report.start.line}`;
         });
+        Handlebars.registerHelper("uncoveredLineList", (report: FunctionReport): string =>
+            report.uncoveredLines.join(","),
+        );
         Handlebars.registerHelper("header", (content: string): string => `${content}_header`);
 
         Handlebars.registerPartial(
@@ -113,25 +121,6 @@ export class HtmlReportService {
                 new URL("./template/function_header.hbs", import.meta.url),
             ),
         );
-    }
-
-    /**
-     * Trims spaces from all lines in a multi-line string until the first non-space character is reached on any line.
-     */
-    private trimStart(source: string | undefined): string | undefined {
-        if (!source) {
-            return source;
-        }
-
-        const lines = source.split("\n");
-        // filter out empty lines, as these should not prevent un-indenting a block
-        const leadingSpaces = lines.filter((line) => line.trim()).map((line) => line.match(/^(\s+)/)?.[0].length ?? 0);
-        const minSpaces = Math.min(...leadingSpaces);
-        if (minSpaces === 0) {
-            return source;
-        }
-
-        return lines.map((line) => line.slice(minSpaces)).join("\n");
     }
 }
 

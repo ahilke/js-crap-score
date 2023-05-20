@@ -25,6 +25,7 @@ describe("re-export", () => {
                     coverage: 1,
                     crap: 1,
                 },
+                uncoveredLines: [],
             },
         }),
     );
@@ -52,6 +53,7 @@ describe("re-export", () => {
                     coverage: 0.75,
                     crap: 2.0625,
                 },
+                uncoveredLines: [11],
             },
         }),
     );
@@ -79,6 +81,7 @@ describe("re-export", () => {
                     coverage: 1,
                     crap: 1,
                 },
+                uncoveredLines: [],
             },
         }),
     );

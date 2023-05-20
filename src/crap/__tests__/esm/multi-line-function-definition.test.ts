@@ -1,9 +1,9 @@
 import { describe, test } from "@jest/globals";
 import { testCrapFunctionReport } from "../crap-report.js";
 
-describe("enum", () => {
+describe("multi-line-function-definition", () => {
     test(
-        "MyEnum",
+        "multiLineFunctionDefinition",
         testCrapFunctionReport({
             filePath: "multi-line-function-definition.ts",
             project: "esm",
@@ -25,6 +25,7 @@ describe("enum", () => {
                     coverage: 0,
                     crap: 2,
                 },
+                uncoveredLines: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
             },
         }),
     );

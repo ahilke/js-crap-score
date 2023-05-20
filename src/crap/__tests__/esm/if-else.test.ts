@@ -25,6 +25,7 @@ describe("if-else", () => {
                     coverage: 0,
                     crap: 6,
                 },
+                uncoveredLines: [2, 3, 4, 5, 6],
             },
         }),
     );
@@ -52,6 +53,7 @@ describe("if-else", () => {
                     coverage: 0.6666666666666666,
                     crap: 2.1481481481481484,
                 },
+                uncoveredLines: [5],
             },
         }),
     );
@@ -79,6 +81,7 @@ describe("if-else", () => {
                     coverage: 0.6666666666666666,
                     crap: 2.1481481481481484,
                 },
+                uncoveredLines: [3],
             },
         }),
     );
@@ -106,6 +109,7 @@ describe("if-else", () => {
                     coverage: 1,
                     crap: 2,
                 },
+                uncoveredLines: [],
             },
         }),
     );

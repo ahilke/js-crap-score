@@ -2,6 +2,6 @@
     "entryFile": "crap",
     "compilerOptions": {
         "deleteOutDir": true,
-        "assets": ["**/*.hbs"]
+        "assets": ["**/*.hbs", "**/prism/prism.min.css", "**/prism/prism.js"]
     }
 }

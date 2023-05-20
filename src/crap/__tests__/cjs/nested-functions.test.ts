@@ -26,6 +26,7 @@ describe("nested-functions", () => {
                         coverage: 0,
                         crap: 6,
                     },
+                    uncoveredLines: [1, 4, 5, 6, 7, 8, 10],
                 },
             }),
         );
@@ -53,6 +54,7 @@ describe("nested-functions", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [5],
                 },
             }),
         );
@@ -80,6 +82,7 @@ describe("nested-functions", () => {
                         coverage: 0,
                         crap: 2,
                     },
+                    uncoveredLines: [7],
                 },
             }),
         );

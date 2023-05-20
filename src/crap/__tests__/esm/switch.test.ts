@@ -25,6 +25,7 @@ describe("switch", () => {
                     coverage: 0.75,
                     crap: 3.140625,
                 },
+                uncoveredLines: [6],
             },
         }),
     );
