@@ -136,7 +136,7 @@ export class ComplexityService {
                 },
             },
             plugins: {
-                crap: crapPlugin as unknown as ESLint.Plugin,
+                crap: crapPlugin,
             },
         });
     }
