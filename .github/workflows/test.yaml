@@ -33,8 +33,9 @@ jobs:
               run: npm run test:generate-data
 
             - name: Run Tests & Publish Coverage to Code Climate
-              uses: paambaati/codeclimate-action@v4.0.0
+              uses: paambaati/codeclimate-action@v5.0.0
               env:
                   CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+              if: ${{ env.CC_TEST_REPORTER_ID }}
               with:
                   coverageCommand: npm run test:cov
