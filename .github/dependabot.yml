@@ -5,3 +5,13 @@ updates:
       versioning-strategy: increase
       schedule:
           interval: weekly
+      groups:
+          typescript-eslint:
+              patterns:
+                  - "@typescript-eslint/*"
+          jest:
+              patterns:
+                  - "@jest/*"
+          nestjs:
+              patterns:
+                  - "@nestjs/*"
