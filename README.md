@@ -1,26 +1,39 @@
 # CRAP Score
 
 [![npm version](https://badge.fury.io/js/crap-score.svg)](https://badge.fury.io/js/crap-score)
-[![Maintainability](https://api.codeclimate.com/v1/badges/27c05623d7226a74a9b7/maintainability)](https://codeclimate.com/github/ahilke/js-crap-score/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/27c05623d7226a74a9b7/test_coverage)](https://codeclimate.com/github/ahilke/js-crap-score/test_coverage)
 
-Calculate and visualize the CRAP score of a JS/TS project using the provided `jest` integration, CLI, or API.
+Use CRAP to estimate and visualize the change risk of your JS/TS project.
+
+-   [Example](#example)
+-   [What is CRAP?](#what-is-crap)
+-   [How to Use](#how-to-use)
+    -   [Jest Reporter](#jest-reporter)
+    -   [CLI](#cli)
+    -   [API](#api)
+    -   [istanbul JSON Coverage Report](#istanbul-json-coverage-report)
+-   [Contributing](#contributing)
 
 ## Example
 
-The CRAP report of the project itself can be found under <https://ahilke.github.io/js-crap-score/>.
+The HTML CRAP report of the project itself can be found under <https://ahilke.github.io/js-crap-score/>.
 
 ## What is CRAP?
 
-The CRAP score is a measure of the risk of a function ranging from 1 (best) to infinity (worst). It stands for Change Risk Anti-Patterns and is computed as follows:
+The CRAP score is a measure of the risk of a function ranging from 1 (best) to infinity (worst). It uses complexity and coverage information to give an estimate how likely it is that a function contains bugs or breaks with future changes.
 
-> complexity^2 \* (1 - coverage)^3 + complexity
+CRAP is an acronym for Change Risk Anti-Patterns and is computed as follows: $comp^2 \cdot (1 - cov)^3 + comp$, where `comp` is the cyclomatic complexity of the function and `cov` is the statement coverage as number between 0 (no coverage) and 1 (fully covered).
 
-where `complexity` is the cyclomatic complexity of the function and `coverage` is the statement coverage as number between 0 (no coverage) and 1 (fully covered).
-
-Combining complexity and coverage information, the CRAP score gives you insight into your riskiest functions, i.e. functions that are the most likely to contain bugs. You can reduce the risk and thus the CRAP score by either improving test coverage or refactoring your function to decrease complexity (e.g. by extracting functions).
+A common guideline is to address functions with a CRAP score above 30 by either adding additional tests or refactoring the function to reduce complexity. This translates to simple functions with complexity 5 or lower not requiring any test coverage, while a function with complexity over 30 always requires refactoring.
 
 ## How to Use
+
+This package provides multiple ways to generate and collect information about coverage, complexity and CRAP for each function within your project. It generates both a human-readable HTML report and a JSON report for further processing.
+
+Usage Options:
+
+-   run it together with your tests by adding it to your [jest configuration](#jest-reporter)
+-   run it from the [command line](#cli)
+-   integrate it into your [own program](#api)
 
 ### Jest Reporter
 
@@ -105,3 +118,9 @@ async function main() {
 If you are using `jest`, you can generate an istanbul JSON coverage report by adding `collectCoverage: true` and `coverageReporters: ["json"]` to your configuration. This will generate a JSON report under `coverage-final.json`.
 
 Make sure to also review other configuration related to coverage, especially `collectCoverageFrom`. This allows you to include files in your report even if they are not covered. This is important, since any uncovered function in your project may have a very high CRAP score.
+
+## Contributing
+
+Got any feedback? I'm eager to hear it! Please open an issue or send me an email.
+
+If you want to contribute code, please read [CONTRIBUTING.md](./CONTRIBUTING.md) first.
