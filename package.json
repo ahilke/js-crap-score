@@ -55,7 +55,7 @@
         "eslint": "^8.53.0",
         "handlebars": "^4.7.8",
         "lodash-es": "^4.17.21",
-        "nest-commander": "^3.11.1",
+        "nest-commander": "^3.12.2",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^7.8.1"
     },
