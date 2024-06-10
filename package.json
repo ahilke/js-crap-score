@@ -46,9 +46,9 @@
         "npm": ">=9.6.7"
     },
     "dependencies": {
-        "@nestjs/cli": "^10.1.18",
-        "@nestjs/common": "^10.2.7",
-        "@nestjs/core": "^10.2.7",
+        "@nestjs/cli": "^10.3.2",
+        "@nestjs/common": "^10.3.9",
+        "@nestjs/core": "^10.3.9",
         "@types/inquirer": "^8.2.9",
         "@typescript-eslint/parser": "^6.10.0",
         "@typescript-eslint/utils": "^6.10.0",
@@ -62,7 +62,7 @@
     "devDependencies": {
         "@jest/reporters": "^29.7.0",
         "@jest/test-result": "^29.7.0",
-        "@nestjs/testing": "^10.2.7",
+        "@nestjs/testing": "^10.3.9",
         "@types/lodash-es": "^4.17.10",
         "prettier": "^3.0.3",
         "ts-jest": "^29.1.1",
