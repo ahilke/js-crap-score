@@ -56,7 +56,7 @@
         "handlebars": "^4.7.8",
         "lodash-es": "^4.17.21",
         "nest-commander": "^3.13.0",
-        "reflect-metadata": "^0.1.14",
+        "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.1"
     },
     "devDependencies": {
