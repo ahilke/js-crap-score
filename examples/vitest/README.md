@@ -5,6 +5,7 @@
 ```bash
 npm ci
 npm run test
+npx crap coverage/coverage-final.json --html --json
 ```
 
 ## References
