@@ -8,6 +8,12 @@ npm run test
 npx crap coverage/coverage-final.json --html --json
 ```
 
+by default should install latest crap-score version (-> release checklist)
+but can also be used locally for testing with "npm pack"
+
+-   `npm pack` in root dir
+-   `npm install --save-dev ../path/to/crap-score.gz` in example dir
+
 ## References
 
 Vite + Vitest setup based on:
