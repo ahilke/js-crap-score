@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.1](https://github.com/ahilke/js-crap-score/releases/tag/1.2.1) - 2026-04-24
+
+### Changed
+
+-   Reworked README.
+
+### Removed
+
+-   Dropped support for Node 16.
+-   No longer distribute source maps.
+
 ## [1.2.0](https://github.com/ahilke/js-crap-score/releases/tag/1.2.0) - 2023-05-20
 
 ### Added

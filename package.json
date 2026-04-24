@@ -1,6 +1,6 @@
 {
     "name": "crap-score",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Use CRAP to estimate and visualize the change risk of your JS/TS project.",
     "license": "MIT",
     "keywords": [
