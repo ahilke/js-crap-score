@@ -8,10 +8,6 @@ on:
         branches:
             - main
     workflow_call:
-        secrets:
-            CC_TEST_REPORTER_ID:
-                description: "Code Climate Test Reporter ID to publish test results to Code Climate."
-                required: true
 
 jobs:
     test:
@@ -32,10 +28,5 @@ jobs:
             - name: Generate Test Data
               run: npm run test:generate-data
 
-            - name: Run Tests & Publish Coverage to Code Climate
-              uses: paambaati/codeclimate-action@v8
-              env:
-                  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-              if: ${{ env.CC_TEST_REPORTER_ID }}
-              with:
-                  coverageCommand: npm run test:cov
+            - name: Run Tests
+              run: npm run test:cov
